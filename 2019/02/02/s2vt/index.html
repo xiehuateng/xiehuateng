@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT">
+  <meta name="keywords" content="NLP,">
 
 
 
@@ -79,13 +79,21 @@
 
 
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="Mcf&#39;s Blog">
-<meta property="og:url" content="http://yoursite.com/index.html">
+<meta name="description" content="文章主要是记录个人尝试做台湾大学李宏毅教授MLDS(2017)Spring HW2-Video Caption Generation.课程网址：http://speech.ee.ntu.edu.tw/~tlkagk/courses_MLDS17.html实现模型是S2VT(sequence to sequence:video to text)，相关论文:http://www.cs.utexas.e">
+<meta name="keywords" content="NLP">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Video Caption Generation">
+<meta property="og:url" content="http://yoursite.com/2019/02/02/s2vt/index.html">
 <meta property="og:site_name" content="Mcf&#39;s Blog">
+<meta property="og:description" content="文章主要是记录个人尝试做台湾大学李宏毅教授MLDS(2017)Spring HW2-Video Caption Generation.课程网址：http://speech.ee.ntu.edu.tw/~tlkagk/courses_MLDS17.html实现模型是S2VT(sequence to sequence:video to text)，相关论文:http://www.cs.utexas.e">
 <meta property="og:locale" content="default">
+<meta property="og:image" content="http://yoursite.com/2019/02/02/s2vt/QQ20190202-221705@2x.png">
+<meta property="og:image" content="http://yoursite.com/2019/02/02/s2vt/QQ20190203-223513@2x.png">
+<meta property="og:updated_time" content="2019-02-05T08:01:08.546Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Mcf&#39;s Blog">
+<meta name="twitter:title" content="Video Caption Generation">
+<meta name="twitter:description" content="文章主要是记录个人尝试做台湾大学李宏毅教授MLDS(2017)Spring HW2-Video Caption Generation.课程网址：http://speech.ee.ntu.edu.tw/~tlkagk/courses_MLDS17.html实现模型是S2VT(sequence to sequence:video to text)，相关论文:http://www.cs.utexas.e">
+<meta name="twitter:image" content="http://yoursite.com/2019/02/02/s2vt/QQ20190202-221705@2x.png">
 
 
 
@@ -115,13 +123,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/">
+  <link rel="canonical" href="http://yoursite.com/2019/02/02/s2vt/">
 
 
 
 
 
-  <title>Mcf's Blog</title>
+  <title>Video Caption Generation | Mcf's Blog</title>
   
 
 
@@ -140,8 +148,7 @@
     
   
 
-  <div class="container sidebar-position-left 
-  page-home">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
@@ -214,9 +221,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
 
@@ -246,9 +253,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/02/02/s2vt/" itemprop="url">Video Caption Generation</a></h1>
+          <h1 class="post-title" itemprop="name headline">Video Caption Generation</h1>
         
 
         <div class="post-meta">
@@ -298,18 +303,15 @@
       
 
       
-        
-          
-          文章主要是记录个人尝试做台湾大学李宏毅教授MLDS(2017)Spring HW2-Video Caption Generation.课程网址：http://speech.ee.ntu.edu.tw/~tlkagk/courses_MLDS17.html实现模型是S2VT(sequence to s
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2019/02/02/s2vt/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
+        <p>文章主要是记录个人尝试做台湾大学李宏毅教授MLDS(2017)Spring HW2-Video Caption Generation.<br>课程网址：<a href="http://speech.ee.ntu.edu.tw/~tlkagk/courses_MLDS17.html" target="_blank" rel="noopener">http://speech.ee.ntu.edu.tw/~tlkagk/courses_MLDS17.html</a><br>实现模型是S2VT(sequence to sequence:video to text)，相关论文:<br><a href="http://www.cs.utexas.edu/users/ml/papers/venugopalan.iccv15.pdf" target="_blank" rel="noopener">http://www.cs.utexas.edu/users/ml/papers/venugopalan.iccv15.pdf</a><br>这篇文章主要关注LSTM部分。CNN相关的特征直接使用了课程提供的。(Included in Dataset)  </p>
+<h4 id="1-模型概述"><a href="#1-模型概述" class="headerlink" title="1.模型概述"></a>1.模型概述</h4><p><img src="/2019/02/02/s2vt/QQ20190202-221705@2x.png" alt="model_base"><br>S2VT模型将通用的序列到序列模型应用到视频描述中，它包含两个LSTM网络，首先读取帧序列，然后生成一个单词序列。整个模型的有RGB图像或光学流图像两种输入烈性，都是经过CNN网络得到帧特征再作为LSTM的输入。使模型能够处理可变长度的输入帧，学习并使用视频的时序结构，以及通过学习语言模型来生成既符合语法规范又能自然表达视频内容的句子。  </p>
+<h4 id="2-模型LSTM相关"><a href="#2-模型LSTM相关" class="headerlink" title="2.模型LSTM相关"></a>2.模型LSTM相关</h4><p><img src="/2019/02/02/s2vt/QQ20190203-223513@2x.png" alt="model_base"><br>模型包括编码和解码两部分，共用一个LSTM，这是特别之处，即编码和解码过程参数共享，别问为什么，最直觉就是降低模型的复杂度~<br>模型具体是两层LSTM结构，接受帧序列的输入并将其解码成表述视频事件的句子。顶层的LSTM对视觉特征进行建模，第二层则建立视频序列隐藏状态表示的语言模型。<bos>以及<eos>分别用来表示句子开始和结束，<pad>填充则用零。<br>建模过程：一开始先由顶层LSTM接受帧序列并进行编码，而第二层的LSTM接受第一层的隐藏状态h，并将其与零填充符相连然后编码，这个过程不计算损失值。在所有帧都输出隐含状态后，第二层LSTM送入起始符<bos>，促使其开始将收到的隐藏状态解码成单词序列。解码阶段进行训练时，在已经知道帧序列的隐藏状态及之前输出的单词的条件下，求预测句子的最大对数似然。训练目标就是使得以下公式(1)得到最大值。</bos></pad></eos></bos></p>
+<script type="math/tex; mode=display">
+\theta^{*} = argmax_{\theta} \sum_{t=1}^m log\ p(y_t|h_{n+t-1},y_{n-1};\theta)\quad(1)</script><p>第二层LSTM的输出z通过在词汇库V中寻找最大可能性的目标单词y(同一般的sofemax求多分类问题)，具体如下公式(2)所示：  </p>
+<script type="math/tex; mode=display">
+p(y|z_{t}) = \frac{exp(W_{y}z_{t})}{\sum_{y^{'}\in{V}}exp(W_{y^{'}z_{t}})}\quad(2)</script><p>除此，我们还需要一个明确表示句子结束的符号<eos>，这使得模型能够满足不同长度的输出。在测试阶段，在遇到结束符之前每次都选择一个使得式5获得最大概率的单词。 </eos></p>
+<h4 id="3-数据集"><a href="#3-数据集" class="headerlink" title="3.数据集"></a>3.数据集</h4><p>本文使用的微软视频描述语料库-MSVD<br>training_data  : 1450 films’s frame feature<br>testing_data  :   50 public testing film’s frame feature<br>Dimension of each frame = 80*4096<br>training_label.json : 1450 films’s id and corresponding captions<br>testing_public_label.json : 50 public testing films’s id and captions<br>testing_id.txt : the example file will input to testing script<br>Download link: <a href="http://speech.ee.ntu.edu.tw/~yangchiyi/MLDS_hw2/MLDS_hw2_data.tar.gz" target="_blank" rel="noopener">http://speech.ee.ntu.edu.tw/~yangchiyi/MLDS_hw2/MLDS_hw2_data.tar.gz</a>  </p>
+
       
     </div>
     
@@ -324,140 +326,36 @@
 
     <footer class="post-footer">
       
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/01/24/hello-world/">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="MCF">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Mcf's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/01/24/hello-world/" itemprop="url">Hello World</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-01-24T17:15:57+08:00">
-                2019-01-24
-              </time>
-            
-
-            
-
-            
-          </span>
-
+        <div class="post-tags">
           
-
+            <a href="/tags/NLP/" rel="tag"># NLP</a>
           
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
         </div>
-      </header>
-    
+      
 
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
+      
       
       
 
       
-        
-          
-          Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in 
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2019/01/24/hello-world/#more" rel="contents">
-              Read more &raquo;
-            </a>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/01/24/hello-world/" rel="next" title="Hello World">
+                <i class="fa fa-chevron-left"></i> Hello World
+              </a>
+            
           </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
 
-    
+          <span class="post-nav-divider"></span>
 
-    
-
-    
-
-    <footer class="post-footer">
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
       
 
       
-
-      
-
-      
-      
-        <div class="post-eof"></div>
       
     </footer>
   </div>
@@ -467,10 +365,11 @@
   </article>
 
 
-    
-  </section>
 
-  
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -478,6 +377,10 @@
 
 
           
+
+  
+
+
 
         </div>
         
@@ -498,8 +401,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
             
@@ -552,6 +464,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-模型概述"><span class="nav-number">1.</span> <span class="nav-text">1.模型概述</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-模型LSTM相关"><span class="nav-number">2.</span> <span class="nav-text">2.模型LSTM相关</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-数据集"><span class="nav-number">3.</span> <span class="nav-text">3.数据集</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -685,6 +613,10 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
