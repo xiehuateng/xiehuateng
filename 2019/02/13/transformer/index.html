@@ -98,6 +98,16 @@
 <meta property="og:image" content="http://yoursite.com/2019/02/13/transformer/transformer_self-attention_visualization.png">
 <meta property="og:image" content="http://yoursite.com/2019/02/13/transformer/transformer_self_attention_vectors.png">
 <meta property="og:image" content="http://yoursite.com/2019/02/13/transformer/transformer_self_attention_score.png">
+<meta property="og:image" content="http://yoursite.com/2019/02/13/transformer/self-attention_softmax.png">
+<meta property="og:image" content="http://yoursite.com/2019/02/13/transformer/self-attention-output.png">
+<meta property="og:image" content="http://yoursite.com/2019/02/13/transformer/self-attention-matrix-calculation.png">
+<meta property="og:image" content="http://yoursite.com/2019/02/13/transformer/self-attention-matrix-calculation-2.png">
+<meta property="og:image" content="http://yoursite.com/2019/02/13/transformer/transformer_attention_heads_qkv.png">
+<meta property="og:image" content="http://yoursite.com/2019/02/13/transformer/transformer_attention_heads_z.png">
+<meta property="og:image" content="http://yoursite.com/2019/02/13/transformer/transformer_attention_heads_weight_matrix_o.png">
+<meta property="og:image" content="http://yoursite.com/2019/02/13/transformer/transformer_multi-headed_self-attention-recap.png">
+<meta property="og:image" content="http://yoursite.com/2019/02/13/transformer/transformer_self-attention_visualization_2.png">
+<meta property="og:image" content="http://yoursite.com/2019/02/13/transformer/transformer_self-attention_visualization_3.png">
 <meta property="og:image" content="http://yoursite.com/2019/02/13/transformer/transformer_positional_encoding_vectors.png">
 <meta property="og:image" content="http://yoursite.com/2019/02/13/transformer/transformer_positional_encoding_example.png">
 <meta property="og:image" content="http://yoursite.com/2019/02/13/transformer/transformer_positional_encoding_large_example.png">
@@ -107,7 +117,7 @@
 <meta property="og:image" content="http://yoursite.com/2019/02/13/transformer/transformer_decoding_1.gif">
 <meta property="og:image" content="http://yoursite.com/2019/02/13/transformer/transformer_decoding_2.gif">
 <meta property="og:image" content="http://yoursite.com/2019/02/13/transformer/transformer_decoder_output_softmax.png">
-<meta property="og:updated_time" content="2019-02-14T16:48:33.710Z">
+<meta property="og:updated_time" content="2019-02-14T17:18:18.562Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="图解Transformer">
 <meta name="twitter:description" content="参考原文：https://jalammar.github.io/illustrated-transformer/   Attention机制最早应用于机器翻译的任务中，并且取得了巨大的成就，因而在最近的深度学习模型中受到了大量的关注。Transformer是一种完全基于Attention机制来加速深度学习训练过程的算法模型。Transformer在Goole的一篇论文Attention is Al">
@@ -376,48 +386,19 @@
 <p>这些向量的概念是很抽象，但是它确实有助于计算注意力。不过先不用纠结去理解它，后面的的内容，会帮助你理解的。  </p>
 <p>计算Self Attention的<font color="DodgerBlue">第二步</font>是计算一个得分。以上图为例，假设我们在计算第一个单词“thinking”的self attention。我们需要根据这个单词对输入句子的每个单词进行评分。当我们在某个位置编码单词时，分数决定了对输入句子的其他单词的关注程度。  </p>
 <p>通过将query向量和key向量点积来对相应的单词打分。所以，如果我们处理<font color="DarkSeaGreen">#1</font>位置的的self attention，则第一个分数为q1和k1的点积，第二个分数为q1和k2的点积（当前位置单词的query向量去和其它位置单词的key向量做点积）。<br><img src="/2019/02/13/transformer/transformer_self_attention_score.png" alt="pic_011">   </p>
-<font color="DodgerBlue">第三和第四步</font>的计算是，将第二部得到的score分别除以<font color="DarkOrchid">8</font>($$\sqrt{d_{k}}$$)（论文中使用key向量的维度是64维，其平方根=8，这样可以使得训练过程中具有更稳定的梯度。这个$$\sqrt{d_{k}}$$并不是唯一值，经验所得）。然后再将得到的输出通过softmax函数标准化，使得最后的列表和为1。  
-![pic_012](transformer/self-attention_softmax.png)  
-这个softmax的分数决定了当前单词在句子中每个位置单词的关注程度。很明显，当前单词对应句子中此单词所在位置的softmax的分数最高，但是，有时候attention机制也能关注到此单词外的其他单词，这很有用。  
-
-<font color="DodgerBlue">第五步</font>是把value向量和sofemax分数（这里等于加权求和）。这里的直觉就是保留我们想要关注的单词，忽略不要关注的词（例如不关注的乘以0.001）。  
-
-<font color="DodgerBlue">第六步</font>就是对相乘得到的向量做加权求和，得到当前位置单词的self attention层的输出。  
-![pic_013](transformer/self-attention-output.png)  
-总结self-attention的计算过程，（单词级别）就是得到一个我们可以输入到前馈神经网络的向量。 然而在实际的实现过程中，该计算会以矩阵的形式完成，以便更快地处理。下面我们来看看Self-Attention的矩阵计算方式。  
-#### 6.Matrix Calculation of Self-Attention  
-第一步是去计算query，key和value矩阵。我们将句子的词嵌入堆叠成矩阵<font color="DarkSeaGreen">X</font>，并将其乘以我们训练的权重矩阵$(W^{Q},W^{K},W^{V})$。  
-![pic_014](transformer/self-attention-matrix-calculation.png)  
-<font color="DarkSeaGreen">X</font>矩阵中的每一行对应于输入句子中的一个单词。 我们看到的X每一行的方框数实际上是词嵌入的维度，图中所示的和论文中是有差距的。X（图中的4格方框代表论文中为512）和q / k / v向量（图中的3格方框代表论文中为64）。
-
-最后，在矩阵处理方法里，我们可以把上面的第二至第六步骤的计算浓缩到以下的计算中，得到整个self-attention层的输出。  
-![pic_015](transformer/self-attention-matrix-calculation-2.png)  
-#### 7.The Beast With Many Heads  
-本文通过使用“Multi-headed”的机制来进一步完善self attention层。“Multi-headed”主要通过下面两个方面改善了attention层的性能：  
-
-1.它扩展了模型关注不同位置的能力。图片中z1包含了更多自己位置的编码，较少其他位置的编码，但是在上面例子中可以看出，<font color="Hotpink">“The animal didn't cross the street because it was too tired”</font>，我们的attention机制会更加关注其它位置的编码，计算出<font color="Hotpink">“it”</font>指代的为<font color="Hotpink">“animal”</font>，这在对语言的理解过程中是很有用的。  
-
-2.它为attention层提供了多个<font color="Hotpink">“representation subspaces”</font>由下图可以看到，在self attention中，我们有多个个Query / Key / Value权重矩阵（Transformer使用8个attention heads）。这些集合中的每个矩阵都是随机初始化生成的。然后通过训练，用于将词嵌入（或者来自较低Encoder/Decoder的向量映射到不同的<font color="Hotpink">“representation subspaces”</font>（表示子空间）中。  
-![pic_016](transformer/transformer_attention_heads_qkv.png)  
-通过<font color="Olive">multi-headed attention</font>，我们为每个<font color="Olive">“head”</font>都独立维护一套Q/K/V的权值矩阵。然后我们还是如之前单词级别的计算过程一样处理这些数据，得到不同的Q/K/V矩阵。  
-
-如果对上面的例子做同样的self attention计算，而因为我们有8头attention，所以我们会在八个时间点去计算这些不同的权值矩阵，最后，我们会得到8个不同的Z矩阵。  
-![pic_017](transformer/transformer_attention_heads_z.png)  
-这里有个问题，我们不希望把8个矩阵输入到前馈网络层，我们希望只输入一个矩阵（一个单词用一个向量表示）。所以我们需要把这8个矩阵浓缩成一个。  
-
-处理办法就是把8个矩阵拼接起来，然后乘以一个额外的权重矩阵<font color="Hotpink">$W^{o}$</font>。  
-![pic_018](transformer/transformer_attention_heads_weight_matrix_o.png)  
-这样<font color="Olive">multi-headed self attention</font>的全部内容就介绍完了。之前可能都是一些过程的图解，现在我将这些过程连接在一起，用一个整体的框图来表示一下计算的过程，希望可以加深理解。  
-![pic_019](transformer/transformer_multi-headed_self-attention-recap.png)  
-现在我们已经触及了<font color="Olive">multi-headed self attention</font>，让我们重新审视我们之前的例子，看看例句中的“it”这个单词在不同的<font color="Olive">attention head</font>情况下会有怎样不同的关注点:  
-![pic_020](transformer/transformer_self-attention_visualization_2.png)  
-如图：当我们对<font color="Hotpink">“it”</font>这个词进行编码时，一个注意力的焦点主要集中在<font color="LightSalmon">“animal”</font>上，而另一个注意力集中在<font color="LimeGreen">“tired”</font>。
-
-但是，如果我们将所有注意力添加到图片中，那么事情可能更难理解：  
-![pic_021](transformer/transformer_self-attention_visualization_3.png)  
-#### 8.Representing The Order of The Sequence Using Positional Encoding  
-我们介绍这个模型到目前为止，忽略了一个很重要的内容，就是怎么把序列中单词的顺序考虑进来。<font color="YellowGreen">（由于Transformer不像LSTM那样是循环序列结构。从上面的编码过程中可以看出，我们是不考虑顺序的，每个单词可以很容易跟句子中任意位置的单词进行关联，这点很好得解决了LSTM中长期记忆困难的问题，但是却丢掉了位置这个重要的信息。）</font>  
-
+<p><font color="DodgerBlue">第三和第四步</font>的计算是，将第二部得到的score分别除以<font color="DarkOrchid">8</font>(<script type="math/tex">\sqrt{d_{k}}</script>)（论文中使用key向量的维度是64维，其平方根=8，这样可以使得训练过程中具有更稳定的梯度。这个<script type="math/tex">\sqrt{d_{k}}</script>并不是唯一值，经验所得）。然后再将得到的输出通过softmax函数标准化，使得最后的列表和为1。<br><img src="/2019/02/13/transformer/self-attention_softmax.png" alt="pic_012"><br>这个softmax的分数决定了当前单词在句子中每个位置单词的关注程度。很明显，当前单词对应句子中此单词所在位置的softmax的分数最高，但是，有时候attention机制也能关注到此单词外的其他单词，这很有用。  </p>
+<p><font color="DodgerBlue">第五步</font>是把value向量和sofemax分数（这里等于加权求和）。这里的直觉就是保留我们想要关注的单词，忽略不要关注的词（例如不关注的乘以0.001）。  </p>
+<p><font color="DodgerBlue">第六步</font>就是对相乘得到的向量做加权求和，得到当前位置单词的self attention层的输出。<br><img src="/2019/02/13/transformer/self-attention-output.png" alt="pic_013"><br>总结self-attention的计算过程，（单词级别）就是得到一个我们可以输入到前馈神经网络的向量。 然而在实际的实现过程中，该计算会以矩阵的形式完成，以便更快地处理。下面我们来看看Self-Attention的矩阵计算方式。  </p>
+<h4 id="6-Matrix-Calculation-of-Self-Attention"><a href="#6-Matrix-Calculation-of-Self-Attention" class="headerlink" title="6.Matrix Calculation of Self-Attention"></a>6.Matrix Calculation of Self-Attention</h4><p>第一步是去计算query，key和value矩阵。我们将句子的词嵌入堆叠成矩阵<font color="DarkSeaGreen">X</font>，并将其乘以我们训练的权重矩阵$(W^{Q},W^{K},W^{V})$。<br><img src="/2019/02/13/transformer/self-attention-matrix-calculation.png" alt="pic_014">  </p>
+<p><font color="DarkSeaGreen">X</font>矩阵中的每一行对应于输入句子中的一个单词。 我们看到的X每一行的方框数实际上是词嵌入的维度，图中所示的和论文中是有差距的。X（图中的4格方框代表论文中为512）和q / k / v向量（图中的3格方框代表论文中为64）。</p>
+<p>最后，在矩阵处理方法里，我们可以把上面的第二至第六步骤的计算浓缩到以下的计算中，得到整个self-attention层的输出。<br><img src="/2019/02/13/transformer/self-attention-matrix-calculation-2.png" alt="pic_015">  </p>
+<h4 id="7-The-Beast-With-Many-Heads"><a href="#7-The-Beast-With-Many-Heads" class="headerlink" title="7.The Beast With Many Heads"></a>7.The Beast With Many Heads</h4><p>本文通过使用“Multi-headed”的机制来进一步完善self attention层。“Multi-headed”主要通过下面两个方面改善了attention层的性能：  </p>
+<p>1.它扩展了模型关注不同位置的能力。图片中z1包含了更多自己位置的编码，较少其他位置的编码，但是在上面例子中可以看出，<font color="Hotpink">“The animal didn’t cross the street because it was too tired”</font>，我们的attention机制会更加关注其它位置的编码，计算出<font color="Hotpink">“it”</font>指代的为<font color="Hotpink">“animal”</font>，这在对语言的理解过程中是很有用的。  </p>
+<p>2.它为attention层提供了多个<font color="Hotpink">“representation subspaces”</font>由下图可以看到，在self attention中，我们有多个个Query / Key / Value权重矩阵（Transformer使用8个attention heads）。这些集合中的每个矩阵都是随机初始化生成的。然后通过训练，用于将词嵌入（或者来自较低Encoder/Decoder的向量映射到不同的<font color="Hotpink">“representation subspaces”</font>（表示子空间）中。<br><img src="/2019/02/13/transformer/transformer_attention_heads_qkv.png" alt="pic_016"><br>通过<font color="Olive">multi-headed attention</font>，我们为每个<font color="Olive">“head”</font>都独立维护一套Q/K/V的权值矩阵。然后我们还是如之前单词级别的计算过程一样处理这些数据，得到不同的Q/K/V矩阵。  </p>
+<p>如果对上面的例子做同样的self attention计算，而因为我们有8头attention，所以我们会在八个时间点去计算这些不同的权值矩阵，最后，我们会得到8个不同的Z矩阵。<br><img src="/2019/02/13/transformer/transformer_attention_heads_z.png" alt="pic_017"><br>这里有个问题，我们不希望把8个矩阵输入到前馈网络层，我们希望只输入一个矩阵（一个单词用一个向量表示）。所以我们需要把这8个矩阵浓缩成一个。  </p>
+<p>处理办法就是把8个矩阵拼接起来，然后乘以一个额外的权重矩阵<font color="Hotpink">$W^{o}$</font>。<br><img src="/2019/02/13/transformer/transformer_attention_heads_weight_matrix_o.png" alt="pic_018"><br>这样<font color="Olive">multi-headed self attention</font>的全部内容就介绍完了。之前可能都是一些过程的图解，现在我将这些过程连接在一起，用一个整体的框图来表示一下计算的过程，希望可以加深理解。<br><img src="/2019/02/13/transformer/transformer_multi-headed_self-attention-recap.png" alt="pic_019"><br>现在我们已经触及了<font color="Olive">multi-headed self attention</font>，让我们重新审视我们之前的例子，看看例句中的“it”这个单词在不同的<font color="Olive">attention head</font>情况下会有怎样不同的关注点:<br><img src="/2019/02/13/transformer/transformer_self-attention_visualization_2.png" alt="pic_020"><br>如图：当我们对<font color="Hotpink">“it”</font>这个词进行编码时，一个注意力的焦点主要集中在<font color="LightSalmon">“animal”</font>上，而另一个注意力集中在<font color="LimeGreen">“tired”</font>。</p>
+<p>但是，如果我们将所有注意力添加到图片中，那么事情可能更难理解：<br><img src="/2019/02/13/transformer/transformer_self-attention_visualization_3.png" alt="pic_021">  </p>
+<h4 id="8-Representing-The-Order-of-The-Sequence-Using-Positional-Encoding"><a href="#8-Representing-The-Order-of-The-Sequence-Using-Positional-Encoding" class="headerlink" title="8.Representing The Order of The Sequence Using Positional Encoding"></a>8.Representing The Order of The Sequence Using Positional Encoding</h4><p>我们介绍这个模型到目前为止，忽略了一个很重要的内容，就是怎么把序列中单词的顺序考虑进来。（<font color="YellowGreen">由于Transformer不像LSTM那样是循环序列结构。从上面的编码过程中可以看出，我们是不考虑顺序的，每个单词可以很容易跟句子中任意位置的单词进行关联，这点很好得解决了LSTM中长期记忆困难的问题，但是却丢掉了位置这个重要的信息。</font>）  </p>
 <p>为了解决这个问题，Transformer为每个词嵌入增加加了一个向量，它可以帮助我们确定每个词的位置信息，或者序列中不同单词之间的距离信息。这些位置编码向量有固定的生成方式，所以获取它们是很方便的。直觉上讲就是，我们把这些向量加入到词向量中，然后再去获取Q/K/V向量，这样得到的attention就包含位置信息了。<br><img src="/2019/02/13/transformer/transformer_positional_encoding_vectors.png" alt="pic_022"><br>为了让模型捕捉到单词的顺序信息，我们添加位置编码向量信息（POSITIONAL ENCODING）-位置编码向量不需要训练，它有一个规则的产生方式。  </p>
 <p>假设词嵌入维度为4，那么实际上的位置编码就如下图所示：<br><img src="/2019/02/13/transformer/transformer_positional_encoding_example.png" alt="pic_023"><br>那么生成位置向量需要遵循怎样的规则呢？  </p>
 <p>观察下面的图形，每一行都代表着对一个向量的位置编码。因此第一行就是我们输入序列中第一个字的嵌入向量，每行都包含512个值，每个值介于1和-1之间。我们用颜色来表示1，-1之间的值，这样方便可视化：<br><img src="/2019/02/13/transformer/transformer_positional_encoding_large_example.png" alt="pic_024"><br>这是一个20个字（行）的（512）列位置编码示例。你会发现它咋中心位置被分为了2半，这是因为左半部分的值是一由一个正弦函数生成的，而右半部分是由另一个余弦函数生成。然后将它们连接起来形成每个位置编码矢量。  </p>
@@ -623,7 +604,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-扼要"><span class="nav-number">1.</span> <span class="nav-text">1.扼要</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-图解张量"><span class="nav-number">2.</span> <span class="nav-text">2.图解张量</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-Now-We’re-Encoding"><span class="nav-number">3.</span> <span class="nav-text">3.Now We’re Encoding!</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-Self-Attention-at-a-High-Level"><span class="nav-number">4.</span> <span class="nav-text">4.Self-Attention at a High Level</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-Self-Attention-in-Detail"><span class="nav-number">5.</span> <span class="nav-text">5.Self-Attention in Detail</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#9-The-Residuals"><span class="nav-number">6.</span> <span class="nav-text">9.The Residuals</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#10-The-Decoder-Side"><span class="nav-number">7.</span> <span class="nav-text">10.The Decoder Side</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#11-The-Final-Linear-and-Softmax-Layer"><span class="nav-number">8.</span> <span class="nav-text">11.The Final Linear and Softmax Layer</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#12-Recap-Of-Training"><span class="nav-number">9.</span> <span class="nav-text">12.Recap Of Training</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#13-Go-Forth-And-Transform"><span class="nav-number">10.</span> <span class="nav-text">13.Go Forth And Transform</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-扼要"><span class="nav-number">1.</span> <span class="nav-text">1.扼要</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-图解张量"><span class="nav-number">2.</span> <span class="nav-text">2.图解张量</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-Now-We’re-Encoding"><span class="nav-number">3.</span> <span class="nav-text">3.Now We’re Encoding!</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-Self-Attention-at-a-High-Level"><span class="nav-number">4.</span> <span class="nav-text">4.Self-Attention at a High Level</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-Self-Attention-in-Detail"><span class="nav-number">5.</span> <span class="nav-text">5.Self-Attention in Detail</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-Matrix-Calculation-of-Self-Attention"><span class="nav-number">6.</span> <span class="nav-text">6.Matrix Calculation of Self-Attention</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-The-Beast-With-Many-Heads"><span class="nav-number">7.</span> <span class="nav-text">7.The Beast With Many Heads</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#8-Representing-The-Order-of-The-Sequence-Using-Positional-Encoding"><span class="nav-number">8.</span> <span class="nav-text">8.Representing The Order of The Sequence Using Positional Encoding</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#9-The-Residuals"><span class="nav-number">9.</span> <span class="nav-text">9.The Residuals</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#10-The-Decoder-Side"><span class="nav-number">10.</span> <span class="nav-text">10.The Decoder Side</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#11-The-Final-Linear-and-Softmax-Layer"><span class="nav-number">11.</span> <span class="nav-text">11.The Final Linear and Softmax Layer</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#12-Recap-Of-Training"><span class="nav-number">12.</span> <span class="nav-text">12.Recap Of Training</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#13-Go-Forth-And-Transform"><span class="nav-number">13.</span> <span class="nav-text">13.Go Forth And Transform</span></a></li></ol></div>
             
 
           </div>
