@@ -89,7 +89,7 @@
 <meta property="og:locale" content="default">
 <meta property="og:image" content="http://yoursite.com/2019/02/02/s2vt/QQ20190202-221705@2x.png">
 <meta property="og:image" content="http://yoursite.com/2019/02/02/s2vt/QQ20190203-223513@2x.png">
-<meta property="og:updated_time" content="2019-02-13T09:50:27.554Z">
+<meta property="og:updated_time" content="2019-02-19T11:54:24.132Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Video Caption Generation">
 <meta name="twitter:description" content="文章主要是记录个人尝试做台湾大学李宏毅教授MLDS(2017)Spring HW2-Video Caption Generation.课程网址：http://speech.ee.ntu.edu.tw/~tlkagk/courses_MLDS17.html实现模型是S2VT(sequence to sequence:video to text)，相关论文:http://www.cs.utexas.e">
@@ -321,7 +321,8 @@
 <script type="math/tex; mode=display">
 p(y|z_{t}) = \frac{exp(W_{y}z_{t})}{\sum_{y^{'}\in{V}}exp(W_{y^{'}z_{t}})}\quad(2)</script><p>除此，我们还需要一个明确表示句子结束的符号<eos>，这使得模型能够满足不同长度的输出。在测试阶段，在遇到结束符之前每次都选择一个使得式5获得最大概率的单词。 </eos></p>
 <h4 id="3-数据集"><a href="#3-数据集" class="headerlink" title="3.数据集"></a>3.数据集</h4><p>本文使用的微软视频描述语料库-MSVD<br>training_data  : 1450 films’s frame feature<br>testing_data  :   50 public testing film’s frame feature<br>Dimension of each frame = 80*4096<br>training_label.json : 1450 films’s id and corresponding captions<br>testing_public_label.json : 50 public testing films’s id and captions<br>testing_id.txt : the example file will input to testing script<br>Download link: <a href="http://speech.ee.ntu.edu.tw/~yangchiyi/MLDS_hw2/MLDS_hw2_data.tar.gz" target="_blank" rel="noopener">http://speech.ee.ntu.edu.tw/~yangchiyi/MLDS_hw2/MLDS_hw2_data.tar.gz</a>  </p>
-<h4 id="4-实现代码"><a href="#4-实现代码" class="headerlink" title="4.实现代码"></a>4.实现代码</h4>
+<h4 id="4-实现代码"><a href="#4-实现代码" class="headerlink" title="4.实现代码"></a>4.实现代码</h4><p><a href="git@github.com:xiehuateng/S2VT.git">github</a></p>
+
       
     </div>
     
