@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="NLP,Chatbot,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="数据完整的数据可以在Google Drive文件夹中找到：https://drive.google.com/open?id=1RIIbsS-vxR7Dlo2_v6FWHDFE7q1XPPgj要复现文档中的代码，需要执行以下操作：1) 下载 以下文件:  glove.6B.50d.txt (Subfolder GloVe)   training_10000.csv (Subfolder MAIN F">
+<meta name="keywords" content="NLP,Chatbot">
+<meta property="og:type" content="article">
+<meta property="og:title" content="构建于Ubuntu对话数据集上的基于检索的Chatbot">
+<meta property="og:url" content="http://yoursite.com/2019/02/22/chatbot-retrieval-Ubuntu-pytorch/index.html">
+<meta property="og:site_name" content="Mcf&#39;s Blog">
+<meta property="og:description" content="数据完整的数据可以在Google Drive文件夹中找到：https://drive.google.com/open?id=1RIIbsS-vxR7Dlo2_v6FWHDFE7q1XPPgj要复现文档中的代码，需要执行以下操作：1) 下载 以下文件:  glove.6B.50d.txt (Subfolder GloVe)   training_10000.csv (Subfolder MAIN F">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-02-22T16:08:43.509Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="构建于Ubuntu对话数据集上的基于检索的Chatbot">
+<meta name="twitter:description" content="数据完整的数据可以在Google Drive文件夹中找到：https://drive.google.com/open?id=1RIIbsS-vxR7Dlo2_v6FWHDFE7q1XPPgj要复现文档中的代码，需要执行以下操作：1) 下载 以下文件:  glove.6B.50d.txt (Subfolder GloVe)   training_10000.csv (Subfolder MAIN F">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/02/22/chatbot-retrieval-Ubuntu-pytorch/">
+
+
+
+
+
+  <title>构建于Ubuntu对话数据集上的基于检索的Chatbot | Mcf's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Mcf's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/02/22/chatbot-retrieval-Ubuntu-pytorch/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="MCF">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Mcf's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">构建于Ubuntu对话数据集上的基于检索的Chatbot</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-02-22T22:38:10+08:00">
+                2019-02-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/NLP/" itemprop="url" rel="index">
+                    <span itemprop="name">NLP</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h4 id="数据"><a href="#数据" class="headerlink" title="数据"></a>数据</h4><p>完整的数据可以在Google Drive文件夹中找到：<a href="https://drive.google.com/open?id=1RIIbsS-vxR7Dlo2_v6FWHDFE7q1XPPgj" target="_blank" rel="noopener">https://drive.google.com/open?id=1RIIbsS-vxR7Dlo2_v6FWHDFE7q1XPPgj</a><br>要复现文档中的代码，需要执行以下操作：<br>1) 下载 以下文件:</p>
+<ul>
+<li>glove.6B.50d.txt (Subfolder GloVe)  </li>
+<li>training_10000.csv (Subfolder MAIN FILES)  </li>
+<li>validation_1000.csv (Subfolder MAIN FILES)  </li>
+<li>testing_same_structure_1000.csv (Subfolder MAIN FILES)  </li>
+<li>testing_different_structure_100.csv (Subfolder MAIN FILES)  </li>
+<li>saved_model_10000_gpu.pt (Subfolder SAVED MODELS)  </li>
+</ul>
+<p>2) 调整变量大小 ：对于代码中出现的 num_training_examples, num_validation_examples, embedding_dim, test_dataframe_same_structure, test_dataframe_different_structure 和saved model file name 可以根据数据量的大小进行调整  </p>
+<p>3) 调整超参数设置：具体模型的参数大家可以自己调整，也可以参考SAVED MODELS文件夹下的内容。  </p>
+<h4 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h4><h5 id="相关库"><a href="#相关库" class="headerlink" title="相关库"></a>相关库</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> torch.nn <span class="keyword">as</span> nn</span><br><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">import</span> torch.autograd <span class="keyword">as</span> autograd</span><br><span class="line"><span class="keyword">from</span> torch.nn <span class="keyword">import</span> init</span><br><span class="line"><span class="keyword">import</span> torch.nn.utils.rnn </span><br><span class="line"><span class="keyword">import</span> datetime</span><br><span class="line"><span class="keyword">import</span> operator</span><br><span class="line">np.random.seed(<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+<h5 id="定义helper函数以构建训练和验证过程中的变量"><a href="#定义helper函数以构建训练和验证过程中的变量" class="headerlink" title="定义helper函数以构建训练和验证过程中的变量"></a>定义helper函数以构建训练和验证过程中的变量</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">create_dataframe</span><span class="params">(csvfile)</span>:</span></span><br><span class="line">    dataframe = pd.read_csv(csvfile)</span><br><span class="line">    <span class="keyword">return</span> dataframe</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">shuffle_dataframe</span><span class="params">(dataframe)</span>:</span></span><br><span class="line">    dataframe.reindex(np.random.permutation(dataframe.index))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">create_vocab</span><span class="params">(dataframe)</span>:</span></span><br><span class="line">    vocab = []</span><br><span class="line">    word_freq = &#123;&#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> index, row <span class="keyword">in</span> dataframe.iterrows():</span><br><span class="line">        context_cell = row[<span class="string">"Context"</span>]</span><br><span class="line">        response_cell = row[<span class="string">"Utterance"</span>]</span><br><span class="line">        train_words = str(context_cell).split() + str(response_cell).split()</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span> word <span class="keyword">in</span> train_words:</span><br><span class="line">            <span class="keyword">if</span> word.lower() <span class="keyword">not</span> <span class="keyword">in</span> vocab:</span><br><span class="line">                vocab.append(word.lower())         </span><br><span class="line">                       </span><br><span class="line">            <span class="keyword">if</span> word.lower() <span class="keyword">not</span> <span class="keyword">in</span> word_freq:</span><br><span class="line">                word_freq[word.lower()] = <span class="number">1</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                word_freq[word] += <span class="number">1</span></span><br><span class="line">    </span><br><span class="line">    word_freq_sorted = sorted(word_freq.items(), key=<span class="keyword">lambda</span> item: item[<span class="number">1</span>], reverse=<span class="keyword">True</span>)</span><br><span class="line">    vocab = [<span class="string">"&lt;UNK&gt;"</span>] + [pair[<span class="number">0</span>] <span class="keyword">for</span> pair <span class="keyword">in</span> word_freq_sorted]</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> vocab</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">create_word_to_id</span><span class="params">(vocab)</span>:</span>             </span><br><span class="line">    word_to_id = &#123;word: id <span class="keyword">for</span> id, word <span class="keyword">in</span> enumerate(vocab)&#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> word_to_id</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">create_id_to_vec</span><span class="params">(word_to_id, glovefile)</span>:</span> </span><br><span class="line">    lines = open(glovefile, <span class="string">'r'</span>).readlines()</span><br><span class="line">    id_to_vec = &#123;&#125;</span><br><span class="line">    vector = <span class="keyword">None</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> line <span class="keyword">in</span> lines:</span><br><span class="line">        word = line.split()[<span class="number">0</span>]</span><br><span class="line">        vector = np.array(line.split()[<span class="number">1</span>:], dtype=<span class="string">'float32'</span>) <span class="comment">#32</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> word <span class="keyword">in</span> word_to_id:</span><br><span class="line">            id_to_vec[word_to_id[word]] = torch.FloatTensor(torch.from_numpy(vector))</span><br><span class="line">            </span><br><span class="line">    <span class="keyword">for</span> word, id <span class="keyword">in</span> word_to_id.items(): </span><br><span class="line">        <span class="keyword">if</span> word_to_id[word] <span class="keyword">not</span> <span class="keyword">in</span> id_to_vec:</span><br><span class="line">            v = np.zeros(*vector.shape, dtype=<span class="string">'float32'</span>)</span><br><span class="line">            v[:] = np.random.randn(*v.shape)*<span class="number">0.01</span></span><br><span class="line">            id_to_vec[word_to_id[word]] = torch.FloatTensor(torch.from_numpy(v))</span><br><span class="line">            </span><br><span class="line">    embedding_dim = id_to_vec[<span class="number">0</span>].shape[<span class="number">0</span>]</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> id_to_vec, embedding_dim</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">load_ids_and_labels</span><span class="params">(row, word_to_id)</span>:</span></span><br><span class="line">    context_ids = []</span><br><span class="line">    response_ids = []</span><br><span class="line"></span><br><span class="line">    context_cell = row[<span class="string">'Context'</span>]</span><br><span class="line">    response_cell = row[<span class="string">'Utterance'</span>]</span><br><span class="line">    label_cell = row[<span class="string">'Label'</span>]</span><br><span class="line"></span><br><span class="line">    max_context_len = <span class="number">160</span></span><br><span class="line">    </span><br><span class="line">    context_words = context_cell.split()</span><br><span class="line">    <span class="keyword">if</span> len(context_words) &gt; max_context_len:</span><br><span class="line">        context_words = context_words[:max_context_len]</span><br><span class="line">    <span class="keyword">for</span> word <span class="keyword">in</span> context_words:</span><br><span class="line">        <span class="keyword">if</span> word <span class="keyword">in</span> word_to_id:</span><br><span class="line">            context_ids.append(word_to_id[word])</span><br><span class="line">        <span class="keyword">else</span>: </span><br><span class="line">            context_ids.append(<span class="number">0</span>) <span class="comment">#UNK</span></span><br><span class="line">    </span><br><span class="line">    response_words = response_cell.split()</span><br><span class="line">    <span class="keyword">for</span> word <span class="keyword">in</span> response_words:</span><br><span class="line">        <span class="keyword">if</span> word <span class="keyword">in</span> word_to_id:</span><br><span class="line">            response_ids.append(word_to_id[word])</span><br><span class="line">        <span class="keyword">else</span>: </span><br><span class="line">            response_ids.append(<span class="number">0</span>)</span><br><span class="line">    </span><br><span class="line">    label = np.array(label_cell).astype(np.float32)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> context_ids, response_ids, label</span><br></pre></td></tr></table></figure>
+<h5 id="模型定义"><a href="#模型定义" class="headerlink" title="模型定义"></a>模型定义</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Encoder</span><span class="params">(nn.Module)</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, </span></span></span><br><span class="line"><span class="function"><span class="params">            emb_size, </span></span></span><br><span class="line"><span class="function"><span class="params">            hidden_size, </span></span></span><br><span class="line"><span class="function"><span class="params">            vocab_size, </span></span></span><br><span class="line"><span class="function"><span class="params">            p_dropout)</span>:</span> </span><br><span class="line">    </span><br><span class="line">            super(Encoder, self).__init__()</span><br><span class="line">             </span><br><span class="line">            self.emb_size = emb_size</span><br><span class="line">            self.hidden_size = hidden_size</span><br><span class="line">            self.vocab_size = vocab_size</span><br><span class="line">            self.p_dropout = p_dropout</span><br><span class="line">       </span><br><span class="line">            self.embedding = nn.Embedding(self.vocab_size, self.emb_size)</span><br><span class="line">            self.lstm = nn.LSTM(self.emb_size, self.hidden_size)</span><br><span class="line">            self.dropout_layer = nn.Dropout(self.p_dropout) </span><br><span class="line"></span><br><span class="line">            self.init_weights()</span><br><span class="line">             </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">init_weights</span><span class="params">(self)</span>:</span></span><br><span class="line">        init.uniform(self.lstm.weight_ih_l0, a = <span class="number">-0.01</span>, b = <span class="number">0.01</span>)</span><br><span class="line">        init.orthogonal(self.lstm.weight_hh_l0)</span><br><span class="line">        self.lstm.weight_ih_l0.requires_grad = <span class="keyword">True</span></span><br><span class="line">        self.lstm.weight_hh_l0.requires_grad = <span class="keyword">True</span></span><br><span class="line">        </span><br><span class="line">        embedding_weights = torch.FloatTensor(self.vocab_size, self.emb_size)</span><br><span class="line">            </span><br><span class="line">        <span class="keyword">for</span> id, vec <span class="keyword">in</span> id_to_vec.items():</span><br><span class="line">            embedding_weights[id] = vec</span><br><span class="line">        </span><br><span class="line">        self.embedding.weight = nn.Parameter(embedding_weights, requires_grad = <span class="keyword">True</span>)</span><br><span class="line">            </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, inputs)</span>:</span></span><br><span class="line">        embeddings = self.embedding(inputs)</span><br><span class="line">        _, (last_hidden, _) = self.lstm(embeddings) <span class="comment">#dimensions: (num_layers * num_directions x batch_size x hidden_size)</span></span><br><span class="line">        last_hidden = self.dropout_layer(last_hidden[<span class="number">-1</span>])<span class="comment">#access last lstm layer, dimensions: (batch_size x hidden_size)</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> last_hidden</span><br><span class="line"></span><br><span class="line">    </span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DualEncoder</span><span class="params">(nn.Module)</span>:</span></span><br><span class="line">     </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, encoder)</span>:</span></span><br><span class="line">        super(DualEncoder, self).__init__()</span><br><span class="line">        self.encoder = encoder</span><br><span class="line">        self.hidden_size = self.encoder.hidden_size</span><br><span class="line">        M = torch.FloatTensor(self.hidden_size, self.hidden_size)     </span><br><span class="line">        init.xavier_normal(M)</span><br><span class="line">        self.M = nn.Parameter(M, requires_grad = <span class="keyword">True</span>)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, context_tensor, response_tensor)</span>:</span></span><br><span class="line">        </span><br><span class="line">        context_last_hidden = self.encoder(context_tensor) <span class="comment">#dimensions: (batch_size x hidden_size)</span></span><br><span class="line">        response_last_hidden = self.encoder(response_tensor) <span class="comment">#dimensions: (batch_size x hidden_size)</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment">#context = context_last_hidden.mm(self.M).cuda()</span></span><br><span class="line">        context = context_last_hidden.mm(self.M) <span class="comment">#dimensions: (batch_size x hidden_size)</span></span><br><span class="line">        context = context.view(<span class="number">-1</span>, <span class="number">1</span>, self.hidden_size) <span class="comment">#dimensions: (batch_size x 1 x hidden_size)</span></span><br><span class="line">        </span><br><span class="line">        response = response_last_hidden.view(<span class="number">-1</span>, self.hidden_size, <span class="number">1</span>) <span class="comment">#dimensions: (batch_size x hidden_size x 1)</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment">#score = torch.bmm(context, response).view(-1, 1).cuda()</span></span><br><span class="line">        score = torch.bmm(context, response).view(<span class="number">-1</span>, <span class="number">1</span>) <span class="comment">#dimensions: (batch_size x 1 x 1) and lastly --&gt; (batch_size x 1)</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> score</span><br></pre></td></tr></table></figure>
+<h5 id="数据与变量构建"><a href="#数据与变量构建" class="headerlink" title="数据与变量构建"></a>数据与变量构建</h5><p>定义函数去调用所有的helper函数，以便完成各种数据和变量初始化，以及部分的预训练词向量加载等.<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">creating_variables</span><span class="params">(num_training_examples, num_validation_examples, embedding_dim)</span>:</span></span><br><span class="line"></span><br><span class="line">    print(str(datetime.datetime.now()).split(<span class="string">'.'</span>)[<span class="number">0</span>], <span class="string">"Creating variables for training and validation..."</span>)</span><br><span class="line"></span><br><span class="line">    training_dataframe = create_dataframe(<span class="string">'training_%d.csv'</span> %num_training_examples)</span><br><span class="line">    vocab = create_vocab(training_dataframe)</span><br><span class="line">    word_to_id = create_word_to_id(vocab)</span><br><span class="line">    id_to_vec, emb_dim = create_id_to_vec(word_to_id, <span class="string">'glove.6B.%dd.txt'</span> %embedding_dim)</span><br><span class="line"></span><br><span class="line">    validation_dataframe = create_dataframe(<span class="string">'validation_%d.csv'</span> %num_validation_examples)</span><br><span class="line"></span><br><span class="line">    print(str(datetime.datetime.now()).split(<span class="string">'.'</span>)[<span class="number">0</span>], <span class="string">"Variables created.\n"</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> training_dataframe, vocab, word_to_id, id_to_vec, emb_dim, validation_dataframe</span><br></pre></td></tr></table></figure></p>
+<h5 id="模型构建"><a href="#模型构建" class="headerlink" title="模型构建"></a>模型构建</h5><p>调用Encoder和DualEncoder去构建模型.<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">creating_model</span><span class="params">(hidden_size, p_dropout)</span>:</span></span><br><span class="line"></span><br><span class="line">    print(str(datetime.datetime.now()).split(<span class="string">'.'</span>)[<span class="number">0</span>], <span class="string">"Calling model..."</span>)</span><br><span class="line"></span><br><span class="line">    encoder = Encoder(</span><br><span class="line">            emb_size = emb_dim,</span><br><span class="line">            hidden_size = hidden_size,</span><br><span class="line">            vocab_size = len(vocab),</span><br><span class="line">            p_dropout = p_dropout)</span><br><span class="line"></span><br><span class="line">    dual_encoder = DualEncoder(encoder)</span><br><span class="line"></span><br><span class="line">    print(str(datetime.datetime.now()).split(<span class="string">'.'</span>)[<span class="number">0</span>], <span class="string">"Model created.\n"</span>)</span><br><span class="line">    print(dual_encoder)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> encoder, dual_encoder</span><br></pre></td></tr></table></figure></p>
+<h5 id="训练集和验证集准确率计算"><a href="#训练集和验证集准确率计算" class="headerlink" title="训练集和验证集准确率计算"></a>训练集和验证集准确率计算</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">increase_count</span><span class="params">(correct_count, score, label)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> ((score.data[<span class="number">0</span>][<span class="number">0</span>] &gt;= <span class="number">0.5</span>) <span class="keyword">and</span> (label.data[<span class="number">0</span>][<span class="number">0</span>] == <span class="number">1.0</span>)) <span class="keyword">or</span> ((score.data[<span class="number">0</span>][<span class="number">0</span>] &lt; <span class="number">0.5</span>) <span class="keyword">and</span> (label.data[<span class="number">0</span>][<span class="number">0</span>]  == <span class="number">0.0</span>)):</span><br><span class="line">       correct_count +=<span class="number">1</span>  </span><br><span class="line">   </span><br><span class="line">    <span class="keyword">return</span> correct_count</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_accuracy</span><span class="params">(correct_count, dataframe)</span>:</span></span><br><span class="line">    accuracy = correct_count/(len(dataframe))</span><br><span class="line">        </span><br><span class="line">    <span class="keyword">return</span> accuracy</span><br></pre></td></tr></table></figure>
+<h5 id="构建模型训练函数"><a href="#构建模型训练函数" class="headerlink" title="构建模型训练函数"></a>构建模型训练函数</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">train_model</span><span class="params">(learning_rate, l2_penalty, epochs)</span>:</span> </span><br><span class="line">    print(str(datetime.datetime.now()).split(<span class="string">'.'</span>)[<span class="number">0</span>], <span class="string">"Starting training and validation...\n"</span>)</span><br><span class="line">    print(<span class="string">"====================Data and Hyperparameter Overview====================\n"</span>)</span><br><span class="line">    print(<span class="string">"Number of training examples: %d, Number of validation examples: %d"</span> %(len(training_dataframe), len(validation_dataframe)))</span><br><span class="line">    print(<span class="string">"Learning rate: %.5f, Embedding Dimension: %d, Hidden Size: %d, Dropout: %.2f, L2:%.10f\n"</span> %(learning_rate, emb_dim, encoder.hidden_size, encoder.p_dropout, l2_penalty))</span><br><span class="line">    print(<span class="string">"================================Results...==============================\n"</span>)</span><br><span class="line"></span><br><span class="line">    optimizer = torch.optim.Adam(dual_encoder.parameters(), lr = learning_rate, weight_decay = l2_penalty)</span><br><span class="line">       </span><br><span class="line">    loss_func = torch.nn.BCEWithLogitsLoss()</span><br><span class="line">    <span class="comment">#loss_func.cuda()</span></span><br><span class="line">     </span><br><span class="line">    best_validation_accuracy = <span class="number">0.0</span></span><br><span class="line">     </span><br><span class="line">    <span class="keyword">for</span> epoch <span class="keyword">in</span> range(epochs):</span><br><span class="line">                     </span><br><span class="line">            shuffle_dataframe(training_dataframe)</span><br><span class="line">                        </span><br><span class="line">            sum_loss_training = <span class="number">0.0</span></span><br><span class="line">            </span><br><span class="line">            training_correct_count = <span class="number">0</span></span><br><span class="line">            </span><br><span class="line">            dual_encoder.train()</span><br><span class="line"></span><br><span class="line">            <span class="keyword">for</span> index, row <span class="keyword">in</span> training_dataframe.iterrows():            </span><br><span class="line">            </span><br><span class="line">                context_ids, response_ids, label = load_ids_and_labels(row, word_to_id)</span><br><span class="line">                </span><br><span class="line">                context = autograd.Variable(torch.LongTensor(context_ids).view(<span class="number">-1</span>,<span class="number">1</span>), requires_grad = <span class="keyword">False</span>) <span class="comment">#.cuda()</span></span><br><span class="line">                </span><br><span class="line">                response = autograd.Variable(torch.LongTensor(response_ids).view(<span class="number">-1</span>, <span class="number">1</span>), requires_grad = <span class="keyword">False</span>) <span class="comment">#.cuda()</span></span><br><span class="line">                                </span><br><span class="line">                label = autograd.Variable(torch.FloatTensor(torch.from_numpy(np.array(label).reshape(<span class="number">1</span>,<span class="number">1</span>))), requires_grad = <span class="keyword">False</span>) <span class="comment">#.cuda()</span></span><br><span class="line">                             </span><br><span class="line">                score = dual_encoder(context, response)</span><br><span class="line">        </span><br><span class="line">                loss = loss_func(score, label)</span><br><span class="line">                </span><br><span class="line">                sum_loss_training += loss.data[<span class="number">0</span>]</span><br><span class="line">                </span><br><span class="line">                loss.backward()</span><br><span class="line">        </span><br><span class="line">                optimizer.step()</span><br><span class="line">               </span><br><span class="line">                optimizer.zero_grad()</span><br><span class="line">                </span><br><span class="line">                training_correct_count = increase_count(training_correct_count, score, label)</span><br><span class="line">                                                    </span><br><span class="line">            training_accuracy = get_accuracy(training_correct_count, training_dataframe)</span><br><span class="line">            </span><br><span class="line">            <span class="comment">#plt.plot(epoch, training_accuracy)</span></span><br><span class="line">                </span><br><span class="line">            shuffle_dataframe(validation_dataframe)</span><br><span class="line">            </span><br><span class="line">            validation_correct_count = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">            sum_loss_validation = <span class="number">0.0</span></span><br><span class="line"></span><br><span class="line">            dual_encoder.eval()</span><br><span class="line"></span><br><span class="line">            <span class="keyword">for</span> index, row <span class="keyword">in</span> validation_dataframe.iterrows():</span><br><span class="line">                </span><br><span class="line">                context_ids, response_ids, label = load_ids_and_labels(row, word_to_id)</span><br><span class="line">                </span><br><span class="line">                context = autograd.Variable(torch.LongTensor(context_ids).view(<span class="number">-1</span>,<span class="number">1</span>)) <span class="comment">#.cuda()</span></span><br><span class="line">                </span><br><span class="line">                response = autograd.Variable(torch.LongTensor(response_ids).view(<span class="number">-1</span>, <span class="number">1</span>)) <span class="comment">#.cuda()</span></span><br><span class="line">                                </span><br><span class="line">                label = autograd.Variable(torch.FloatTensor(torch.from_numpy(np.array(label).reshape(<span class="number">1</span>,<span class="number">1</span>)))) <span class="comment">#.cuda()</span></span><br><span class="line">                </span><br><span class="line">                score = dual_encoder(context, response)</span><br><span class="line">                </span><br><span class="line">                loss = loss_func(score, label)</span><br><span class="line">                </span><br><span class="line">                sum_loss_validation += loss.data[<span class="number">0</span>]</span><br><span class="line">                </span><br><span class="line">                validation_correct_count = increase_count(validation_correct_count, score, label)</span><br><span class="line">                    </span><br><span class="line">            validation_accuracy = get_accuracy(validation_correct_count, validation_dataframe)</span><br><span class="line">                        </span><br><span class="line">            print(str(datetime.datetime.now()).split(<span class="string">'.'</span>)[<span class="number">0</span>], </span><br><span class="line">                  <span class="string">"Epoch: %d/%d"</span> %(epoch,epochs),  </span><br><span class="line">                  <span class="string">"TrainLoss: %.3f"</span> %(sum_loss_training/len(training_dataframe)), </span><br><span class="line">                  <span class="string">"TrainAccuracy: %.3f"</span> %(training_accuracy), </span><br><span class="line">                  <span class="string">"ValLoss: %.3f"</span> %(sum_loss_validation/len(validation_dataframe)), </span><br><span class="line">                  <span class="string">"ValAccuracy: %.3f"</span> %(validation_accuracy))</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">if</span> validation_accuracy &gt; best_validation_accuracy:</span><br><span class="line">                best_validation_accuracy = validation_accuracy</span><br><span class="line">                torch.save(dual_encoder.state_dict(), <span class="string">'saved_model_%d_examples.pt'</span> %(len(training_dataframe)))</span><br><span class="line">                print(<span class="string">"New best found and saved."</span>)</span><br><span class="line">                </span><br><span class="line">    print(str(datetime.datetime.now()).split(<span class="string">'.'</span>)[<span class="number">0</span>], <span class="string">"Training and validation epochs finished."</span>)</span><br></pre></td></tr></table></figure>
+<h5 id="构建数据"><a href="#构建数据" class="headerlink" title="构建数据"></a>构建数据</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">training_dataframe, vocab, word_to_id, id_to_vec, emb_dim, validation_dataframe = creating_variables(num_training_examples = <span class="number">10000</span>, </span><br><span class="line">                                                                                                     embedding_dim = <span class="number">50</span>, </span><br><span class="line">                                                                                                     num_validation_examples = <span class="number">1000</span>)</span><br></pre></td></tr></table></figure>
+<h5 id="设定hidden-size和dropout概率，构建模型"><a href="#设定hidden-size和dropout概率，构建模型" class="headerlink" title="设定hidden size和dropout概率，构建模型"></a>设定hidden size和dropout概率，构建模型</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">encoder, dual_encoder = creating_model(hidden_size = <span class="number">50</span>, </span><br><span class="line">                                       p_dropout = <span class="number">0.85</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">#encoder.cuda()</span></span><br><span class="line"><span class="comment">#dual_encoder.cuda</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> name, param <span class="keyword">in</span> dual_encoder.named_parameters():</span><br><span class="line">    <span class="keyword">if</span> param.requires_grad:</span><br><span class="line">        print(name)</span><br></pre></td></tr></table></figure>
+<h5 id="设定学习率，迭代轮数，l2正则化强度，开始训练"><a href="#设定学习率，迭代轮数，l2正则化强度，开始训练" class="headerlink" title="设定学习率，迭代轮数，l2正则化强度，开始训练"></a>设定学习率，迭代轮数，l2正则化强度，开始训练</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">train_model(learning_rate = <span class="number">0.0001</span>, </span><br><span class="line">            l2_penalty = <span class="number">0.0001</span>,</span><br><span class="line">            epochs = <span class="number">100</span>)</span><br></pre></td></tr></table></figure>
+<h5 id="加载训练好的模型进行测试"><a href="#加载训练好的模型进行测试" class="headerlink" title="加载训练好的模型进行测试"></a>加载训练好的模型进行测试</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">dual_encoder.load_state_dict(torch.load(<span class="string">'saved_model_10000_examples.pt'</span>))</span><br><span class="line"></span><br><span class="line">dual_encoder.eval()</span><br></pre></td></tr></table></figure>
+<h5 id="第1种测试方式"><a href="#第1种测试方式" class="headerlink" title="第1种测试方式:"></a>第1种测试方式:</h5><p>测试数据集和训练还有验证数据集有着一样的数据组织格式 (context, response, label)<br>测试评判指标：准确率<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">test_dataframe_same_structure = pd.read_csv(<span class="string">'testing_same_structure_1000.csv'</span>)</span><br></pre></td></tr></table></figure></p>
+<p>构建测试函数<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">testing_same_structure</span><span class="params">()</span>:</span></span><br><span class="line">    </span><br><span class="line">    test_correct_count = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> index, row <span class="keyword">in</span> test_dataframe_same_structure.iterrows():</span><br><span class="line"></span><br><span class="line">        context_ids, response_ids, label = load_ids_and_labels(row, word_to_id)</span><br><span class="line"></span><br><span class="line">        context = autograd.Variable(torch.LongTensor(context_ids).view(<span class="number">-1</span>,<span class="number">1</span>)) <span class="comment">#.cuda()</span></span><br><span class="line"></span><br><span class="line">        response = autograd.Variable(torch.LongTensor(response_ids).view(<span class="number">-1</span>, <span class="number">1</span>)) <span class="comment">#.cuda()</span></span><br><span class="line"></span><br><span class="line">        label = autograd.Variable(torch.FloatTensor(torch.from_numpy(np.array(label).reshape(<span class="number">1</span>,<span class="number">1</span>)))) <span class="comment">#.cuda()</span></span><br><span class="line"></span><br><span class="line">        score = dual_encoder(context, response)</span><br><span class="line"></span><br><span class="line">        test_correct_count = increase_count(test_correct_count, score, label)</span><br><span class="line"></span><br><span class="line">    test_accuracy = get_accuracy(test_correct_count, test_dataframe_same_structure)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> test_accuracy</span><br></pre></td></tr></table></figure></p>
+<p>准确率<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">test_accuracy = testing_same_structure()</span><br><span class="line">print(<span class="string">"Test accuracy for %d training examples and %d test examples: %.2f"</span> %(len(training_dataframe),len(test_dataframe_same_structure),test_accuracy))</span><br></pre></td></tr></table></figure></p>
+<h5 id="第2种测试方式"><a href="#第2种测试方式" class="headerlink" title="第2种测试方式"></a>第2种测试方式</h5><p>测试数据集和训练/验证集格式不一样 (1个问题，1个标准答案，9个干扰项错误答案)<br>测试评估指标：recall(召回)<br>加载数据<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">test_dataframe_different_structure = pd.read_csv(<span class="string">'testing_different_structure_100.csv'</span>)</span><br></pre></td></tr></table></figure></p>
+<p>以字典形态存储对话word ids<br><em>Outer dictionary “ids_per_example_and_candidate”: keys = examples, values = inner dictionaries</em><br><em>Inner dictionaries “ids_per_candidate”: keys = candidate names, values = list of word IDs</em><br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">load_ids</span><span class="params">(test_dataframe_different_structure, word_to_id)</span>:</span></span><br><span class="line">    </span><br><span class="line">    print(str(datetime.datetime.now()).split(<span class="string">'.'</span>)[<span class="number">0</span>], <span class="string">"Loading test IDs..."</span>)</span><br><span class="line"></span><br><span class="line">    max_context_len = <span class="number">160</span></span><br><span class="line">    </span><br><span class="line">    ids_per_example_and_candidate = &#123;&#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> i, example <span class="keyword">in</span> test_dataframe_different_structure.iterrows():</span><br><span class="line">        </span><br><span class="line">        ids_per_candidate = &#123;&#125;</span><br><span class="line">      </span><br><span class="line">        <span class="keyword">for</span> column_name, cell <span class="keyword">in</span>  example.iteritems():</span><br><span class="line">            </span><br><span class="line">                id_list = []</span><br><span class="line">            </span><br><span class="line">                words = str(cell).split()</span><br><span class="line">                <span class="keyword">if</span> len(words) &gt; max_context_len:</span><br><span class="line">                    words = words[:max_context_len]</span><br><span class="line">    </span><br><span class="line">                <span class="keyword">for</span> word <span class="keyword">in</span> words:</span><br><span class="line">                    <span class="keyword">if</span> word <span class="keyword">in</span> word_to_id:</span><br><span class="line">                        id_list.append(word_to_id[word])</span><br><span class="line">                    <span class="keyword">else</span>: </span><br><span class="line">                        id_list.append(<span class="number">0</span>) <span class="comment">#UNK  </span></span><br><span class="line">                    </span><br><span class="line">                ids_per_candidate[column_name] = id_list</span><br><span class="line">    </span><br><span class="line">        ids_per_example_and_candidate[i] = ids_per_candidate</span><br><span class="line">    </span><br><span class="line">    print(str(datetime.datetime.now()).split(<span class="string">'.'</span>)[<span class="number">0</span>], <span class="string">"Test IDs loaded."</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> ids_per_example_and_candidate</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ids_per_example_and_candidate = load_ids(test_dataframe_different_structure, word_to_id)</span><br></pre></td></tr></table></figure>
+<p>以字典形态存储得分score<br><em>Outer dictionary “scores_per_example_and_candidate”: keys = examples, values = inner dictionaries</em><br><em>Inner dictionaries “scores_per_candidate”: keys = candidate names, values = score</em><br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">load_scores</span><span class="params">()</span>:</span> </span><br><span class="line">    print(str(datetime.datetime.now()).split(<span class="string">'.'</span>)[<span class="number">0</span>], <span class="string">"Computing test scores..."</span>)</span><br><span class="line">    </span><br><span class="line">    scores_per_example_and_candidate = &#123;&#125;</span><br><span class="line">                 </span><br><span class="line">    <span class="keyword">for</span> example, utterance_ids_dict <span class="keyword">in</span> sorted(ids_per_example_and_candidate.items()): </span><br><span class="line">        </span><br><span class="line">        score_per_candidate = &#123;&#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> utterance_name, ids_list <span class="keyword">in</span> sorted(utterance_ids_dict.items()):</span><br><span class="line">        </span><br><span class="line">            context = autograd.Variable(torch.LongTensor(utterance_ids_dict[<span class="string">'Context'</span>]).view(<span class="number">-1</span>,<span class="number">1</span>))<span class="comment">#.cuda()</span></span><br><span class="line">            </span><br><span class="line">            <span class="keyword">if</span> utterance_name != <span class="string">'Context'</span>:</span><br><span class="line"></span><br><span class="line">                candidate_response = autograd.Variable(torch.LongTensor(utterance_ids_dict[utterance_name]).view(<span class="number">-1</span>, <span class="number">1</span>))<span class="comment">#.cuda()</span></span><br><span class="line">                        </span><br><span class="line">                score = torch.sigmoid(dual_encoder(context, candidate_response))</span><br><span class="line">                </span><br><span class="line">                score_per_candidate[<span class="string">"Score with "</span> + utterance_name] = score.data[<span class="number">0</span>][<span class="number">0</span>]</span><br><span class="line">    </span><br><span class="line">        scores_per_example_and_candidate[example] = score_per_candidate</span><br><span class="line"></span><br><span class="line">    print(str(datetime.datetime.now()).split(<span class="string">'.'</span>)[<span class="number">0</span>], <span class="string">"Test scores computed."</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> scores_per_example_and_candidate</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scores_per_example_and_candidate = load_scores()</span><br></pre></td></tr></table></figure>
+<p>定义计算召回结果的方法：<br>这里计算的是recall@k这个评估指标。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_recall_at_k</span><span class="params">(k)</span>:</span></span><br><span class="line">    count_true_hits = <span class="number">0</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> example, score_per_candidate_dict <span class="keyword">in</span> sorted(scores_per_example_and_candidate.items()): </span><br><span class="line">    </span><br><span class="line">        top_k = dict(sorted(score_per_candidate_dict.items(), key=operator.itemgetter(<span class="number">1</span>), reverse=<span class="keyword">True</span>)[:k])</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> <span class="string">'Score with Ground Truth Utterance'</span> <span class="keyword">in</span> top_k:</span><br><span class="line">            count_true_hits += <span class="number">1</span></span><br><span class="line">    </span><br><span class="line">    number_of_examples = len(scores_per_example_and_candidate)</span><br><span class="line">    </span><br><span class="line">    recall_at_k = count_true_hits/number_of_examples</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> recall_at_k</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">print(<span class="string">"recall_at_5 ="</span>,get_recall_at_k(k = <span class="number">5</span>)) <span class="comment">#Baseline expectation: 5/10 = 0.5 for random guess</span></span><br><span class="line">print(<span class="string">"recall_at_2 ="</span>,get_recall_at_k(k = <span class="number">2</span>)) <span class="comment">#Baseline expectation: 2/10 = 0.2 for random guess</span></span><br><span class="line">print(<span class="string">"recall_at_1 ="</span>,get_recall_at_k(k = <span class="number">1</span>)) <span class="comment">#Baseline expectation: 1/10 = 0.1 for random guess</span></span><br></pre></td></tr></table></figure>
+<p>建议把cuda()打开。在GPU上训练。<br><a href="https://github.com/xiehuateng/chatbot_retrieval_based_pytorch" target="_blank" rel="noopener">github</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/NLP/" rel="tag"># NLP</a>
+          
+            <a href="/tags/Chatbot/" rel="tag"># Chatbot</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/02/21/xavier/" rel="next" title="深度学习之参数初始化（一）——Xavier初始化和He初始化">
+                <i class="fa fa-chevron-left"></i> 深度学习之参数初始化（一）——Xavier初始化和He初始化
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="MCF">
+            
+              <p class="site-author-name" itemprop="name">MCF</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#数据"><span class="nav-number">1.</span> <span class="nav-text">数据</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#代码"><span class="nav-number">2.</span> <span class="nav-text">代码</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#相关库"><span class="nav-number">2.1.</span> <span class="nav-text">相关库</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#定义helper函数以构建训练和验证过程中的变量"><span class="nav-number">2.2.</span> <span class="nav-text">定义helper函数以构建训练和验证过程中的变量</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#模型定义"><span class="nav-number">2.3.</span> <span class="nav-text">模型定义</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#数据与变量构建"><span class="nav-number">2.4.</span> <span class="nav-text">数据与变量构建</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#模型构建"><span class="nav-number">2.5.</span> <span class="nav-text">模型构建</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#训练集和验证集准确率计算"><span class="nav-number">2.6.</span> <span class="nav-text">训练集和验证集准确率计算</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#构建模型训练函数"><span class="nav-number">2.7.</span> <span class="nav-text">构建模型训练函数</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#构建数据"><span class="nav-number">2.8.</span> <span class="nav-text">构建数据</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#设定hidden-size和dropout概率，构建模型"><span class="nav-number">2.9.</span> <span class="nav-text">设定hidden size和dropout概率，构建模型</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#设定学习率，迭代轮数，l2正则化强度，开始训练"><span class="nav-number">2.10.</span> <span class="nav-text">设定学习率，迭代轮数，l2正则化强度，开始训练</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#加载训练好的模型进行测试"><span class="nav-number">2.11.</span> <span class="nav-text">加载训练好的模型进行测试</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#第1种测试方式"><span class="nav-number">2.12.</span> <span class="nav-text">第1种测试方式:</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#第2种测试方式"><span class="nav-number">2.13.</span> <span class="nav-text">第2种测试方式</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">MCF</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>
