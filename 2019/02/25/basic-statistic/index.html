@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Linear Algebra,线性代数,">
+  <meta name="keywords" content="statistic,">
 
 
 
@@ -79,25 +79,18 @@
 
 
 
-<meta name="description" content="先看大佬是怎么说的：https://www.zhihu.com/question/21874816以下是个人的简单理解，方便记忆。   特征分解是使用最广的矩阵分解之一，即我们矩阵分解成一组特征向量和特征值。 方阵 A 的特征向量（eigenvector）是指与A相乘后相当于对该向量进行缩放的非零向量v：    Av = \lambda v其中标量$\lambda$称为这个特征向量的特征值（eig">
-<meta name="keywords" content="Linear Algebra,线性代数">
+<meta name="description" content="一些常见的概率联合概率：联合概率指的是包含多个条件且所有条件同时成立的概率，记作p(X=a,Y=b)或p(a,b),有的书上也习惯记作p(ab),但是这种记发个人不太习惯，所以下文采用以逗号分隔的记法。一定要注意的是所有条件同时成立。 边缘概率：边缘概率是和联合概率对应的，p(X=a)或p(Y=b),这类仅于单个随机变量有关的概率称为边缘概率。 联合概率和边缘概率的关  p(X=a)=\sum_{">
+<meta name="keywords" content="statistic">
 <meta property="og:type" content="article">
-<meta property="og:title" content="矩阵特征分解">
-<meta property="og:url" content="http://yoursite.com/2019/02/16/eigendecomposition/index.html">
+<meta property="og:title" content="概率统计基础（一）">
+<meta property="og:url" content="http://yoursite.com/2019/02/25/basic-statistic/index.html">
 <meta property="og:site_name" content="Mcf&#39;s Blog">
-<meta property="og:description" content="先看大佬是怎么说的：https://www.zhihu.com/question/21874816以下是个人的简单理解，方便记忆。   特征分解是使用最广的矩阵分解之一，即我们矩阵分解成一组特征向量和特征值。 方阵 A 的特征向量（eigenvector）是指与A相乘后相当于对该向量进行缩放的非零向量v：    Av = \lambda v其中标量$\lambda$称为这个特征向量的特征值（eig">
+<meta property="og:description" content="一些常见的概率联合概率：联合概率指的是包含多个条件且所有条件同时成立的概率，记作p(X=a,Y=b)或p(a,b),有的书上也习惯记作p(ab),但是这种记发个人不太习惯，所以下文采用以逗号分隔的记法。一定要注意的是所有条件同时成立。 边缘概率：边缘概率是和联合概率对应的，p(X=a)或p(Y=b),这类仅于单个随机变量有关的概率称为边缘概率。 联合概率和边缘概率的关  p(X=a)=\sum_{">
 <meta property="og:locale" content="default">
-<meta property="og:image" content="http://yoursite.com/2019/02/16/eigendecomposition/v2-9c697544d33a102f75e33dfc1fc2bcd3_hd.jpg">
-<meta property="og:image" content="http://yoursite.com/2019/02/16/eigendecomposition/v2-72998d1d940aec9a4e79fd4548cfc32b_hd.jpg">
-<meta property="og:image" content="http://yoursite.com/2019/02/16/eigendecomposition/v2-d1f9c14af565b0833c07e5f009c4022d_hd.jpg">
-<meta property="og:image" content="http://yoursite.com/2019/02/16/eigendecomposition/v2-3064249b9e5593e8de34fd704dc72dbc_hd.jpg">
-<meta property="og:image" content="http://yoursite.com/2019/02/16/eigendecomposition/v2-251d988d7f010e199b9f8895dd4dcd43_hd.jpg">
-<meta property="og:image" content="http://yoursite.com/2019/02/16/eigendecomposition/v2-b48642e5416d3130656ff23b7a2fc385_hd.jpg">
-<meta property="og:updated_time" content="2019-02-17T13:19:31.631Z">
+<meta property="og:updated_time" content="2019-02-25T08:58:04.434Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="矩阵特征分解">
-<meta name="twitter:description" content="先看大佬是怎么说的：https://www.zhihu.com/question/21874816以下是个人的简单理解，方便记忆。   特征分解是使用最广的矩阵分解之一，即我们矩阵分解成一组特征向量和特征值。 方阵 A 的特征向量（eigenvector）是指与A相乘后相当于对该向量进行缩放的非零向量v：    Av = \lambda v其中标量$\lambda$称为这个特征向量的特征值（eig">
-<meta name="twitter:image" content="http://yoursite.com/2019/02/16/eigendecomposition/v2-9c697544d33a102f75e33dfc1fc2bcd3_hd.jpg">
+<meta name="twitter:title" content="概率统计基础（一）">
+<meta name="twitter:description" content="一些常见的概率联合概率：联合概率指的是包含多个条件且所有条件同时成立的概率，记作p(X=a,Y=b)或p(a,b),有的书上也习惯记作p(ab),但是这种记发个人不太习惯，所以下文采用以逗号分隔的记法。一定要注意的是所有条件同时成立。 边缘概率：边缘概率是和联合概率对应的，p(X=a)或p(Y=b),这类仅于单个随机变量有关的概率称为边缘概率。 联合概率和边缘概率的关  p(X=a)=\sum_{">
 
 
 
@@ -127,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2019/02/16/eigendecomposition/">
+  <link rel="canonical" href="http://yoursite.com/2019/02/25/basic-statistic/">
 
 
 
 
 
-  <title>矩阵特征分解 | Mcf's Blog</title>
+  <title>概率统计基础（一） | Mcf's Blog</title>
   
 
 
@@ -250,7 +243,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/02/16/eigendecomposition/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/02/25/basic-statistic/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="MCF">
@@ -267,7 +260,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">矩阵特征分解</h1>
+          <h1 class="post-title" itemprop="name headline">概率统计基础（一）</h1>
         
 
         <div class="post-meta">
@@ -279,8 +272,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-02-16T19:52:16+08:00">
-                2019-02-16
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-02-25T15:28:11+08:00">
+                2019-02-25
               </time>
             
 
@@ -317,27 +310,23 @@
       
 
       
-        <p>先看大佬是怎么说的：<a href="https://www.zhihu.com/question/21874816" target="_blank" rel="noopener">https://www.zhihu.com/question/21874816</a><br>以下是个人的简单理解，方便记忆。  </p>
-<p>特征分解是使用最广的矩阵分解之一，即我们矩阵分解成一组特征向量和特征值。</p>
-<p>方阵 A 的特征向量（eigenvector）是指与A相乘后相当于对该向量进行缩放的非零向量v：  </p>
+        <h4 id="一些常见的概率"><a href="#一些常见的概率" class="headerlink" title="一些常见的概率"></a>一些常见的概率</h4><p><strong>联合概率</strong>：联合概率指的是包含多个条件且所有条件同时成立的概率，记作p(X=a,Y=b)或p(a,b),有的书上也习惯记作p(ab),但是这种记发个人不太习惯，所以下文采用以逗号分隔的记法。一定要注意的是所有条件同时成立。</p>
+<p><strong>边缘概率</strong>：边缘概率是和联合概率对应的，p(X=a)或p(Y=b),这类仅于单个随机变量有关的概率称为边缘概率。</p>
+<p>联合概率和边缘概率的关</p>
 <script type="math/tex; mode=display">
-Av = \lambda v</script><p>其中标量$\lambda$称为这个特征向量的特征值（eigenvalue）。  </p>
-<p>如果v是A的特征向量，那么任何缩放后的向量sv（$s\in R$,$s&ne;0$）也是A的特征向量。此外，sv和v有相同的特征值。基于这个原因，通常我们只考虑单位特征向量。（单位向量$\parallel x\parallel _{2}=1$）  </p>
-<p>假设矩阵A有n个线性无关的特征向量{$v_1,v_2,…,v_n$},对应着特征值{$\lambda _{1},\lambda _{2},…,\lambda _{n}$}。我们将特征向量连接成一个矩阵，使得每一列是一个特征向量：$V = [v_1,v_2,…,v_n]$。类似的，我们也可以将特征值连接成一个向量$\lambda = [\lambda _{1},\lambda _{2},…,\lambda _{n}]^{T}$。因此A的特征分解可以记作：  </p>
+p(X=a)=\sum_{b}{p(X=a,Y=b)}=\sum_{i}^{b}{p(Y=b_{i})p(X=a|Y=b_{i})}</script><script type="math/tex; mode=display">
+p(Y=b)=\sum_{a}{p(X=a,Y=b)}=\sum_{i}^{a}{p(X=a_{i})p(Y=b|X=a_{i})}</script><p>求和符号表示穷举所有Y（或X）所能取得b（或a）后，所有对应值相加得到的和.</p>
+<p><strong>条件概率</strong>：条件概率表示在条件Y=b成立的情况下，X=a的概率，记作p(a|b),它具有如下性质：“在条件Y=b下X的条件分布”也是一种“X的概率分布”，因此穷举X的可取值之后，所有这里值对应的概率之和为1，即：  </p>
 <script type="math/tex; mode=display">
-A = Vdiag(\lambda)V^{-1}</script><p>不是每一个矩阵都可以分解成特征向量和特征值的。在某些情况下，特征分解存在，但是会涉及复数而非实数。在深度学习领域，我们通常只要分解一类有简单分解的矩阵。具体来讲，每个实对称矩阵都可以分解成实特征向量和特征值：  </p>
+\sum_{a}{p(X=a|Y=b)}=1</script><p>联合概率、边缘概率与条件概率之间的关系：</p>
 <script type="math/tex; mode=display">
-A = Q\Lambda Q^{T}</script><p>其中Q是A的特征向量组成的正交矩阵，$\Lambda$是对角矩阵。特征值$\Lambda _{i}$，i对应的特征向量是矩阵Q的第i列，记作$Q_{:,i}$。  </p>
-<p>一个简单的理解，如果把矩阵看作是运动，对于运动而言，最重要的当然就是运动的速度和方向，那么：  </p>
-<ul>
-<li>特征值就是运动的速度</li>
-<li>特征向量就是运动的方向  </li>
-</ul>
-<p>既然运动最重要的两方面都被描述了，特征值，特征向量自然可以称为运动（即矩阵）的特征。反复运用矩阵乘法，矩阵所代表的运动最明显的特征，即速度最大的方向，就由最大特征值对应的特征向量展现了出来。  </p>
-<h5 id="几何意义"><a href="#几何意义" class="headerlink" title="几何意义"></a>几何意义</h5><p>说明下，因为线性变换总是在各种基之间变来变去，所以下面的画图都会把作图所用的基和原点画出来。  </p>
-<p>在$\vec{i}$，$\vec{j}$下面有个$\vec{v}$：<br><img src="/2019/02/16/eigendecomposition/v2-9c697544d33a102f75e33dfc1fc2bcd3_hd.jpg" alt="pic_001"><br>随便左乘一个矩阵A，图像看上去没有什么特殊的：<br><img src="/2019/02/16/eigendecomposition/v2-72998d1d940aec9a4e79fd4548cfc32b_hd.jpg" alt="pic_002"><br>调整下$\vec{v}$的方向，图像看上去就有点特殊了：<br><img src="/2019/02/16/eigendecomposition/v2-d1f9c14af565b0833c07e5f009c4022d_hd.jpg" alt="pic_003"><br>可以观察到，调整后的$\vec{v}$和$A\vec{v}$在同一直线上，只是$A\vec{v}$的长度相对$\vec{v}$的长度变长了。此时，我们就称$\vec{v}$是$A$的特征向量，而$A\vec{v}$的长度是$\vec{v}$的$\lambda$倍，$\lambda$就是特征值。从而，特征值与特征向量的定义式就是这样的：<br><img src="/2019/02/16/eigendecomposition/v2-3064249b9e5593e8de34fd704dc72dbc_hd.jpg" alt="pic_004"><br>之前的$A$不止一个特征向量，还有一个特征向量：<br><img src="/2019/02/16/eigendecomposition/v2-251d988d7f010e199b9f8895dd4dcd43_hd.jpg" alt="pic_005"><br>容易从$A\vec{v}$相对于$\vec{v}$是变长了还是缩短看出，这两个特征向量对应的特征值$\lambda$，一个大于1，一个小于1。  </p>
-<p>从特征向量和特征值的定义式还可以看出，特征向量所在直线上的向量都是特征向量：<br><img src="/2019/02/16/eigendecomposition/v2-b48642e5416d3130656ff23b7a2fc385_hd.jpg" alt="pic_006"><br>特征值越大，说明矩阵在对应的特征向量上的方差越大，功率越大，信息量越多。  </p>
-<p>例如图片压缩的例子，一副512*512的图片只保留前面50个的特征值（也就是最大的50个，其实也只占了所有特征值的百分之十），其它的都填0，就能复原出基本图像，效果还可以。其实一两百个特征值之和可能就占了所有特征值和的百分之九十了，其他的特征值都可以丢弃了。</p>
+p(X=a|Y=b)=\frac{p(X=a,Y=b)}{p(Y=b)}</script><p><strong>先验概率</strong>：根据以往的经验和分析得到的概率，如全概率公式，它往往作为“由因求果”问题中的“因”出现。P(原因)、P(结果|原因)等.  </p>
+<p><strong>后验概率</strong>：依据得到“结果”信息所计算的最优可能是那种事件发生，如贝叶斯公式中的，是“执果寻因”问题中的“因”。后延概率可以根据贝叶斯公式，用先验概率和似然函数计算出来。P(原因|结果)等.</p>
+<p><strong>简单例子</strong>：抛掷一枚硬币，按经验来说，出现正反面的概率都应该为0.5，这就是先验概率。而实际上一枚硬币可能是不标准的，它的正反面出现的不一定是0.5，这种基于某一枚指定的硬币抛掷结果的到概率称为后验概率。由这枚硬币抛掷的结果来求得正反面概率<strong>p(正反|抛掷结果)</strong>。</p>
+<p><strong>贝叶斯定理</strong>：假设B1,B2,…,Bn互斥且构成一个完全事件，已知他们的概率p(Bi),i=1,2,…,n ,现观察到某事件A与B1,B2,…,Bn相伴随机出现，且已知条件概率p(A|Bi),求p(Bi|A).公式如下：</p>
+<script type="math/tex; mode=display">
+p(B_{i}|A) = \frac{p(B_{i})p(A|B_{i})}{\sum_{j=1}^{n}{p(B_{j})p(A|B_{j})}}</script><p>贝叶斯公式解决的是一些原因（B）无法直接观测，测量，而我们希望通过其结果（A）来反推出原因的问题，也就是知道一部分先验概率，来求后验概率的问题。（有点像交换律的感觉）  </p>
+<p>这里的贝叶斯公式完全可以通过上面的条件概率公式推导出来。</p>
 
       
     </div>
@@ -355,9 +344,7 @@ A = Q\Lambda Q^{T}</script><p>其中Q是A的特征向量组成的正交矩阵，
       
         <div class="post-tags">
           
-            <a href="/tags/Linear-Algebra/" rel="tag"># Linear Algebra</a>
-          
-            <a href="/tags/线性代数/" rel="tag"># 线性代数</a>
+            <a href="/tags/statistic/" rel="tag"># statistic</a>
           
         </div>
       
@@ -370,8 +357,8 @@ A = Q\Lambda Q^{T}</script><p>其中Q是A的特征向量组成的正交矩阵，
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/02/13/transformer/" rel="next" title="图解Transformer">
-                <i class="fa fa-chevron-left"></i> 图解Transformer
+              <a href="/2019/02/22/chatbot-retrieval-Ubuntu-pytorch/" rel="next" title="构建于Ubuntu对话数据集上的基于检索的Chatbot">
+                <i class="fa fa-chevron-left"></i> 构建于Ubuntu对话数据集上的基于检索的Chatbot
               </a>
             
           </div>
@@ -380,8 +367,8 @@ A = Q\Lambda Q^{T}</script><p>其中Q是A的特征向量组成的正交矩阵，
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2019/02/19/chatbot-part1/" rel="prev" title="聊天机器人（chatbot-part1）">
-                聊天机器人（chatbot-part1） <i class="fa fa-chevron-right"></i>
+              <a href="/2019/02/25/basic-statistic2/" rel="prev" title="概率统计基础（二）">
+                概率统计基础（二） <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -516,7 +503,7 @@ A = Q\Lambda Q^{T}</script><p>其中Q是A的特征向量组成的正交矩阵，
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-5"><a class="nav-link" href="#几何意义"><span class="nav-number">1.</span> <span class="nav-text">几何意义</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#一些常见的概率"><span class="nav-number">1.</span> <span class="nav-text">一些常见的概率</span></a></li></ol></div>
             
 
           </div>
