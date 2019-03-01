@@ -88,7 +88,7 @@
 <meta property="og:description" content="原文出处：https://blog.csdn.net/tsyccnh/article/details/79163834交叉熵（cross entropy）是深度学习中常用的一个概念，一般用来求目标与预测值之间的差距。   1.信息量信息：$i(x)=-log(p(x))$,如果说概率p是对确定性的度量，那么信息就是对不确定性的度量。   独立事件的信息：如果两个事件X和Y独立，即p(XY)=p(X">
 <meta property="og:locale" content="default">
 <meta property="og:image" content="http://yoursite.com/2019/02/25/cross-entropy/20180125164333234.png">
-<meta property="og:updated_time" content="2019-02-26T04:54:44.197Z">
+<meta property="og:updated_time" content="2019-02-27T11:24:19.666Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="交叉熵的理解">
 <meta name="twitter:description" content="原文出处：https://blog.csdn.net/tsyccnh/article/details/79163834交叉熵（cross entropy）是深度学习中常用的一个概念，一般用来求目标与预测值之间的差距。   1.信息量信息：$i(x)=-log(p(x))$,如果说概率p是对确定性的度量，那么信息就是对不确定性的度量。   独立事件的信息：如果两个事件X和Y独立，即p(XY)=p(X">
@@ -373,7 +373,7 @@ H(X)=-\sum_{i=1}^{n}{p(x_{i})logp(x_{i})}</script><p>其中n代表所有的n中�
 H(X) = -[p(A)logp(A) + p(B)logp(B) + p(C)logp(C)]\\=0.804</script><p>然而又一类比较特殊的问题，比如抛掷硬币，一般只有两种可能。我们称之为0-1分布问题（二项分布的特例），对于这类问题，熵的计算方法可以简化为如下算式：</p>
 <script type="math/tex; mode=display">
 H(X) = -\sum_{i=1}^{n}p(x_{i})logp(x_{i})\\
-=-p(x)logp(x) - (1-p(x))logp(1-p(x))</script><p>（发现了逻辑回归的交叉熵损失函数~）</p>
+=-p(x)logp(x) - (1-p(x))logp(1-p(x))</script><p>（注意，这里可不是交叉熵损失函数哦~）</p>
 <h4 id="3-互信息"><a href="#3-互信息" class="headerlink" title="3.互信息"></a>3.互信息</h4><p>这里暂时不详细说。</p>
 <script type="math/tex; mode=display">
 i(y,x)=i(y|x)=i(y)-i(y|x)=log(\frac{p(y|x)}{p(y)})\\
@@ -394,7 +394,7 @@ D_{KL}(p||q)=\sum_{i=1}^{n}{p({x_{i})logp(x_{i})}-\sum_{i=1}^{n}{p(x_{i})logq(x_
 =-H(p(X)) + [-\sum_{i=1}^{n}{p(x_{i})log(q(x_{i}))}]</script><p>等式的前一部分恰巧就是p的熵，等式的后一部分，就是交叉熵：</p>
 <script type="math/tex; mode=display">
 H(p,q)= -\sum_{i=1}^{n}{p(x_{i})logq(x_{i})}</script><p>（可以看出，相对熵是一种原来的熵与变换分布描述之后熵值的差异（信息增益）；而交叉熵直接是用变化分布描述的熵作为差异本身，优化交叉熵，值越小，两个分布之间越接近。）  </p>
-<p>在机器学习中，我们评估label和predicts之间的差距，使用KL散度刚刚好，即$D_{KL}(y||\hat{y})$，由于KL散度中的前一部分-H(y)不变，故在优化过程中，只需要关注交叉熵就可以了。所以一般在机器学习中直接用交叉熵做loss，评估模型。（G也有用KL散度的，在svm，GAN里面都有）</p>
+<p>在机器学习中，我们评估label和predicts之间的差距，使用KL散度刚刚好，即$D_{KL}(y||\hat{y})$，由于KL散度中的前一部分-H(y)不变，故在优化过程中，只需要关注交叉熵就可以了。所以一般在机器学习中直接用交叉熵做loss，评估模型。（也有用KL散度的，在svm，GAN里面都有）</p>
 
       
     </div>
@@ -440,6 +440,10 @@ H(p,q)= -\sum_{i=1}^{n}{p(x_{i})logq(x_{i})}</script><p>（可以看出，相对
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/02/27/EM/" rel="prev" title="EM算法理解">
+                EM算法理解 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -518,7 +522,7 @@ H(p,q)= -\sum_{i=1}^{n}{p(x_{i})logq(x_{i})}</script><p>（可以看出，相对
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-count">12</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
