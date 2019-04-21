@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="NLP,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="概述 模型目标：进行此的向量化表示，使得向量之间尽可能多地蕴含语义和语法的信息。   输入：语料库   输出：词向量   方法概述：首先基于语料库构建词的共现矩阵，然后基于共现矩阵和GloVe模型学习词向量。    开始-&amp;gt;统计共现矩阵-&amp;gt;训练词向量-&amp;gt;结束   统计共现矩阵设共现矩阵为X，其元素为$X_{i,j}$。$X_{i,j}$的意义为：在整个语料库中，单词i和单词j共同">
+<meta name="keywords" content="NLP">
+<meta property="og:type" content="article">
+<meta property="og:title" content="GloVe">
+<meta property="og:url" content="http://yoursite.com/2018/06/04/glove/index.html">
+<meta property="og:site_name" content="Mcf&#39;s Blog">
+<meta property="og:description" content="概述 模型目标：进行此的向量化表示，使得向量之间尽可能多地蕴含语义和语法的信息。   输入：语料库   输出：词向量   方法概述：首先基于语料库构建词的共现矩阵，然后基于共现矩阵和GloVe模型学习词向量。    开始-&amp;gt;统计共现矩阵-&amp;gt;训练词向量-&amp;gt;结束   统计共现矩阵设共现矩阵为X，其元素为$X_{i,j}$。$X_{i,j}$的意义为：在整个语料库中，单词i和单词j共同">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="http://yoursite.com/2018/06/04/glove/WX20190404-132511@2x.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/04/glove/WX20190404-143255@2x.png">
+<meta property="og:updated_time" content="2019-04-21T03:22:39.333Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="GloVe">
+<meta name="twitter:description" content="概述 模型目标：进行此的向量化表示，使得向量之间尽可能多地蕴含语义和语法的信息。   输入：语料库   输出：词向量   方法概述：首先基于语料库构建词的共现矩阵，然后基于共现矩阵和GloVe模型学习词向量。    开始-&amp;gt;统计共现矩阵-&amp;gt;训练词向量-&amp;gt;结束   统计共现矩阵设共现矩阵为X，其元素为$X_{i,j}$。$X_{i,j}$的意义为：在整个语料库中，单词i和单词j共同">
+<meta name="twitter:image" content="http://yoursite.com/2018/06/04/glove/WX20190404-132511@2x.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/06/04/glove/">
+
+
+
+
+
+  <title>GloVe | Mcf's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Mcf's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/04/glove/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="MCF">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Mcf's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">GloVe</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-06-04T11:12:15+08:00">
+                2018-06-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h4 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h4><ul>
+<li>模型目标：进行此的向量化表示，使得向量之间尽可能多地蕴含语义和语法的信息。  </li>
+<li>输入：语料库  </li>
+<li>输出：词向量  </li>
+<li>方法概述：首先基于语料库构建词的共现矩阵，然后基于共现矩阵和GloVe模型学习词向量。  </li>
+</ul>
+<p><strong>开始-&gt;统计共现矩阵-&gt;训练词向量-&gt;结束</strong>  </p>
+<h4 id="统计共现矩阵"><a href="#统计共现矩阵" class="headerlink" title="统计共现矩阵"></a>统计共现矩阵</h4><p>设共现矩阵为X，其元素为$X_{i,j}$。<br>$X_{i,j}$的意义为：在整个语料库中，单词i和单词j共同出现在一个窗口中的次数。<br>举个栗子：<br>设有预料库：  </p>
+<ul>
+<li>i love you but you love him i am sad  </li>
+</ul>
+<p>这个小小的预料库只有一个句子，涉及到7个单词：i、love、you、but、him、am、sad。<br>如果我们采用一个窗口为5（左右长度都为2）的统计窗口，使用窗口将整个语料库遍历一遍，即可得到共现矩阵X，自己想象！  </p>
+<h4 id="使用GloVe模型训练词向量"><a href="#使用GloVe模型训练词向量" class="headerlink" title="使用GloVe模型训练词向量"></a>使用GloVe模型训练词向量</h4><h5 id="模型公式"><a href="#模型公式" class="headerlink" title="模型公式"></a>模型公式</h5><p>先看模型，代价函数长这个样子：  </p>
+<script type="math/tex; mode=display">
+J = \sum_{i,j}^{N}{f(X_{i,j})(v_{i}^{T}v_{j}+b_i + b_j - log(X_{i,j}))^{2}}</script><p>$v_{i},v_{j}$是单词i和单词j的词向量，$b_{i},b_{j}$是两个标量（作者定义的偏差项），f是权重函数（具体函数公式及功能下一节介绍），N是词汇表的大小（共现矩阵维度为N*N）。<br>可以看到，GloVe模型没有使用神经网络的方法。  </p>
+<h5 id="模型怎么来的"><a href="#模型怎么来的" class="headerlink" title="模型怎么来的"></a>模型怎么来的</h5><p>那么作者为什么这么构造模型呢？首先定义几个符号：  </p>
+<script type="math/tex; mode=display">
+X_{i} = \sum_{j=1}^{N}{X_{i,j}}</script><p>其实就是矩阵单词i那一行的和；  </p>
+<script type="math/tex; mode=display">
+P_{i,k}= \frac{X_{i,k}}{X_{i}}</script><p>条件概率，表示单词k出现在单词i语境中的概率；  </p>
+<script type="math/tex; mode=display">
+ratio_{i,j,k} = \frac{P_{i,k}}{P_{j,k}}</script><p>两个条件概率的比率。<br>作者的灵感是这样的：<br>作者发现，$ratio_{i,j,k}$这个指标是有规律的，规律统计在下表：<br><img src="/2018/06/04/glove/WX20190404-132511@2x.png" alt=""><br>我们可以使用它观察出两个单词i和j相对于单词k哪个更相关（relevant）。这个是很直观的。因此，以上推断可以说明通过概率的比例而不是概率本身去学习词向量可能是一个更恰当的方法.<br>思想：假设我们已经得到了词向量，如果我们用词向量$v_{i},v_{j},v_{k}$ 通过某种函数计算$ratio_{i,j,k}$，能够同样得到这样的规律的话，就意味着我们词向量与共现矩阵具有很好的一致性，也就说明我们的词向量中蕴含了共现矩阵中所蕴含的信息。<br>设用词向量$v_{i},v_{j},v_{k}$计算$ratio_{i,j,k}$的函数为$g(v_{i},v_{j},v_{k})$(我们先不去管具体的函数形式)，那么应该由：  </p>
+<script type="math/tex; mode=display">
+\frac{P_{i,k}}{P_{j,k}} = ratio_{i,j,k}= g(v_{i},v_{j},v_{k})</script><p>即：  </p>
+<script type="math/tex; mode=display">
+\frac{P_{i,k}}{P_{j,k}} = g(v_{i},v_{j},v_{k})</script><p>即二者应该尽可能地接近；<br>很容易想到用二者的差方来作为代价函数：  </p>
+<script type="math/tex; mode=display">
+J = \sum_{i,j,k}^{N}{(\frac{P_{i,k}}{P_{j,k}}-g(v_{i},v_{j},v_{k}))^{2}}</script><p>但是仔细一看，模型中包含3个单词，这就意味着要在NNN的复杂度上进行计算，太复杂了，最好能再简单点。<br>现在我们来仔细思考$g(v_{i},v_{j},v_{k})$，或许它能帮上忙；<br>作者的脑洞是这样的：<br>1.要考虑单词i和单词j之间的关系，那$g(v_{i},v_{j},v_{k})$中大概有这么一项吧：$v_{i}-v_{j}$;嗯，合理，在线性空间中考察两个向量的相似性，不失线性地考察，那么$v_{i}-v_{j}$大概是个合理的选择；<br>2.$ratio_{i,j,k}$是个标量，那么$g(v_{i},v_{j},v_{k})$最后应该是个标量啊，虽然其输入都是向量，那内积应该是合理的选择，于是应该由这么一项吧：$(v_{i}-v_{j})^{T}v_{k}$。<br>3.然后作者又往$(v_{i}-v_{j})^{T}v_{k}$的外面套了一层指数运算exp(),得到最终的$g(v_{i},v_{j},v_{k})=exp((v_{i}-v_{j})^{T}v_{k})$；<br>最关键的第3步，为什么套了一层exp()？<br>套上了之后，我们的目标是让一下公式尽可能地成立：  </p>
+<script type="math/tex; mode=display">
+\frac{P_{i,k}}{P_{j,k}} = g(v_{i},v_{j},v_{k})</script><p>即：  </p>
+<script type="math/tex; mode=display">
+\frac{P_{i,k}}{P_{j,k}} = exp((v_{i}-v_{j})^{T}v_{k})</script><p>即：  </p>
+<script type="math/tex; mode=display">
+\frac{P_{i,k}}{P_{j,k}} = exp(v_{i}^{T}v_{k}-v_{j}^{T}v_{k})</script><p>即：  </p>
+<script type="math/tex; mode=display">
+\frac{P_{i,k}}{P_{j,k}} = \frac{exp(v_{i}^{T}v_{k})}{exp(v_{j}^{T}v_{k})}</script><p>然后就发现找到简化方法了：只需要让上式分子对应相等，分母对应相等，即：$P_{i,k} = exp(v_{i}^{T}v_{k})$并且$P_{j,k} = exp(v_{j}^{T}v_{k})$。<br>然而分子分母形式相同，就可以把两者统一考虑了，即：  </p>
+<script type="math/tex; mode=display">
+P_{i,j} = exp(v_{i}^{T}v_{j})</script><p>本来我们追求： </p>
+<script type="math/tex; mode=display">
+\frac{P_{i,k}}{P_{j,k}} = g(v_{i},v_{j},v_{k})</script><p>现在只需要追求：  </p>
+<script type="math/tex; mode=display">
+P_{i,j} = exp(v_{i}^{T}v_{j})</script><p>两边去个对数：  </p>
+<script type="math/tex; mode=display">
+log(P_{i,j}) = v_{i}^{T}v_{j}</script><p>那么代价函数就可以简化为：  </p>
+<script type="math/tex; mode=display">
+J = \sum_{i,j}^{N}{(log(P_{i,j})-v_{i}^{T}v_{j})^2 }</script><p>现在只需要在NN的复杂度上进行计算，现在关于为什么第3步中，外面套一层exp()就清楚了，正是因为套了一层exp()，才使得差形式变成商形式，进而等式两边分子分母对应相等，进而简化模型。<br>然而，出了点问题。仔细看这两个句子：<br>$log(P_{i,j}) = v_{i}^{T}v_{j}$和$log(P_{j,i}) = v_{j}^{T}v_{i}$。<br>$log(P_{i,j})$不等于$log(P_{j,i})$但是$v_{i}^{T}v_{j}$等于$v_{j}^{T}v_{i}$；即等式左侧布局有对称性，但是右侧具有对称性。数学上出了问题。<br>补救一下就好了。现在讲代价函数中的条件概率展开：  </p>
+<script type="math/tex; mode=display">
+log(P_{i,j}) = v_{i}^{T}v_{j}</script><p>即为：  </p>
+<script type="math/tex; mode=display">
+log(X_{i,j}) - log(X_{i}) = v_{i}^{T}v_{j}</script><p>此时，我们发现因为等号右侧的log(Xi)<br>的存在而且这个也是不满足对称性的。而其实是log(Xi)跟j独立的，它只跟i有关，于是我们可以针对$v_{i}$增加一个bias term   bi把它替换掉，为了对称，那就一不做二不休，再针对$v_{j}$增加一个bias term   bj于是我们有：  </p>
+<script type="math/tex; mode=display">
+log(X_{i,j}) = v_{i}^{T}v_{j} + b_{i} + b_{j}</script><p>于是代价函数就变成了：  </p>
+<script type="math/tex; mode=display">
+J = \sum_{i,j}^{N}{(v_{i}^{T}v_{j} + b_{i} + b_{j} - log(X_{i,j}))^{2}}</script><p>然后基于出现频率越高的词对儿权重应该越大的原则，在代价函数中添加权重项，于是代价函数进一步完善：  </p>
+<script type="math/tex; mode=display">
+J = \sum_{i,j}^{N}{f(X_{i,j})(v_{i}^{T}v_{j} + b_{i} + b_{j} - log(X_{i,j}))^{2}}</script><p>具体权重函数应该是怎么样的呢？<br>首先应该是非减的，其次当词频过高时，权重不应过分增大，作者通过实验确定权重函数为：<br><img src="/2018/06/04/glove/WX20190404-143255@2x.png" alt="">  </p>
+<h5 id="GloVe的训练过程是怎样的？"><a href="#GloVe的训练过程是怎样的？" class="headerlink" title="GloVe的训练过程是怎样的？"></a>GloVe的训练过程是怎样的？</h5><p>1.实质上还是监督学习：虽然glove不需要人工标注为无监督学习，但实质还是有label就是 $log(X_{ij})$ 。<br>2.向量 w 和 $\tilde{w}$为学习参数，本质上与监督学习的训练方法一样，采用了AdaGrad的梯度下降算法，对矩阵 X 中的所有非零元素进行随机采样，学习曲率（learning rate）设为0.05，在vector size小于300的情况下迭代了50次，其他大小的vectors上迭代了100次，直至收敛。<br>.3最终学习得到的是两个词向量是 $\tilde{w}$ 和 w  ，因为 X 是对称的（symmetric），所以从原理上讲$\tilde{w}$ 和 w  ，是也是对称的，他们唯一的区别是初始化的值不一样，而导致最终的值不一样。所以这两者其实是等价的，都可以当成最终的结果来使用。但是为了提高鲁棒性，我们最终会选择两者之和 $w+\tilde{w}$ 作为最终的vector（两者的初始化不同相当于加了不同的随机噪声，所以能提高鲁棒性）。  </p>
+<p>到此，整个模型就介绍完了。<br>以上内容其实不能完全称之为推导，因为有很多不严谨的地方，只能说是解释作者如何一步一步构造出这个公式的，仅此而已。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/NLP/" rel="tag"># NLP</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/04/21/Newton-method/" rel="next" title="牛顿法和拟牛顿法（Newton's method & Quasi-Newton Methods）">
+                <i class="fa fa-chevron-left"></i> 牛顿法和拟牛顿法（Newton's method & Quasi-Newton Methods）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/06/13/transformer/" rel="prev" title="图解Transformer">
+                图解Transformer <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="MCF">
+            
+              <p class="site-author-name" itemprop="name">MCF</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">34</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#概述"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#统计共现矩阵"><span class="nav-number">2.</span> <span class="nav-text">统计共现矩阵</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#使用GloVe模型训练词向量"><span class="nav-number">3.</span> <span class="nav-text">使用GloVe模型训练词向量</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#模型公式"><span class="nav-number">3.1.</span> <span class="nav-text">模型公式</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#模型怎么来的"><span class="nav-number">3.2.</span> <span class="nav-text">模型怎么来的</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#GloVe的训练过程是怎样的？"><span class="nav-number">3.3.</span> <span class="nav-text">GloVe的训练过程是怎样的？</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">MCF</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

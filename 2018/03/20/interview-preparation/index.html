@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="一、神经网络基础和前馈神经网络1.神经网络中的激活函数：对比ReLU与Sigmoid、Tanh的优缺点？ReLU有哪些变种？为什么引入非线性激励函数？如果不用激励函数（其实相当于激励函数是f(x) = x），在这种情况下你每一层输出都是上层输入的线性函数，很容易验证，无论你神经网络有多少层，输出都是输入的线性组合，与没有隐藏层效果相当，这种情况就是最原始的感知机（Perceptron）了。   常">
+<meta property="og:type" content="article">
+<meta property="og:title" content="interview preparation">
+<meta property="og:url" content="http://yoursite.com/2018/03/20/interview-preparation/index.html">
+<meta property="og:site_name" content="Mcf&#39;s Blog">
+<meta property="og:description" content="一、神经网络基础和前馈神经网络1.神经网络中的激活函数：对比ReLU与Sigmoid、Tanh的优缺点？ReLU有哪些变种？为什么引入非线性激励函数？如果不用激励函数（其实相当于激励函数是f(x) = x），在这种情况下你每一层输出都是上层输入的线性函数，很容易验证，无论你神经网络有多少层，输出都是输入的线性组合，与没有隐藏层效果相当，这种情况就是最原始的感知机（Perceptron）了。   常">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="http://yoursite.com/2018/03/20/interview-preparation/891145-20180930160836680-539968208.png">
+<meta property="og:image" content="http://yoursite.com/2018/03/20/interview-preparation/0001.png">
+<meta property="og:image" content="http://yoursite.com/2018/03/20/interview-preparation/0002.png">
+<meta property="og:image" content="http://yoursite.com/2018/03/20/interview-preparation/0003.png">
+<meta property="og:image" content="http://yoursite.com/2018/03/20/interview-preparation/0004.png">
+<meta property="og:image" content="http://yoursite.com/2018/03/20/interview-preparation/0005.png">
+<meta property="og:image" content="http://yoursite.com/2018/03/20/interview-preparation/0006.png">
+<meta property="og:image" content="http://yoursite.com/2018/03/20/interview-preparation/0007.png">
+<meta property="og:image" content="http://yoursite.com/2018/03/20/interview-preparation/0008.png">
+<meta property="og:image" content="http://yoursite.com/2018/03/20/interview-preparation/0009.png">
+<meta property="og:image" content="http://yoursite.com/2018/03/20/interview-preparation/0010.png">
+<meta property="og:image" content="http://yoursite.com/2018/03/20/interview-preparation/0011.png">
+<meta property="og:image" content="http://yoursite.com/2018/03/20/interview-preparation/0012.png">
+<meta property="og:image" content="http://yoursite.com/2018/03/20/interview-preparation/0013.png">
+<meta property="og:image" content="http://yoursite.com/2018/03/20/interview-preparation/0014.png">
+<meta property="og:image" content="http://yoursite.com/2018/03/20/interview-preparation/0015.png">
+<meta property="og:image" content="http://yoursite.com/2018/03/20/interview-preparation/0016.png">
+<meta property="og:image" content="http://yoursite.com/2018/03/20/interview-preparation/0017.png">
+<meta property="og:updated_time" content="2019-04-21T03:21:40.582Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="interview preparation">
+<meta name="twitter:description" content="一、神经网络基础和前馈神经网络1.神经网络中的激活函数：对比ReLU与Sigmoid、Tanh的优缺点？ReLU有哪些变种？为什么引入非线性激励函数？如果不用激励函数（其实相当于激励函数是f(x) = x），在这种情况下你每一层输出都是上层输入的线性函数，很容易验证，无论你神经网络有多少层，输出都是输入的线性组合，与没有隐藏层效果相当，这种情况就是最原始的感知机（Perceptron）了。   常">
+<meta name="twitter:image" content="http://yoursite.com/2018/03/20/interview-preparation/891145-20180930160836680-539968208.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/03/20/interview-preparation/">
+
+
+
+
+
+  <title>interview preparation | Mcf's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Mcf's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/20/interview-preparation/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="MCF">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Mcf's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">interview preparation</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-03-20T15:28:14+08:00">
+                2018-03-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h4 id="一、神经网络基础和前馈神经网络"><a href="#一、神经网络基础和前馈神经网络" class="headerlink" title="一、神经网络基础和前馈神经网络"></a>一、神经网络基础和前馈神经网络</h4><h5 id="1-神经网络中的激活函数：对比ReLU与Sigmoid、Tanh的优缺点？ReLU有哪些变种？"><a href="#1-神经网络中的激活函数：对比ReLU与Sigmoid、Tanh的优缺点？ReLU有哪些变种？" class="headerlink" title="1.神经网络中的激活函数：对比ReLU与Sigmoid、Tanh的优缺点？ReLU有哪些变种？"></a>1.神经网络中的激活函数：对比ReLU与Sigmoid、Tanh的优缺点？ReLU有哪些变种？</h5><p><strong>为什么引入非线性激励函数？</strong><br>如果不用激励函数（其实相当于激励函数是f(x) = x），在这种情况下你每一层输出都是上层输入的线性函数，很容易验证，无论你神经网络有多少层，输出都是输入的线性组合，与没有隐藏层效果相当，这种情况就是最原始的感知机（Perceptron）了。  </p>
+<p>常见的激活函数有sigmoid、tanh、relu三种非线性激活函数，其数学表达式分别为：  </p>
+<ul>
+<li>sigmoid:$y=\frac{1}{1+e^{-x}}$  </li>
+<li>tanh:$y=\frac{e^{x}-e^{-x}}{e^{x}+e^{-x}}$  </li>
+<li>relu:$y=max(0,x)$  </li>
+</ul>
+<p>其图形解释如下：<br><img src="/2018/03/20/interview-preparation/891145-20180930160836680-539968208.png" alt=""><br>相较而言，在隐藏层，tanh函数要比sigmoid函数较优，因为tanh函数取值范围在-1~1之间，均值为0，数据是以0为中心化的。而不像sigmoid为0.5。这样的sigmoid输出值总是0~1之间，即a为正值，这样会导致一个结果就是w1和w2.。。总是同号，这样更新的时候容易出现zigzag现象（锯齿状波动），不容易到达最优值。<br>但是在输出层，sigmoid也许会优于tanh，原因在于如果你希望输出的结果是概率值，落在0~1之间，比如二元分类，sigmoid可作为输出层的激活函数。<br>在实际应用中，特别是深层网络在训练是，tanh和sigmoid会在两端值趋于饱和，梯度值很小，接近于0，造成训练速度减慢，甚至梯度弥散，是加深网络结构的主要障碍之一。相反，Relu的gradient大多数情况下是常数，有助于解决深层网络的收敛问题。（Relu的另一个优势是在生物上的合理性，它是单边的，相比sigmoid和tanh，更符合生物神经元的特征。）故深层网络的激活函数默认大多采用relu函数，浅层网络可以采用sigmoid和tanh函数。  </p>
+<p><strong>为什么引入Relu呢？</strong><br>　　第一，采用sigmoid等函数，算激活函数时（指数运算），计算量大，反向传播求误差梯度时，求导涉及除法，计算量相对大，而采用Relu激活函数，整个过程的计算量节省很多。<br>　　第二，对于深层网络，sigmoid函数反向传播时，很容易就会出现梯度消失的情况（在sigmoid接近饱和区时，变换太缓慢，导数趋于0，这种情况会造成信息丢失，参见 @Haofeng Li 答案的第三点），从而无法完成深层网络的训练。<br>　　第三，Relu会使一部分神经元的输出为0，这样就造成了网络的稀疏性，并且减少了参数的相互依存关系，缓解了过拟合问题的发生（以及一些人的生物解释balabala）。<br>　　<br>ReLU的局限性在于其训练过程中会导致神经元死亡的问题。在训练时，如果参数在一次不恰当的更新后，第一个隐藏层中的某个ReLU神经元在所有的训练数据上都不能被激活。那么，这个神经元自身参数的梯度永远都会是 0，在以后的训练过程中永远不能被激活。这种现象称为死亡 ReLU 问题 （Dying ReLU Problem），并且也有可能会发生在其它隐藏层。<br>在实际使用中，为了避免上述情况，有几种ReLU的变种也会被广泛使用：Leaky ReLU、ELU以及softplus函数。   </p>
+<h5 id="2、神经网络结构哪几种？各自都有什么特点？"><a href="#2、神经网络结构哪几种？各自都有什么特点？" class="headerlink" title="2、神经网络结构哪几种？各自都有什么特点？"></a>2、神经网络结构哪几种？各自都有什么特点？</h5><p>前馈网络：整个网络中的信息是朝一个方向传播，没有反向的信息传播，可以用一个有向无环路图表示。前馈网络包括全连接前馈网络和卷积神经网络等。<br>反馈网络：反馈网络中神经元不但可以接收其它神经元的信号，也可以接收自己的反馈信号。和前馈网络相比，反馈网络中的神经元具有记忆功能，在不同的时刻具有不同的状态。馈神经网络中的信息传播可以是单向或双向传递，因此可用一个有向循环图或无向图来表示。反馈网络包括循环神经网络、Hopfield 网络、玻尔兹曼机等。<br>图网络：图网络是定义在图结构数据上的神经网络。图中每个节点都一个或一组神经元构成。节点之间的连接可以是有向的，也可以是无向的。每个 节点可以收到来自相邻节点或自身的信息。 图网络是前馈网络和记忆网络的泛化，包含很多不同的实现方式，比如图卷积网络、消息传递网络等。  </p>
+<h5 id="3、前馈神经网络叫做多层感知机是否合适？-区别"><a href="#3、前馈神经网络叫做多层感知机是否合适？-区别" class="headerlink" title="3、前馈神经网络叫做多层感知机是否合适？(区别)"></a>3、前馈神经网络叫做多层感知机是否合适？(区别)</h5><p>前馈神经网络也经常称为多层感知器（Multi-Layer Perceptron，MLP）。但多层感知器的叫法并不是十分合理，因为前馈神经网络其实是由多层的logistic 回归模型（连续的非线性函数,0~1之间）组成，而不是由多层的感知器（不连续的非线性函数，输出根据threshold为0或1）组成。  </p>
+<h5 id="4、前馈神经网络怎么划分层？"><a href="#4、前馈神经网络怎么划分层？" class="headerlink" title="4、前馈神经网络怎么划分层？"></a>4、前馈神经网络怎么划分层？</h5><p>在前馈神经网络中，各神经元分别属于不同的层。每一层的神经元可以接受前一层神经元的信号，并产生信号输出到下一层。第0层叫输入层，最后一层叫输出层，其它中间层叫做隐藏层。整个网络中无反馈，信号从输入层向输 出层单向传播，可用一个有向无环图表示。</p>
+<h5 id="5、怎么理解前馈神经网络中的反向传播？具体计算流程是怎样的？"><a href="#5、怎么理解前馈神经网络中的反向传播？具体计算流程是怎样的？" class="headerlink" title="5、怎么理解前馈神经网络中的反向传播？具体计算流程是怎样的？"></a>5、怎么理解前馈神经网络中的反向传播？具体计算流程是怎样的？</h5><p> <img src="/2018/03/20/interview-preparation/0001.png" alt=""><br> 上式中，误差项$δ^{(l) }$来表示第 l 层的神经元对最终误差的影响，也反映了最终的输出对第  l  层的神经元对最终误差的敏感程度。</p>
+<p>前馈神经网络中反向传播的实质就是误差的反向传播： 第 l 层的误差项可以通过第 l + 1 层的误差项计算得到，这就是误差的反向传播。</p>
+<p>误差反向传播算法的具体含义是：第 l 层的一个神经元的误差项（或敏感性）是所有与该神经元相连的第 l + 1 层的神经元的误差项的权重和，然后再乘上该神经元激活函数的梯度。</p>
+<h5 id="6、卷积神经网络哪些部分构成？各部分作用分别是什么？"><a href="#6、卷积神经网络哪些部分构成？各部分作用分别是什么？" class="headerlink" title="6、卷积神经网络哪些部分构成？各部分作用分别是什么？"></a>6、卷积神经网络哪些部分构成？各部分作用分别是什么？</h5><p>如果用全连接前馈网络来处理图像时，会存在以下两个问题：<br>参数太多；<br>局部不变性特征：全连接前馈网络很难提取局部不变特征，一般需要进行数据增强来提高性能。<br>卷积神经网络一般是由卷积层、汇聚层和全连接层交叉堆叠而成的前馈神经网络，使用反向传播算法进行训练。卷积神经网络有三个结构上的特性：局部连接，权重共享以及子采样。  </p>
+<p>卷积层的作用：局部连接，权重共享；<br>池化层（pooling layer）也叫子采样层（subsampling layer）的作用：进行特征选择，降低特征数量，并从而减少参数数。  </p>
+<ul>
+<li>计算资源的消耗（集成GPU可解决）  </li>
+<li>模型容易过拟合（Dropout可解决）</li>
+<li>梯度消失、梯度爆炸问题的产生（批量归一化BN：BN层能对各层的输出做归一化，这样梯度在反向层层传递后仍能保持大小稳定，不会出现过小或过大的情况。）  </li>
+</ul>
+<p>退化问题：随着网络层数的增多，训练集loss逐渐下降，然后趋于饱和，当你再增加网络深度的话，训练集loss反而会增大。注意这并不是过拟合，因为在过拟合中训练loss是一直减小的。（残差网络ResNet？）  </p>
+<p>残差块可以表示为：（参考自详解<a href="https://blog.csdn.net/qq_29893385/article/details/81207203" target="_blank" rel="noopener">残差网络</a>）</p>
+<script type="math/tex; mode=display">x_{l+1} = x_l + \mathcal{F}(x_l, {W_l})</script><p>对于一个更深的层 L ，其与 l 层的关系可以表示为</p>
+<script type="math/tex; mode=display">x_L = x_l + \sum_{i=1}^{L-1}\mathcal{F}(x_i, {W_i})</script><p>这个公式反应了残差网络的两个属性：</p>
+<p>L 层可以表示为任意一个比它浅的l层和他们之间的残差部分之和；<br>$x_L= x_0 + \sum_{i=0}^{L-1}\mathcal{F}(x_i, {W_i})$ ， L 是各个残差块特征的单位累和，而MLP是特征矩阵的累积。<br>根据BP中使用的导数的链式法则，损失函数 $\varepsilon$ 关于 $x_l$ 的梯度可以表示为</p>
+<script type="math/tex; mode=display">\frac{\partial \varepsilon}{\partial x_l} = \frac{\partial \varepsilon}{\partial x_L}\frac{\partial x_L}{\partial x_l} = \frac{\partial \varepsilon}{\partial x_L}(1+\frac{\partial }{\partial x_l}\sum_{i=1}^{L-1}\mathcal{F}(x_i, {W_i})) = \frac{\partial \varepsilon}{\partial x_L}+\frac{\partial \varepsilon}{\partial x_L} \frac{\partial }{\partial x_l}\sum_{i=1}^{L-1}\mathcal{F}(x_i, {W_i})</script><p>上面公式反映了残差网络的两个属性：</p>
+<p>1.在整个训练过程中， $\frac{\partial }{\partial x_l}\sum_{i=1}^{L-1}\mathcal{F}(x_i, {W_i}) $ 不可能一直为 -1 ，也就是说在残差网络中不会出现梯度消失的问题。<br>2.$\frac{\partial \varepsilon}{\partial x_L} $表示 L 层的梯度可以直接传递到任何一个比它浅的 l 层。  </p>
+<h4 id="二、循环神经网络"><a href="#二、循环神经网络" class="headerlink" title="二、循环神经网络"></a>二、循环神经网络</h4><h5 id="1、什么是循环神经网络？循环神经网络的基本结构是怎样的？"><a href="#1、什么是循环神经网络？循环神经网络的基本结构是怎样的？" class="headerlink" title="1、什么是循环神经网络？循环神经网络的基本结构是怎样的？"></a>1、什么是循环神经网络？循环神经网络的基本结构是怎样的？</h5><p>循环神经网络（Recurrent Neural Network，RNN）是一类具有短期记忆能力的神经网络。在循环神经网络中，神经元不但可以接受其它神经元的信息，也可以接受自身的信息，形成具有环路的网络结构。和前馈神经网络相比，循环神经网络更加符合生物神经网络的结构。循环神经网络已经被广泛应用在语音识别、语言模型以及自然语言生成等任务上。循环神经网络的参数学习可以通过随时间反向传播算法来学习。随时间反向传播算法即按照时间的逆序将错误信息一步步地往前传递。当输入序列比较长时，会存在梯度爆炸和消失问题，也称为长期依赖问题。为了解决这个问题，人们对循环神经网络，进行了很多的改进，其中最有效的改进方式引入门控机制。此外，循环神经网络可以很容易地扩展到两种更广义的记忆网络模型：递归神经网络和图网络。——《神经网络与深度学习》  </p>
+<h5 id="2、循环神经网络RNN常见的几种设计模式是怎样的？"><a href="#2、循环神经网络RNN常见的几种设计模式是怎样的？" class="headerlink" title="2、循环神经网络RNN常见的几种设计模式是怎样的？"></a>2、循环神经网络RNN常见的几种设计模式是怎样的？</h5><ul>
+<li>序列到类别模式<br><img src="/2018/03/20/interview-preparation/0002.png" alt=""> </li>
+<li>同步序列到序列模式<br><img src="/2018/03/20/interview-preparation/0003.png" alt=""> </li>
+<li>异步序列到序列模式<br><img src="/2018/03/20/interview-preparation/0004.png" alt="">  </li>
+</ul>
+<h5 id="3、循环神经网络RNN怎样进行参数学习？"><a href="#3、循环神经网络RNN怎样进行参数学习？" class="headerlink" title="3、循环神经网络RNN怎样进行参数学习？"></a>3、循环神经网络RNN怎样进行参数学习？</h5><p><strong>随时间反向传播（Backpropagation Through Time，BPTT）</strong>算法的主要思想是通过类似前馈神经网络的错误反向传播算法来进行计算梯度。BPTT算法将循环神经网络看作是一个展开的多层前馈网络，其中“每一层”对应循环网络中的“每个时刻”。这样，循环神经网络就可以按按照前馈网络中的反向传播算法进行计算参数梯度。<strong>在“展开”的前馈网络中，所有层的参数是共享的</strong>。因此参数的真实梯度是将所有“展开层”的参数梯度之和。<br><img src="/2018/03/20/interview-preparation/0005.png" alt=""><br><img src="/2018/03/20/interview-preparation/0006.png" alt=""><br>定义 $\delta_{t,k} $为第t 时刻的损失对第k 时刻隐藏神经层的净输入 $z_k=Uh_{k-1}+Wx_{k}+b $的导数，同样对U、W求导时则可得到到随时间反向传播的公式：<br><img src="/2018/03/20/interview-preparation/0007.png" alt=""><br><img src="/2018/03/20/interview-preparation/0008.png" alt="">  </p>
+<h5 id="4、循环神经网络RNN长期依赖问题产生的原因是怎样的？"><a href="#4、循环神经网络RNN长期依赖问题产生的原因是怎样的？" class="headerlink" title="4、循环神经网络RNN长期依赖问题产生的原因是怎样的？"></a>4、循环神经网络RNN长期依赖问题产生的原因是怎样的？</h5><p>RNN产生长期依赖的原因与参数学习BPTT过程有关，实质就是参数U 的更新主要靠当前时刻k 的几个相邻状态 $h_k $来更新，长距离的状态对U 没有影响。将 $\delta_{t,k}$ 展开可得到：  </p>
+<script type="math/tex; mode=display">\delta_{t,k}=\prod_{i=k}^{t-1}(diag(f^{'}(z_i))U^{T})\delta_{t,t}</script><p>如果令 $\gamma\simeq ||diagf^{‘}(z_i)U^{T}|| $，则可得到：</p>
+<script type="math/tex; mode=display">\delta_{t,k}=\gamma^{t-k}\delta_{t,t}</script><p>若 $\gamma&gt;1$ ，当 $t−k\rightarrow\infty $时，造成系统不稳定，称为梯度爆炸问题（Gradient Exploding Problem）；相反，若 $\gamma&lt;1 $，当 $t−k\rightarrow\infty $时会出现和深度前馈神经网络类似的梯度消失问题（gradient vanishing problem）。</p>
+<p>在循环神经网络中的梯度消失不是说 $\frac{\alpha L}{\alpha U} $的梯度消失了，而是 $\delta_{t,k} $的梯度消失了当 $t−k\rightarrow\infty $。也就是说，参数U 的更新主要靠当前时刻k 的几个相邻状态 $h_k$ 来更新，长距离的状态对U 没有影响。  </p>
+<h5 id="5、RNN中为什么要采用tanh而不是ReLu作为激活函数？为什么普通的前馈网络或-CNN-中采取ReLU不会出现问题？"><a href="#5、RNN中为什么要采用tanh而不是ReLu作为激活函数？为什么普通的前馈网络或-CNN-中采取ReLU不会出现问题？" class="headerlink" title="5、RNN中为什么要采用tanh而不是ReLu作为激活函数？为什么普通的前馈网络或 CNN 中采取ReLU不会出现问题？"></a>5、RNN中为什么要采用tanh而不是ReLu作为激活函数？为什么普通的前馈网络或 CNN 中采取ReLU不会出现问题？</h5><p>由 $\delta_{t,k}=\prod_{i=k}^{t-1}(diag(f^{‘}(z_i))U^{T})\delta_{t,t} $可以得到，当使用ReLU作为激活函数时，$f^{‘}(z_i)=1， diag(f^{‘}(z_i))=I $，只要 U 不是单位矩阵，梯度还是会出现消失或者爆炸的现象。</p>
+<p>当采用ReLU作为循环神经网络中隐含层的激活函数时，只有当 U  的取值在单位矩阵附近时才能取得比较好的效果，因此需要将 U 初始化为单位矩阵。实验证明，初始化W为单位矩阵并使用ReLU激活函数在一些应用中取得了与长短期记忆模型相似的结果，并且学习速度比长短期记忆模型更快，是一个值得尝试的小技巧。</p>
+<p>那么为什么普通的前馈网络或 CNN 中采取ReLU不会出现梯度消失或梯度爆炸的问题呢？</p>
+<p>类似前馈神经网络中的误差反向传播：<br><img src="/2018/03/20/interview-preparation/0009.png" alt=""><br>因为他们每一层的 W 不同，且在初始化时是独立同分布的，因此可以在一定程度相互抵消。即使多层之后一般也不会出现数值问题。</p>
+<h5 id="6、循环神经网络RNN怎么解决长期依赖问题？LSTM的结构是怎样的？LSTM又有哪些变种的？"><a href="#6、循环神经网络RNN怎么解决长期依赖问题？LSTM的结构是怎样的？LSTM又有哪些变种的？" class="headerlink" title="6、循环神经网络RNN怎么解决长期依赖问题？LSTM的结构是怎样的？LSTM又有哪些变种的？"></a>6、循环神经网络RNN怎么解决长期依赖问题？LSTM的结构是怎样的？LSTM又有哪些变种的？</h5><p>RNN中的长期依赖问题，也就是梯度消失或梯度爆炸可以采取如下解法：<br>1）RNN梯度爆炸的解决方法：梯度截断<br>2）RNN梯度消失的解决方法；残差结构、门控机制（LSTM，GRU）<br>为了RNN中的长期依赖问题，一种非常好的解决方案是引入门控(Hochreiter and Schmidhuber)来控制信息的累积速度，包括有选择地加入新的信息，并有选择地遗忘之前累积的信息。这一类网络可以称为基于门控的循环神经网络（Gated RNN）。   </p>
+<h5 id="7、怎么理解“长短时记忆单元”？RNN中的隐状态-h-t-与LSTM中的记忆状态-C-t-有什么区别？"><a href="#7、怎么理解“长短时记忆单元”？RNN中的隐状态-h-t-与LSTM中的记忆状态-C-t-有什么区别？" class="headerlink" title="7、怎么理解“长短时记忆单元”？RNN中的隐状态 $h_t$ 与LSTM中的记忆状态 $C_t $有什么区别？"></a>7、怎么理解“长短时记忆单元”？RNN中的隐状态 $h_t$ 与LSTM中的记忆状态 $C_t $有什么区别？</h5><p>记忆循环神经网络中的隐状态h存储了历史信息，可以看作是一种记忆（mem-ory）。在简单循环网络中，隐状态每个时刻都会被重写，因此可以看作是一种短期记忆（short-term memory）。在神经网络中，长期记忆（long-term memory）可以看作是网络参数，隐含了从训练数据中学到的经验，并更新周期要远远慢于短期记忆。而在LSTM网络中，记忆单元c 可以在某个时刻捕捉到某个关键信息，并有能力将此关键信息保存一定的时间间隔。记忆单元c 中保存信息的生命周期要长于短期记忆h，但又远远短于长期记忆，因此称为长的短期记忆（long short-term memory）。  </p>
+<h5 id="8、LSTM与GRU关系是怎样的？"><a href="#8、LSTM与GRU关系是怎样的？" class="headerlink" title="8、LSTM与GRU关系是怎样的？"></a>8、LSTM与GRU关系是怎样的？</h5><ul>
+<li>GRU 把遗忘门和输入门合并为更新门（update）z，并使用重置门（reset）r 代替输出门；  </li>
+<li>合并了记忆状态 C 和隐藏状态 h  </li>
+</ul>
+<h4 id="三、神经网络的训练技巧及优化问题"><a href="#三、神经网络的训练技巧及优化问题" class="headerlink" title="三、神经网络的训练技巧及优化问题"></a>三、神经网络的训练技巧及优化问题</h4><p><strong>神经网络主要的问题集中在优化问题和正则化问题。</strong><br>（1）优化问题：神经网络模型是一个非凸函数，再加上在深度网络中的梯度消失问题，很难进行优化；另外，深层神经网络模型一般参数比较多，训练数据也比较大，会导致训练的效率比较低。<br>（2）泛化问题：因为神经网络的拟合能力强，反而容易在训练集上产生过拟合。因此，在训练深层神经网络时，同时也需要通过一定的正则化方法来改进网络的泛化能力。  </p>
+<p>对应的优化问题有：  </p>
+<ul>
+<li>如何初始化参数；  </li>
+<li>预处理数据；  </li>
+<li>如何避免陷入局部最优？（学习率衰减+梯度方向优化）  </li>
+</ul>
+<p>具体展开讨论如下：  </p>
+<h5 id="1、神经网络优化的难点体现在哪里？"><a href="#1、神经网络优化的难点体现在哪里？" class="headerlink" title="1、神经网络优化的难点体现在哪里？"></a>1、神经网络优化的难点体现在哪里？</h5><p>深层神经网络是一个高度非线性的模型，其风险函数是一个非凸函数，因此风险最小化是一个非凸优化问题，会存在很多局部最优点。在高维空间中，非凸优化的难点并不在于如何逃离局部最优点，而是如何逃离<strong>鞍点</strong>。</p>
+<h5 id="2、神经网络数据预处理方法有哪些？神经网络怎样进行参数初始化？参数初始化为0、过大、过小会怎样？"><a href="#2、神经网络数据预处理方法有哪些？神经网络怎样进行参数初始化？参数初始化为0、过大、过小会怎样？" class="headerlink" title="2、神经网络数据预处理方法有哪些？神经网络怎样进行参数初始化？参数初始化为0、过大、过小会怎样？"></a>2、神经网络数据预处理方法有哪些？神经网络怎样进行参数初始化？参数初始化为0、过大、过小会怎样？</h5><p>1）神经网络数据预处理方法有哪些？  </p>
+<ul>
+<li>缩放归一化：通过缩放将每一个特征的取值范围归一到[0, 1] 或[−1, 1] 之间  </li>
+<li>标准归一化：将每一个维特征都处理为符合标准正态分布（均值为0，标准差为1）。  </li>
+<li>白化（Whitening）：是一种重要的预处理方法，用来降低输入数据特征之间的冗余性。输入数据经过白化处理后，特征之间相关性较低，并且所有特征具有相同的方差。  </li>
+</ul>
+<p><img src="/2018/03/20/interview-preparation/0010.png" alt="">  </p>
+<p>2）参数初始化为0、过大、过小会怎样？  </p>
+<ul>
+<li>参数为0：在第一遍前向计算时，所有的隐层神经元的激活值都相同。这样会导致深层神经元没有区分性。这种现象也称为对称权重现象。  </li>
+<li>参数过大或过小：参数过小还会使得sigmoid型激活函数丢失非线性的能力，这样多层神经网络的优势也就不存在了。如果参数取得太大，会导致输入状态过大。对于sigmoid 型激活函数来说，激活值变得饱和，从而导致梯度接近于0。  </li>
+</ul>
+<p>3）经常使用的初始化方法有以下几种：  </p>
+<ul>
+<li>Gaussian分布初始化；</li>
+<li>Xavier均匀分布初始化：参数可以在[−r, r] 内采用均匀分布进行初始化。  </li>
+</ul>
+<h5 id="3、神经网络优化方法有哪些？"><a href="#3、神经网络优化方法有哪些？" class="headerlink" title="3、神经网络优化方法有哪些？"></a>3、神经网络优化方法有哪些？</h5><p>几种优化方法大体上可以分为两类：一是调整学习率，使得优化更稳定；二是调整梯度方向，优化训练速度。如图所示：<br><img src="/2018/03/20/interview-preparation/0011.png" alt="">  </p>
+<ul>
+<li>AdaGrad：Adagrad 算法的缺点是在经过一定次数的迭代依然没有找到最优点时，由于这时的学习率已经非常小，很难再继续找到最优点。在第t 迭代时，计算每个参数梯度平方的累计值，累积值Gt越大，‘学习率’（$-\frac{\alpha}{\sqrt{Gt+\epsilon}}$）越小。<br><img src="/2018/03/20/interview-preparation/0012.png" alt=""><br><img src="/2018/03/20/interview-preparation/0013.png" alt="">  </li>
+<li>RMSprop：计算每次迭代梯度gt 平方的指数衰减移动平均：</li>
+</ul>
+<h5 id="4、请介绍逐层归一化（Batch-Normalization和Layer-Normalization）？"><a href="#4、请介绍逐层归一化（Batch-Normalization和Layer-Normalization）？" class="headerlink" title="4、请介绍逐层归一化（Batch Normalization和Layer Normalization）？"></a>4、请介绍逐层归一化（Batch Normalization和Layer Normalization）？</h5><p>（1）为什么要进行逐层归一化？什么是内部协变量偏移？<br>在深层神经网络中，中间某一层的输入是其之前的神经层的输出。因此，其之前的神经层的参数变化会导致其输入的分布发生较大的差异。在使用随机梯度下降来训练网络时，每次参数更新都会导致网络中间每一层的输入的分布发生改变。越深的层，其输入的分布会改变得越明显。就像一栋高楼，低楼层发生一个较小的偏移，都会导致高楼层较大的偏移。<br><strong>协变量偏移</strong>：协变量是一个统计学概念，是可能影响预测结果的统计变量。 在机器学习中，协变量可以看作是输入。一般的机器学习算法都要求输 入在训练集和测试集上的分布是相似的。如果不满足这个要求，这些学 习算法在测试集的表现会比较差。<br>从机器学习角度来看，如果某个神经层的输入分布发生了改变，那么其参数需要重新学习，这种现象叫做<strong>内部协变量偏移</strong>。  </p>
+<p>内部协变量偏移会导致什么问题？  </p>
+<p>简而言之，每个神经元的输入数据不再是“独立同分布”。  </p>
+<p>1.上层参数需要不断适应新的输入数据分布，降低学习速度。<br>2.下层输入的变化可能趋向于变大或者变小，导致上层落入饱和区，使得学习过早停止。<br>3.每层的更新都会影响到其它层，因此每层的参数更新策略需要尽可能的谨慎。  </p>
+<p>为了解决内部协变量偏移问题，就要使得每一个神经层的输入的分布在训练过程中要保持一致。最简单直接的方法就是对每一个神经层都进行归一化操作，使其分布保存稳定。下面介绍几种比较常用的逐层归一化方法：<strong>批量归一化、层归一化</strong>。层归一化和批量归一化整体上是十分类似的，差别在于归一化的方法不同。  </p>
+<p><strong>动机</strong>  </p>
+<ul>
+<li>训练的本质是学习数据分布。如果训练数据与测试数据的分布不同会降低模型的泛化能力。因此，应该在开始训练前对所有输入数据做归一化处理。  </li>
+<li>而在神经网络中，因为每个隐层的参数不同，会使下一层的输入发生变化，从而导致每一批数据的分布也发生改变；致使网络在每次迭代中都需要拟合不同的数据分布，增大了网络的训练难度与过拟合的风险。（个人理解，参数更新了，输入下一个batch的数据走到越后层，数据和上个batch的分布出现了越大的差异）  </li>
+</ul>
+<p>（2）批量归一化（Batch Normalization，BN）的主要作用是什么？主要原理是什么？<br>BN 是一种正则化方法（减少泛化误差），主要作用有：  </p>
+<ul>
+<li>加速网络的训练（缓解梯度消失，支持更大的学习率）</li>
+<li>防止过拟合：BN 可以看作在各层之间加入了一个新的计算层，对数据分布进行额外的约束，从而增强模型的泛化能力；  </li>
+<li>降低了参数初始化的要求。</li>
+</ul>
+<p><strong>基本原理</strong>. </p>
+<ul>
+<li>BN 方法会针对每一批数据，在网络的每一层输入之前增加归一化处理，使输入的均值为 0，标准差为 1。目的是将数据限制在统一的分布下。  </li>
+<li>具体来说，针对每层的第 k 个神经元，计算这一批数据在第 k 个神经元的均值与标准差，然后将归一化后的值作为该神经元的激活值。<br><img src="/2018/03/20/interview-preparation/0014.png" alt="">  </li>
+<li>BN 可以看作在各层之间加入了一个新的计算层，对数据分布进行额外的约束，从而增强模型的泛化能力；  </li>
+<li>但同时 BN 也降低了模型的拟合能力，破坏了之前学到的特征分布；为了恢复数据的原始分布，BN 引入了一个重构变换来还原最优的输入数据分布。加入缩放和平移变量γ和β ,归一化后的值y=γx’+β。（加入缩放平移变量的原因是：保证每一次数据经过归一化后还保留原有学习来的特征，同时又能完成归一化操作，加速训练。 这两个参数是用来学习的参数。）<br><img src="/2018/03/20/interview-preparation/0015.png" alt=""><br>其中 γ 和 β 为可训练参数。  </li>
+</ul>
+<p>（3）BN 在训练和测试时分别是怎么做的？  </p>
+<ul>
+<li>训练时每次会传入一批数据，做法如前述；训练时不采用移动平均，使用 BN 的目的就是为了保证每批数据的分布稳定，使用全局统计量反而违背了这个初衷；  </li>
+<li>当测试或预测时，每次可能只会传入单个数据，此时模型会使用全局统计量代替批统计量（移动平均（moving averages）)  </li>
+</ul>
+<p>（4）Layer Normalizaiton  </p>
+<p>batch normalization存在以下缺点：   </p>
+<ul>
+<li>对batchsize的大小比较敏感，由于每次计算均值和方差是在一个batch上，所以如果batchsize太小，则计算的均值、方差不足以代表整个数据分布；  </li>
+<li>BN实际使用时需要计算并且保存某一层神经网络batch的均值和方差等统计信息，对于对一个固定深度的前向神经网络（DNN，CNN）使用BN，很方便；但对于RNN来说，sequence的长度是不一致的，换句话说RNN的深度不是固定的，不同的time-step需要保存不同的statics特征，可能存在一个特殊sequence比其他sequence长很多，这样training时，计算很麻烦。（参考于<a href="https://blog.csdn.net/lqfarmer/article/details/71439314）" target="_blank" rel="noopener">https://blog.csdn.net/lqfarmer/article/details/71439314）</a>  </li>
+</ul>
+<p>与BN不同，LN是针对深度网络的某一层的所有神经元的输入按以下公式进行normalize操作。<br><img src="/2018/03/20/interview-preparation/0016.png" alt=""><br><strong>BN与LN的区别在于：</strong>  </p>
+<ul>
+<li>LN中同层神经元输入拥有相同的均值和方差，不同的输入样本有不同的均值和方差；  </li>
+<li>BN中则针对不同神经元输入计算均值和方差，同一个batch中的输入拥有相同的均值和方差。  </li>
+</ul>
+<p>所以，LN不依赖于batch的大小和输入sequence的深度，因此可以用于batchsize为1和RNN中对边长的输入sequence的normalize操作。（LN用于RNN效果比较明显，但是在CNN上，不如BN。）  </p>
+<h5 id="5、神经网络正则化的方法有哪些？"><a href="#5、神经网络正则化的方法有哪些？" class="headerlink" title="5、神经网络正则化的方法有哪些？"></a>5、神经网络正则化的方法有哪些？</h5><ul>
+<li>L1 和L2 正则化：L1 和L2 正则化是机器学习中最常用的正则化方法，通过约束参数的L1 和L2 范数来减小模型在训练数据集上的过拟合现象。  </li>
+<li>Batch Normalization（同上）  </li>
+<li>提前停止: 当验证集上的错误率不再下降，就停止迭代。  </li>
+<li>Dropout：集成学习的解释:每做一次丢弃，相当于从原始的网络中采样得到一个子网络。每次迭代都相当于训练一个不同的子网络，这些子网络都共享原始网络的参数。那么，最终的网络可以近似看作是集成了指数级个不同网络的组合模型。当在循环神经网络上应用丢弃法，不能直接对每个时刻的隐状态进行随机丢弃，这样会损害循环网络在时间维度上记忆能力。一种简单的方法是对非时间维度的连接（即非循环连接）进行随机丢失:<br><img src="/2018/03/20/interview-preparation/0017.png" alt="">  </li>
+<li>数据增强： 增加数据量，提高模型鲁棒性，避免过拟合。目前，数据增强还主要应用在图像数据上，在文本等其它类型的数据还没有太好的方法。  </li>
+<li>标签平滑：在输出标签中添加噪声来避免模型过拟合。  </li>
+</ul>
+<h5 id="6、神经网络怎么解决梯度消失问题？"><a href="#6、神经网络怎么解决梯度消失问题？" class="headerlink" title="6、神经网络怎么解决梯度消失问题？"></a>6、神经网络怎么解决梯度消失问题？</h5><ul>
+<li>选择合适的激活函数：前馈神经网络：ReLU 循环神经网络：tanh</li>
+<li>Batch Normalization</li>
+<li>采取残差网络ResNet  </li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/03/15/ensemble/" rel="next" title="Ensemble">
+                <i class="fa fa-chevron-left"></i> Ensemble
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/03/29/interview-preparation2/" rel="prev" title="interview-preparation2">
+                interview-preparation2 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="MCF">
+            
+              <p class="site-author-name" itemprop="name">MCF</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">34</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#一、神经网络基础和前馈神经网络"><span class="nav-number">1.</span> <span class="nav-text">一、神经网络基础和前馈神经网络</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-神经网络中的激活函数：对比ReLU与Sigmoid、Tanh的优缺点？ReLU有哪些变种？"><span class="nav-number">1.1.</span> <span class="nav-text">1.神经网络中的激活函数：对比ReLU与Sigmoid、Tanh的优缺点？ReLU有哪些变种？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2、神经网络结构哪几种？各自都有什么特点？"><span class="nav-number">1.2.</span> <span class="nav-text">2、神经网络结构哪几种？各自都有什么特点？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3、前馈神经网络叫做多层感知机是否合适？-区别"><span class="nav-number">1.3.</span> <span class="nav-text">3、前馈神经网络叫做多层感知机是否合适？(区别)</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#4、前馈神经网络怎么划分层？"><span class="nav-number">1.4.</span> <span class="nav-text">4、前馈神经网络怎么划分层？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#5、怎么理解前馈神经网络中的反向传播？具体计算流程是怎样的？"><span class="nav-number">1.5.</span> <span class="nav-text">5、怎么理解前馈神经网络中的反向传播？具体计算流程是怎样的？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#6、卷积神经网络哪些部分构成？各部分作用分别是什么？"><span class="nav-number">1.6.</span> <span class="nav-text">6、卷积神经网络哪些部分构成？各部分作用分别是什么？</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二、循环神经网络"><span class="nav-number">2.</span> <span class="nav-text">二、循环神经网络</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1、什么是循环神经网络？循环神经网络的基本结构是怎样的？"><span class="nav-number">2.1.</span> <span class="nav-text">1、什么是循环神经网络？循环神经网络的基本结构是怎样的？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2、循环神经网络RNN常见的几种设计模式是怎样的？"><span class="nav-number">2.2.</span> <span class="nav-text">2、循环神经网络RNN常见的几种设计模式是怎样的？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3、循环神经网络RNN怎样进行参数学习？"><span class="nav-number">2.3.</span> <span class="nav-text">3、循环神经网络RNN怎样进行参数学习？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#4、循环神经网络RNN长期依赖问题产生的原因是怎样的？"><span class="nav-number">2.4.</span> <span class="nav-text">4、循环神经网络RNN长期依赖问题产生的原因是怎样的？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#5、RNN中为什么要采用tanh而不是ReLu作为激活函数？为什么普通的前馈网络或-CNN-中采取ReLU不会出现问题？"><span class="nav-number">2.5.</span> <span class="nav-text">5、RNN中为什么要采用tanh而不是ReLu作为激活函数？为什么普通的前馈网络或 CNN 中采取ReLU不会出现问题？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#6、循环神经网络RNN怎么解决长期依赖问题？LSTM的结构是怎样的？LSTM又有哪些变种的？"><span class="nav-number">2.6.</span> <span class="nav-text">6、循环神经网络RNN怎么解决长期依赖问题？LSTM的结构是怎样的？LSTM又有哪些变种的？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#7、怎么理解“长短时记忆单元”？RNN中的隐状态-h-t-与LSTM中的记忆状态-C-t-有什么区别？"><span class="nav-number">2.7.</span> <span class="nav-text">7、怎么理解“长短时记忆单元”？RNN中的隐状态 $h_t$ 与LSTM中的记忆状态 $C_t $有什么区别？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#8、LSTM与GRU关系是怎样的？"><span class="nav-number">2.8.</span> <span class="nav-text">8、LSTM与GRU关系是怎样的？</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#三、神经网络的训练技巧及优化问题"><span class="nav-number">3.</span> <span class="nav-text">三、神经网络的训练技巧及优化问题</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1、神经网络优化的难点体现在哪里？"><span class="nav-number">3.1.</span> <span class="nav-text">1、神经网络优化的难点体现在哪里？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2、神经网络数据预处理方法有哪些？神经网络怎样进行参数初始化？参数初始化为0、过大、过小会怎样？"><span class="nav-number">3.2.</span> <span class="nav-text">2、神经网络数据预处理方法有哪些？神经网络怎样进行参数初始化？参数初始化为0、过大、过小会怎样？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3、神经网络优化方法有哪些？"><span class="nav-number">3.3.</span> <span class="nav-text">3、神经网络优化方法有哪些？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#4、请介绍逐层归一化（Batch-Normalization和Layer-Normalization）？"><span class="nav-number">3.4.</span> <span class="nav-text">4、请介绍逐层归一化（Batch Normalization和Layer Normalization）？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#5、神经网络正则化的方法有哪些？"><span class="nav-number">3.5.</span> <span class="nav-text">5、神经网络正则化的方法有哪些？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#6、神经网络怎么解决梯度消失问题？"><span class="nav-number">3.6.</span> <span class="nav-text">6、神经网络怎么解决梯度消失问题？</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">MCF</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

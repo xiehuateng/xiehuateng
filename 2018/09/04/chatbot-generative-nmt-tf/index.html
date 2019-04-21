@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="NLP,Chatbot,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="这里用的是google开源的nmt项目来简单实现的一个chatbot。很直觉的，把对话的语聊喂到nmt的模型进行训练，这样最终训练得到的模型就是一个简单的聊天机器人。   Google开源的tensorflow-nmt(seq2seq)模型，可以在下面这篇博客里详细了解下：tensorflow-nmt(seq2seq)模型   使用seq2seq框架完成一个聊天机器人构建的任务，我给大家准备了一些">
+<meta name="keywords" content="NLP,Chatbot">
+<meta property="og:type" content="article">
+<meta property="og:title" content="seq2seq构建生成式的聊天机器人">
+<meta property="og:url" content="http://yoursite.com/2018/09/04/chatbot-generative-nmt-tf/index.html">
+<meta property="og:site_name" content="Mcf&#39;s Blog">
+<meta property="og:description" content="这里用的是google开源的nmt项目来简单实现的一个chatbot。很直觉的，把对话的语聊喂到nmt的模型进行训练，这样最终训练得到的模型就是一个简单的聊天机器人。   Google开源的tensorflow-nmt(seq2seq)模型，可以在下面这篇博客里详细了解下：tensorflow-nmt(seq2seq)模型   使用seq2seq框架完成一个聊天机器人构建的任务，我给大家准备了一些">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-04-21T03:17:04.729Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="seq2seq构建生成式的聊天机器人">
+<meta name="twitter:description" content="这里用的是google开源的nmt项目来简单实现的一个chatbot。很直觉的，把对话的语聊喂到nmt的模型进行训练，这样最终训练得到的模型就是一个简单的聊天机器人。   Google开源的tensorflow-nmt(seq2seq)模型，可以在下面这篇博客里详细了解下：tensorflow-nmt(seq2seq)模型   使用seq2seq框架完成一个聊天机器人构建的任务，我给大家准备了一些">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/09/04/chatbot-generative-nmt-tf/">
+
+
+
+
+
+  <title>seq2seq构建生成式的聊天机器人 | Mcf's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Mcf's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/04/chatbot-generative-nmt-tf/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="MCF">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Mcf's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">seq2seq构建生成式的聊天机器人</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-09-04T18:19:20+08:00">
+                2018-09-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/NLP/" itemprop="url" rel="index">
+                    <span itemprop="name">NLP</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>这里用的是google开源的nmt项目来简单实现的一个chatbot。很直觉的，把对话的语聊喂到nmt的模型进行训练，这样最终训练得到的模型就是一个简单的聊天机器人。  </p>
+<p>Google开源的tensorflow-nmt(seq2seq)模型，可以在下面这篇博客里详细了解下：<a href="https://xiehuateng.github.io/2019/02/28/tf-nmt-seq2seq/" target="_blank" rel="noopener">tensorflow-nmt(seq2seq)模型</a>  </p>
+<p>使用seq2seq框架完成一个聊天机器人构建的任务，我给大家准备了一些对话语料，我们使用这份数据来构建聊天机器人的AI应用。在此之前，我们先了解一下原有的翻译系统需要准备的语料格式，我们把中文数据处理成格式一致的形态。  </p>
+<p>我们先拉取一份样例数据。执行项目里的脚本文件进行下载。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">!bash nmt/scripts/download_iwslt15.sh /tmp/nmt_data</span><br></pre></td></tr></table></figure></p>
+<p>查看一下包含的文件:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">train.en  tst2012.en  tst2013.en  vocab.en</span><br><span class="line">train.vi  tst2012.vi  tst2013.vi  vocab.vi</span><br></pre></td></tr></table></figure></p>
+<p>看一下源语言与目标语言的格式，以及对应的数据量,可以看到都是做过tokenization之后的数据:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">!head <span class="number">-10</span> /tmp/nmt_data/train.en</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Rachel Pike : The science behind a climate headline</span><br><span class="line">In <span class="number">4</span> minutes , atmospheric chemist Rachel Pike provides a glimpse of the massive scientific effort behind the bold headlines on climate change , <span class="keyword">with</span> her team -- one of thousands who contributed -- taking a risky flight over the rainforest <span class="keyword">in</span> pursuit of data on a key molecule .</span><br><span class="line">I &amp;apos;d like to talk to you today about the scale of the scientific effort that goes into making the headlines you see <span class="keyword">in</span> the paper .</span><br><span class="line">Headlines that look like this when they have to do <span class="keyword">with</span> climate change , <span class="keyword">and</span> headlines that look like this when they have to do <span class="keyword">with</span> air quality <span class="keyword">or</span> smog .</span><br><span class="line">They are both two branches of the same field of atmospheric science .</span><br><span class="line">Recently the headlines looked like this when the Intergovernmental Panel on Climate Change , <span class="keyword">or</span> IPCC , put out their report on the state of understanding of the atmospheric system .</span><br><span class="line">That report was written by <span class="number">620</span> scientists <span class="keyword">from</span> <span class="number">40</span> countries .</span><br><span class="line">They wrote almost a thousand pages on the topic .</span><br><span class="line">And all of those pages were reviewed by another <span class="number">400</span>-plus scientists <span class="keyword">and</span> reviewers , <span class="keyword">from</span> <span class="number">113</span> countries .</span><br><span class="line">It &amp;apos;s a big community . It &amp;apos;s such a big community , <span class="keyword">in</span> fact , that our annual gathering <span class="keyword">is</span> the largest scientific meeting <span class="keyword">in</span> the world .</span><br></pre></td></tr></table></figure>
+<p>还需要准备好vocabulary词表:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">!head <span class="number">-10</span> /tmp/nmt_data/vocab.en</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&lt;unk&gt;</span><br><span class="line">&lt;s&gt;</span><br><span class="line">&lt;/s&gt;</span><br><span class="line">Rachel</span><br><span class="line">:</span><br><span class="line">The</span><br><span class="line">science</span><br><span class="line">behind</span><br><span class="line">a</span><br><span class="line">climate</span><br></pre></td></tr></table></figure>
+<h4 id="处理数据"><a href="#处理数据" class="headerlink" title="处理数据"></a>处理数据</h4><p>下面使用<a href="https://github.com/rustch3n/dgk_lost_conv/tree/master/results" target="_blank" rel="noopener">小黄鸡</a>进行训练。</p>
+<p>首先下载小黄鸡语料，并对它做一个处理，使得它符合seq2seq模型的输入格式。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">!wget https://github.com/candlewill/Dialog_Corpus/raw/master/xiaohuangji50w_nofenci.conv.zip</span><br><span class="line">!unzip xiaohuangji50w_nofenci.conv.zip</span><br></pre></td></tr></table></figure></p>
+<p>预处理数据，将问题与回答标识出来：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">!perl -pi.bak -e <span class="string">'s/(E\s)/\1Q /g'</span> xiaohuangji50w_nofenci.conv</span><br><span class="line">!perl -pi.bak -e <span class="string">'s/(Q M)/Q/g'</span> xiaohuangji50w_nofenci.conv</span><br><span class="line">!perl -pi.bak -e <span class="string">'s/(M )/A /g'</span> xiaohuangji50w_nofenci.conv</span><br><span class="line">!head <span class="number">-30</span> xiaohuangji50w_nofenci.conv</span><br></pre></td></tr></table></figure></p>
+<p>用jieba工具分词：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> jieba</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">split_conv</span><span class="params">(in_f, out_q, out_a)</span>:</span></span><br><span class="line">  out_question = open(out_q, <span class="string">'w'</span>)</span><br><span class="line">  out_answer = open(out_a, <span class="string">'w'</span>)</span><br><span class="line">  text = open(in_f).read().split(<span class="string">"E\n"</span>)</span><br><span class="line">  <span class="keyword">for</span> pair <span class="keyword">in</span> text:</span><br><span class="line">    <span class="comment"># 句子长度太短的问题对话，跳过</span></span><br><span class="line">    <span class="keyword">if</span> len(pair)&lt;=<span class="number">4</span>:</span><br><span class="line">      <span class="keyword">continue</span></span><br><span class="line">    <span class="comment"># 切分问题和回答</span></span><br><span class="line">    contents = pair.split(<span class="string">"\n"</span>)</span><br><span class="line">    out_question.write(<span class="string">" "</span>.join(jieba.lcut(contents[<span class="number">0</span>].strip(<span class="string">"Q "</span>)))+<span class="string">"\n"</span>)</span><br><span class="line">    out_answer.write(<span class="string">" "</span>.join(jieba.lcut(contents[<span class="number">1</span>].strip(<span class="string">"A "</span>)))+<span class="string">"\n"</span>)</span><br><span class="line">  out_question.close()</span><br><span class="line">  out_answer.close()</span><br><span class="line">  </span><br><span class="line">in_f = <span class="string">"xiaohuangji50w_nofenci.conv"</span></span><br><span class="line">out_q = <span class="string">'question.file'</span></span><br><span class="line">out_a = <span class="string">'answer.file'</span></span><br><span class="line">split_conv(in_f, out_q, out_a)</span><br></pre></td></tr></table></figure></p>
+<p>构建词表：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> re</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_vocab</span><span class="params">(in_f, out_f)</span>:</span></span><br><span class="line">    vocab_dic = &#123;&#125;</span><br><span class="line">    <span class="keyword">for</span> line <span class="keyword">in</span> open(in_f, encoding=<span class="string">'utf-8'</span>):</span><br><span class="line">        words = line.strip().split(<span class="string">" "</span>)</span><br><span class="line">        <span class="keyword">for</span> word <span class="keyword">in</span> words:</span><br><span class="line">            <span class="comment"># 保留汉字内容</span></span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">not</span> re.match(<span class="string">r"[\u4e00-\u9fa5]+"</span>, word):</span><br><span class="line">                <span class="keyword">continue</span></span><br><span class="line">            <span class="keyword">try</span>:</span><br><span class="line">                vocab_dic[word] += <span class="number">1</span></span><br><span class="line">            <span class="keyword">except</span>:</span><br><span class="line">                vocab_dic[word] = <span class="number">1</span></span><br><span class="line">    out = open(out_f, <span class="string">'w'</span>, encoding=<span class="string">'utf-8'</span>)</span><br><span class="line">    out.write(<span class="string">"&lt;unk&gt;\n&lt;s&gt;\n&lt;/s&gt;\n"</span>)</span><br><span class="line">    vocab = sorted(vocab_dic.items(),key = <span class="keyword">lambda</span> x:x[<span class="number">1</span>],reverse = <span class="keyword">True</span>)</span><br><span class="line">    <span class="keyword">for</span> word <span class="keyword">in</span> [x[<span class="number">0</span>] <span class="keyword">for</span> x <span class="keyword">in</span> vocab[:<span class="number">80000</span>]]:</span><br><span class="line">        out.write(word)</span><br><span class="line">        out.write(<span class="string">"\n"</span>)</span><br><span class="line">    out.close()</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">in_file = <span class="string">"question.file"</span></span><br><span class="line">out_file = <span class="string">"./data/vocab.input"</span></span><br><span class="line">get_vocab(in_file, out_file)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">in_file = <span class="string">"answer.file"</span></span><br><span class="line">out_file = <span class="string">"./data/vocab.output"</span></span><br><span class="line">get_vocab(in_file, out_file)</span><br></pre></td></tr></table></figure>
+<p>切分训练，验证，测试集:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">!mkdir data</span><br><span class="line">!head <span class="number">-300000</span> question.file &gt; data/train.input</span><br><span class="line">!head <span class="number">-300000</span> answer.file &gt; data/train.output</span><br><span class="line">!head <span class="number">-380000</span> question.file | tail <span class="number">-80000</span> &gt; data/val.input</span><br><span class="line">!head <span class="number">-380000</span> answer.file | tail <span class="number">-80000</span> &gt; data/val.output</span><br><span class="line">!tail <span class="number">-75000</span> question.file &gt; data/test.input</span><br><span class="line">!tail <span class="number">-75000</span> answer.file &gt; data/test.output</span><br></pre></td></tr></table></figure></p>
+<p>训练摘要生成模型:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">!python3 -m nmt.nmt \</span><br><span class="line">    --attention=scaled_luong \</span><br><span class="line">    --src=input --tgt=output \</span><br><span class="line">    --vocab_prefix=./data/vocab  \</span><br><span class="line">    --train_prefix=./data/train \</span><br><span class="line">    --dev_prefix=./data/val  \</span><br><span class="line">    --test_prefix=./data/test \</span><br><span class="line">    --out_dir=/tmp/nmt_attention_model \</span><br><span class="line">    --num_train_steps=<span class="number">12000</span> \</span><br><span class="line">    --steps_per_stats=<span class="number">1</span> \</span><br><span class="line">    --num_layers=<span class="number">2</span> \</span><br><span class="line">    --num_units=<span class="number">128</span> \</span><br><span class="line">    --dropout=<span class="number">0.2</span> \</span><br><span class="line">    --metrics=bleu</span><br></pre></td></tr></table></figure></p>
+<p><a href="">github</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/NLP/" rel="tag"># NLP</a>
+          
+            <a href="/tags/Chatbot/" rel="tag"># Chatbot</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/08/08/DSSM/" rel="next" title="DSSM(Deep Structured Semantic Model)">
+                <i class="fa fa-chevron-left"></i> DSSM(Deep Structured Semantic Model)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/09/12/language-model/" rel="prev" title="语言模型基础">
+                语言模型基础 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="MCF">
+            
+              <p class="site-author-name" itemprop="name">MCF</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">34</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#处理数据"><span class="nav-number">1.</span> <span class="nav-text">处理数据</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">MCF</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="一、AI算法基础.1、样本不平衡的解决方法？机器学习中经典假设中往往假定训练样本各类别是同等数量即各类样本数目是均衡的，但是真实场景中遇到的实际问题却常常不符合这个假设。一般来说，不平衡样本会导致训练模型侧重样本数目较多的类别，而‘轻视’样本数目较少类别，这样模型在测试数据上的泛化能力就会受到影响。一个例子，训练集中有99个正例样本，一个负例样本。在不考虑样本不平衡的很多情况下，学习算法会使分类器">
+<meta property="og:type" content="article">
+<meta property="og:title" content="interview-preparation2">
+<meta property="og:url" content="http://yoursite.com/2018/03/29/interview-preparation2/index.html">
+<meta property="og:site_name" content="Mcf&#39;s Blog">
+<meta property="og:description" content="一、AI算法基础.1、样本不平衡的解决方法？机器学习中经典假设中往往假定训练样本各类别是同等数量即各类样本数目是均衡的，但是真实场景中遇到的实际问题却常常不符合这个假设。一般来说，不平衡样本会导致训练模型侧重样本数目较多的类别，而‘轻视’样本数目较少类别，这样模型在测试数据上的泛化能力就会受到影响。一个例子，训练集中有99个正例样本，一个负例样本。在不考虑样本不平衡的很多情况下，学习算法会使分类器">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="http://yoursite.com/2018/03/29/interview-preparation2/WX20190329-154415@2x.png">
+<meta property="og:image" content="http://yoursite.com/2018/03/29/interview-preparation2/WX20190329-163950@2x.png">
+<meta property="og:image" content="http://yoursite.com/2018/03/29/interview-preparation2/interview-preparation2.png">
+<meta property="og:image" content="http://yoursite.com/2018/03/29/interview-preparation2/WX20190329-164737@2x.png">
+<meta property="og:image" content="http://yoursite.com/2018/03/29/interview-preparation2/WX20190329-164750@2x.png">
+<meta property="og:image" content="http://yoursite.com/2018/03/29/interview-preparation2/accuracy.gif">
+<meta property="og:image" content="http://yoursite.com/2018/03/29/interview-preparation2/WX20190402-141634@2x.png">
+<meta property="og:image" content="http://yoursite.com/2018/03/29/interview-preparation2/precision.gif">
+<meta property="og:image" content="http://yoursite.com/2018/03/29/interview-preparation2/recall.gif">
+<meta property="og:image" content="http://yoursite.com/2018/03/29/interview-preparation2/f1.gif">
+<meta property="og:image" content="http://yoursite.com/2018/03/29/interview-preparation2/WX20190402-162437@2x.gif">
+<meta property="og:updated_time" content="2019-04-21T03:21:32.097Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="interview-preparation2">
+<meta name="twitter:description" content="一、AI算法基础.1、样本不平衡的解决方法？机器学习中经典假设中往往假定训练样本各类别是同等数量即各类样本数目是均衡的，但是真实场景中遇到的实际问题却常常不符合这个假设。一般来说，不平衡样本会导致训练模型侧重样本数目较多的类别，而‘轻视’样本数目较少类别，这样模型在测试数据上的泛化能力就会受到影响。一个例子，训练集中有99个正例样本，一个负例样本。在不考虑样本不平衡的很多情况下，学习算法会使分类器">
+<meta name="twitter:image" content="http://yoursite.com/2018/03/29/interview-preparation2/WX20190329-154415@2x.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/03/29/interview-preparation2/">
+
+
+
+
+
+  <title>interview-preparation2 | Mcf's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Mcf's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/29/interview-preparation2/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="MCF">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Mcf's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">interview-preparation2</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-03-29T13:41:55+08:00">
+                2018-03-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h4 id="一、AI算法基础"><a href="#一、AI算法基础" class="headerlink" title="一、AI算法基础."></a>一、AI算法基础.</h4><h5 id="1、样本不平衡的解决方法？"><a href="#1、样本不平衡的解决方法？" class="headerlink" title="1、样本不平衡的解决方法？"></a>1、样本不平衡的解决方法？</h5><p>机器学习中经典假设中往往假定训练样本各类别是同等数量即各类样本数目是均衡的，但是真实场景中遇到的实际问题却常常不符合这个假设。一般来说，不平衡样本会导致训练模型侧重样本数目较多的类别，而‘轻视’样本数目较少类别，这样模型在测试数据上的泛化能力就会受到影响。一个例子，训练集中有99个正例样本，一个负例样本。在不考虑样本不平衡的很多情况下，学习算法会使分类器放弃负例预测，因为把所有样本都分为正便可获得高达99%的训练分类准确率。下面将从“数据层面”和“算法层面”两个方面介绍不平衡样本问题。  </p>
+<h6 id="数据层面处理办法"><a href="#数据层面处理办法" class="headerlink" title="数据层面处理办法"></a>数据层面处理办法</h6><p>数据层面处理方法多借助数据采样法是整体训练样本趋于平衡，即各类样本基本一致。  </p>
+<ul>
+<li>上采样：对样本少的类别采用复制样本的方式进行采样，直至与样本数最多的类别一致。当然也可以由数据扩充方式替代简单复制。  </li>
+<li>下采样：对于样本较多的类别，可采用下采样，不是随机丢弃一部分数据，而是在批处理训练是对每批随机抽取的图像严格控制器样本较多的类别的数量。</li>
+</ul>
+<h6 id="算法层面的处理方法"><a href="#算法层面的处理方法" class="headerlink" title="算法层面的处理方法"></a>算法层面的处理方法</h6><p>对于不平衡样本导致样本数目较少的类别”欠学习“这一现象，一个很自然的解决办法是增加小样本错分的惩罚代价，并将此代价直接体现在目标函数里。这就是代价敏感的方法，这样就可以通过优化目标函数调整模型在小样本上的注意力。算法层面处理不平衡样本问题的方法也多从代价敏感的角度出发。</p>
+<p><strong>代价敏感方法</strong><br>代价敏感的方法可概括为两种， 一则基于代价敏感矩阵，一则基于代价敏感向量。<br><strong>代价敏感矩阵</strong><br>以分类问题为例，假设某训练集共有N个样本，形如$[x_{n},y_{n}]_{n=1}^{N}$，其中样本标记y隶属于K类。基于代价敏感矩阵方法是利用K∗K的矩阵C对不同样本类别施加错分惩罚（亦可称权重）。  </p>
+<div align="center">
+  <img width="300" src="/2018/03/29/interview-preparation2/WX20190329-154415@2x.png">
+</div> 
+其中，$C(y_{i},y_{j})\in [0,\infty)]$表示类别$y_{i}$的惩罚。$C(y_{i},y_{i})=0$。施加代价后的训练目标变为：训练得到某分类器$g$使得期望之和$\sum_{n}{C(y_{n},g(x_{n}))}$最小。  
+**代价敏感向量**  
+另一种代价敏感的反映方式则针对样本级别:对某样本$(x_{n},y_{n})$，有对应的一个K维的向量$c_{n}\in [0,+\infty)^{K}$，其中$c_{n}$的第k维表示该样本被错分为第k类的惩罚。基于代价敏感向量的方法在模型训练阶段是将样本级别的代价敏感向量与样本以$(x_{n},y_{n},c_{n})$三元组形式一同作为输入数据送入学习算法。细心的读者不难发现，代价敏感矩阵法实际上式代价敏感向量法的一种特殊形式，即对于某类的所有样本其错分惩罚向量为同一向量。  
+
+**代价敏感法中权重的指定方式**  
+代价敏感方法的处理前提是先指定代价敏感矩阵或向量。其中关键是错分惩罚或错分权重的设定。实际使用中可根据样本的比例，分类结果的混淆矩阵等信息指定代价敏感矩阵或向量中错分权重的具体取值。
+
+按照比例指定. 
+
+假设训练样本的标记共有3类：a类， b类， c类。它们的样本数目比例是3：2：1，则代价敏感矩阵为： 
+<div align="center">
+  <img width="300" src="/2018/03/29/interview-preparation2/WX20190329-163950@2x.png">
+</div> 
+可以在矩阵基础上乘以类别最小公倍数6。  
+
+根据混淆矩阵指定. 
+混淆矩阵(confusion matrix)是人工智能中一种算法分析工具， 用来度量模型或学习算法在监督学习中预测能力的优劣。 在机器学习领域，混淆矩阵通常也被称之为”联列表“ 或 ”误差矩阵“。混淆矩阵的每一列代表一个类的实例预测，而每一行代表其真实类别，如下表，仍以a， b， c三类分类为例。   
+<div align="center">
+  <img width="300" src="/2018/03/29/interview-preparation2/interview-preparation2.png">
+</div> 
+矩阵对角线为正确分类样本数，各分类为4， 3， 21。矩阵其它位置为错分样本数，如a错分b类的样本数为1， 错分c类的样本数为3。  
+虽然各类错分样本数的绝对数值接近（均错分3）但是相对而言，样本数较少的a类b类有50%和66.67%的样本被错分，比例相当高，但是c类只有19%。该情况用代价敏感法处理时，可根据各类分错样本数设置代价敏感矩阵的取值。   
+一种方法直接以错分样本数为矩阵取值。   
+<div align="center">
+  <img width="300" src="/2018/03/29/interview-preparation2/WX20190329-164737@2x.png">
+</div>
+不过更优的方案还需考虑各类的错分比例，并以此比例调整错分权重。对a类而言，a类错分比例50%，占所有比例的136%（50%+67%+19%）的百分之36.76%
+<div align="center">
+  <img width="300" src="/2018/03/29/interview-preparation2/WX20190329-164750@2x.png">
+</div>  
+
+<p><strong>数据层面采用数据重采样处理解决样本不平衡问题，其操作简单，不过该类方法会改变数据原始分布，有可能产生过拟合<br>算法层面采用代价敏感法处理样本不平衡问题，通过指定代价敏感矩阵或代价敏感向量的错分权重，可缓解样本不平衡带来的影响。</strong></p>
+<p>还有一些其他方法，通过降低方差来缓解问题，如集成方法：bagging，类似随机森林、自助采样；多任务联合学习；   </p>
+<h5 id="2、交叉熵函数系列问题？与最大似然函数的关系和区别？"><a href="#2、交叉熵函数系列问题？与最大似然函数的关系和区别？" class="headerlink" title="2、交叉熵函数系列问题？与最大似然函数的关系和区别？"></a>2、交叉熵函数系列问题？与最大似然函数的关系和区别？</h5><ul>
+<li>1）交叉熵损失函数的物理意义：用于描述模型预测值与真实值的差距大小(由KL散度推导得来，用来形容两个分布之间的差距)；  </li>
+<li>2）最小化交叉熵的本质就是对数似然函数的最大化；  </li>
+<li>3）对数似然函数的本质就是衡量在某个参数下，整体的估计和真实情况一样的概率，越大代表越相近；而损失函数的本质就是衡量预测值和真实值之间的差距，越大代表越不相近。  </li>
+</ul>
+<h5 id="3、HMM、MEMM-vs-CRF-对比？"><a href="#3、HMM、MEMM-vs-CRF-对比？" class="headerlink" title="3、HMM、MEMM vs CRF 对比？"></a>3、HMM、MEMM vs CRF 对比？</h5><ul>
+<li>HMM是有向图模型，是生成模型；HMM有两个假设：一阶马尔科夫假设和观测独立性假设；但对于序列标注问题不仅和单个词相关，而且和观察序列的长度，单词的上下文，等等相关。   </li>
+<li>MEMM（最大熵马尔科夫模型）是有向图模型，是判别模型；MEMM打破了HMM的观测独立性假设，MEMM考虑到相邻状态之间依赖关系，且考虑整个观察序列，因此MEMM的表达能力更强；但MEMM会带来标注偏置问题：由于局部归一化问题，MEMM倾向于选择拥有更少转移的状态。这就是标记偏置问题。  </li>
+<li>CRF模型解决了标注偏置问题，去除了HMM中两个不合理的假设，当然，模型相应得也变复杂了。  </li>
+</ul>
+<p><strong>HMM、MEMM和CRF的优缺点比较：</strong><br>首先，CRF，HMM(隐马模型)，MEMM(最大熵隐马模型)都常用来做序列标注的建模，像分词、词性标注，以及命名实体标注。<br>隐马模型一个最大的缺点就是由于其输出独立性假设，导致其不能考虑上下文的特征，限制了特征的选择。<br>最大熵隐马模型则解决了隐马的问题，可以任意选择特征，但由于其在每一节点都要进行归一化，所以只能找到局部的最优值，同时也带来了标记偏见的问题，即凡是训练语料中未出现的情况全都忽略掉。<br>条件随机场则很好的解决了这一问题，他并不在每一个节点进行归一化，而是所有特征进行全局归一化，因此可以求得全局的最优值。  </p>
+<h5 id="4、RF、GBDT、XGBoost"><a href="#4、RF、GBDT、XGBoost" class="headerlink" title="4、RF、GBDT、XGBoost"></a>4、RF、GBDT、XGBoost</h5><h6 id="1、RF与GBDT之间的区别"><a href="#1、RF与GBDT之间的区别" class="headerlink" title="1、RF与GBDT之间的区别"></a>1、RF与GBDT之间的区别</h6><p>（1）相同点  </p>
+<ul>
+<li>都是由多棵树组成  </li>
+<li>最终的结果都是由多棵树一起决定  </li>
+</ul>
+<p>（2）不同点</p>
+<ul>
+<li>组成随机森林的树可以分类树也可以是回归树，而GBDT只由回归树组成</li>
+<li>组成随机森林的树可以并行生成，而GBDT是串行生成</li>
+<li>随机森林的结果是多数表决表决的，而GBDT则是多棵树累加之和</li>
+<li>随机森林对异常值不敏感，而GBDT对异常值比较敏感</li>
+<li>随机森林是通过减少模型的方差来提高性能，而GBDT是减少模型的偏差来提高性能的</li>
+<li>随机森林不需要进行数据预处理，即特征归一化。而GBDT则需要进行特征归一化</li>
+</ul>
+<h6 id="2、分类树和回归树的区别"><a href="#2、分类树和回归树的区别" class="headerlink" title="2、分类树和回归树的区别"></a>2、分类树和回归树的区别</h6><p>（1）分类树使用信息增益或增益比率来划分节点；每个节点样本的类别情况投票决定测试样本的类别。<br>（2)回归树使用最小化均方差划分节点；每个节点样本的均值作为测试样本的回归预测值  </p>
+<h6 id="3：说一下GBDT"><a href="#3：说一下GBDT" class="headerlink" title="3：说一下GBDT"></a>3：说一下GBDT</h6><p>GBDT的核心就在于，每一棵树学的是之前所有树结论和的残差，这个残差就是一个加预测值后能得真实值的累加量  </p>
+<h6 id="4：Xgboost和GBDT的区别"><a href="#4：Xgboost和GBDT的区别" class="headerlink" title="4：Xgboost和GBDT的区别"></a>4：Xgboost和GBDT的区别</h6><p>(1)传统GBDT以CART作为基分类器，xgboost还支持线性分类器，这个时候xgboost相当于带L1和L2正则化项的逻辑斯蒂回归（分类问题）或者线性回归（回归问题）。节点分裂的方式不同，gbdt是用的gini系数，xgboost是经过优化推导后的  </p>
+<p>(2)传统GBDT在优化时只用到一阶导数信息，xgboost则对代价函数进行了二阶泰勒展开，同时用到了一阶和二阶导数。为什么xgboost要用泰勒展开，优势在哪里？xgboost使用了一阶和二阶偏导, 二阶导数有利于梯度下降的更快更准. 使用泰勒展开取得函数做自变量的二阶导数形式, 可以在不选定损失函数具体形式的情况下, 仅仅依靠输入数据的值就可以进行叶子分裂优化计算, 本质上也就把损失函数的选取和模型算法优化/参数选择分开了. 这种去耦合增加了xgboost的适用性, 使得它按需选取损失函数, 可以用于分类, 也可以用于回归。  </p>
+<p>(3)Xgboost在代价函数里加入了正则项，用于控制模型的复杂度，降低了过拟合的可能性。正则项里包含了树的叶子节点个数、每个叶子节点上输出的score的L2模的平方和  </p>
+<p>(4)Xgboost工具支持并行。boosting不是一种串行的结构吗?怎么并行的？注意xgboost的并行不是tree粒度的并行，xgboost也是一次迭代完才能进行下一次迭代的（第t次迭代的代价函数里包含了前面t-1次迭代的预测值）。xgboost的并行是在特征粒度上的。我们知道，决策树的学习最耗时的一个步骤就是对特征的值进行排序（因为要确定最佳分割点），xgboost在训练之前，预先对数据进行了排序，然后保存为block结构，后面的迭代中重复地使用这个结构，大大减小计算量。这个block结构也使得并行成为了可能，在进行节点的分裂时，需要计算每个特征的增益，最终选增益最大的那个特征去做分裂，那么各个特征的增益计算就可以开多线程进行  </p>
+<h6 id="5-N问GBDT"><a href="#5-N问GBDT" class="headerlink" title="5:N问GBDT"></a>5:N问GBDT</h6><p>(1)怎样设置单棵树的停止生长条件？<br>答：A. 节点分裂时的最小样本数  </p>
+<p>B. 最大深度  </p>
+<p>C. 最多叶子节点数  </p>
+<p>D. loss满足约束条件  </p>
+<p>(2)如何评估特征的权重大小？<br>答：a. 通过计算每个特征在训练集下的信息增益，最后计算每个特征信息增益与所有特征信息增益之和的比例为权重值。  </p>
+<p>b. 借鉴投票机制。用相同的gbdt参数对w每个特征训练出一个模型，然后在该模型下计算每个特征正确分类的个数，最后计算每个特征正确分类的个数与所有正确分类个数之和的比例为权重值。  </p>
+<p>(3)当增加样本数量时，训练时长是线性增加吗？<br>答：不是。因为生成单棵决策树时，对于损失函数极小值与样本数量N不是线性相关  </p>
+<p>(4)当增加树的棵树时，训练时长是线性增加吗？  </p>
+<p>答：不是。因为每棵树的生成的时间复杂度不一样。  </p>
+<p>(5)当增加一个棵树叶子节点数目时，训练时长是线性增加吗？  </p>
+<p>答：不是。叶子节点数和每棵树的生成的时间复杂度不成正比。  </p>
+<p>(6)每个节点上都保存什么信息？  </p>
+<p>答：中间节点保存某个特征的分割值，叶结点保存预测是某个类别的概率。  </p>
+<p>(7)如何防止过拟合？  </p>
+<p>答：a. 增加样本（data bias or small data的缘故），移除噪声。  </p>
+<p>b. 减少特征，保留重要的特征（可以用PCA等对特征进行降维）。  </p>
+<p>c. 对样本进行采样（类似bagging）。就是建树的时候，不是把所有的样本都作为输入，而是选择一个子集。  </p>
+<p>d. 对特征进行采样。类似样本采样一样, 每次建树的时候，只对部分的特征进行切分。  </p>
+<p>(8) gbdt在训练和预测的时候都用到了步长，这两个步长一样么？都有什么用，如果不一样，为什么？怎么设步长的大小？（太小？太大？）在预测时，设太大对排序结果有什么影响？跟shrinking里面的步长一样么这两个步长一样么？  </p>
+<p>答：训练跟预测时，两个步长是一样的，也就是预测时的步长为训练时的步长，从训练的过程可以得知（更新当前迭代模型的时候）。  </p>
+<p>都有什么用，如果不一样，为什么？答：它的作用就是使得每次更新模型的时候，使得loss能够平稳地沿着负梯度的方向下降，不至于发生震荡。  </p>
+<p>那么怎么设步长的大小?  </p>
+<p>答：有两种方法，一种就是按策略来决定步长，另一种就是在训练模型的同时，学习步长。  </p>
+<p>A. 策略：  </p>
+<p>a 每个树步长恒定且相等，一般设较小的值；  </p>
+<p>b 开始的时候给步长设一个较小值，随着迭代次数动态改变，或者说衰减。  </p>
+<p>B. 学习：  </p>
+<p>因为在训练第k棵树的时候，前k-1棵树时已知的，而且求梯度的时候是利用前k-1棵树来获得。所以这个时候，就可以把步长当作一个变量来学习。  </p>
+<p>（太小？太大？）在预测时，对排序结果有什么影响？  </p>
+<p>答：如果步长过大，在训练的时候容易发生震荡，使得模型学不好，或者完全没有学好，从而导致模型精度不好。  </p>
+<p>而步长过小，导致训练时间过长，即迭代次数较大，从而生成较多的树，使得模型变得复杂，容易造成过拟合以及增加计算量。  </p>
+<p>不过步长较小的话，使训练比较稳定，总能找到一个稳定的局部最优解。  </p>
+<p>个人觉得过大过小的话，模型的预测值都会偏离真实情况（可能比较严重），从而导致模型精度不好。  </p>
+<p>跟shrinking里面的步长一样么？答：这里的步长跟shrinking里面的步长是一致的。  </p>
+<p>(9)boosting的本意是是什么？跟bagging，random forest，adaboost，gradient boosting有什么区别？  </p>
+<p>答：Bagging:  </p>
+<p>可以看成是一种圆桌会议，或是投票选举的形式。通过训练多个模型，将这些训练好的模型进行加权组合来获得最终的输出结果(分类/回归)，一般这类方法的效果，都会好于单个模型的效果。在实践中，在特征一定的情况下，大家总是使用Bagging的思想去提升效果。例如kaggle上的问题解决，因为大家获得的数据都是一样的，特别是有些数据已经过预处理。  </p>
+<p>基本的思路比较简单，就是：训练时，使用replacement的sampling方法，sampling一部分训练数据k次并训练k个模型；预测时，使用k个模型，如果为分类，则让k个模型均进行分类并选择出现次数最多的类（每个类出现的次数占比可以视为置信度）；如为回归，则为各类器返回的结果的平均值。在该处，Bagging算法可以认为每个分类器的权重都一样由于每次迭代的采样是独立的，所以bagging可以并行。<br>而boosting的采样或者更改样本的权重依赖于上一次迭代的结果，在迭代层面上是不能并行的。<br>Random forest：<br>随机森林在bagging的基础上做了修改。<br>A. 从样本集散用Boostrap采样选出n个样本，预建立CART<br>B. 在树的每个节点上，从所有属性中随机选择k个属性/特征，选择出一个最佳属性/特征作为节点<br>C. 重复上述两步m次，i.e.build m棵cart<br>D. 这m棵cart形成random forest。  </p>
+<p>随机森林可以既处理属性是离散的量，比如ID3算法，也可以处理属性为连续值得量，比如C4.5算法。<br>这里的random就是指：<br>A. boostrap中的随机选择样本<br>B. random subspace的算法中从属性/特征即中随机选择k个属性/特征，每棵树节点分裂时，从这随机的k个属性/特征，选择最优的。<br>Boosting:  </p>
+<p>boosting是”提升”的意思。一般Boosting算法都是一个迭代的过程，每一次新的训练都是为了改进上一次的结果。  </p>
+<p>boosting在选择hyperspace的时候给样本加了一个权值，使得loss function尽量考虑那些分错类的样本（如分错类的样本weight大）。怎么做的呢？<br>boosting重采样的不是样本，而是样本的分布，对于分类正确的样本权值低，分类错误的样本权值高(通常是边界附近的样本)，最后的分类器是很多弱分类器的线性叠加(加权组合)。<br>或者这么理解也是可以的:<br>如果弱学习器与强学习器是等价的, 当强学习器难以学习时(如强学习器高度非线性等)，问题就可以转化为这样的学习问题：<br>学习多个弱分类器(弱分类器容易学习)，并将多个弱分类器组合成一个强分类器(与原来的强学习器等价)。<br>Adaboosting:<br>这其实思想相当的简单，大概是对一份数据，建立M个模型(比如分类)，而一般这种模型比较简单，称为弱分类器(weak learner)。每次分类都将上一次分错的数据权重提高一点，对分对的数据权重降低一点，再进行分类。这样最终得到的分类器在测试数据与训练数据上都可以得到比较好的效果。<br>每次迭代的样本是一样的，即没有采样过程，不同的是不同的样本权重不一样。(当然也可以对样本/特征进行采样，这个不是adaboosting的原意)。<br>另外，每个分类器的步长由在训练该分类器时的误差来生成。<br>Gradient boosting:<br>每一次的计算是为了减少上一次的残差(residual)，而为了消除残差，我们可以在残差减少的梯度 (Gradient)方向上建立一个新的模型。所以说在Gradient Boost中，每个新模型是为了使之前模型的残差往梯度方向减少，与传统Boost对正确，错误的样本进行加权有着很大的区别。(或者这样理解：每一次建立模型是在之前建立模型损失函数的梯度下降方向。这句话有一点拗口，损失函数(loss function)描述的是模型的不靠谱程度，损失函数越大，则说明模型越容易出错(其实这里有一个方差、偏差均衡的问题, 但是这里就假设损失函数越大, 模型越容易出错)。如果我们的模型能够让损失函数持续的下降, 则说明我们的模型在不停的改进, 而最好的方式就是让损失函数在其Gradient的方向上下降)。  </p>
+<p>(10)gbdt中哪些部分可以并行？  </p>
+<p>答：A. 计算每个样本的负梯度  </p>
+<p>B. 分裂挑选最佳特征及其分割点时，对特征计算相应的误差及均值时  </p>
+<p>C. 更新每个样本的负梯度时  </p>
+<p>D. 最后预测过程中，每个样本将之前的所有树的结果累加的时候  </p>
+<p>(11) 树生长成畸形树，会带来哪些危害，如何预防？  </p>
+<p>答：在生成树的过程中，加入树不平衡的约束条件。这种约束条件可以是用户自定义的。  </p>
+<p>例如对样本集中分到某个节点，而另一个节点的样本很少的情况进行惩罚。  </p>
+<ul>
+<li>统GBDT在优化时只用到一阶导数信息，xgboost则对代价函数进行了二阶泰勒展开，同时用到了一阶和二阶导数。顺便提一下，xgboost工具支持自定义代价函数，只要函数可一阶和二阶求导。  </li>
+<li>xgboost在代价函数里加入了正则项，用于控制模型的复杂度。正则项里包含了树的叶子节点个数、每个叶子节点上输出的score的L2模的平方和。从Bias-variance tradeoff角度来讲，正则项降低了模型的variance，使学习出来的模型更加简单，防止过拟合，这也是xgboost优于传统GBDT的一个特性。  </li>
+<li>Shrinkage（缩减），相当于学习速率（xgboost中的eta）。每次迭代，增加新的模型，在前面成上一个小于1的系数，降低优化的速度，每次走一小步逐步逼近最优模型比每次走一大步逼近更加容易避免过拟合现象；  </li>
+<li>列抽样（column subsampling）。xgboost借鉴了随机森林的做法，支持列抽样（即每次的输入特征不是全部特征），不仅能降低过拟合，还能减少计算，这也是xgboost异于传统gbdt的一个特性。  </li>
+<li>忽略缺失值：在寻找splitpoint的时候，不会对该特征为missing的样本进行遍历统计，只对该列特征值为non-missing的样本上对应的特征值进行遍历，通过这个工程技巧来减少了为稀疏离散特征寻找splitpoint的时间开销. </li>
+<li>指定缺失值的分隔方向：可以为缺失值或者指定的值指定分支的默认方向，为了保证完备性，会分别处理将missing该特征值的样本分配到左叶子结点和右叶子结点的两种情形，分到那个子节点带来的增益大，默认的方向就是哪个子节点，这能大大提升算法的效率。  </li>
+<li>并行化处理：在训练之前，预先对每个特征内部进行了排序找出候选切割点，然后保存为block结构，后面的迭代中重复地使用这个结构，大大减小计算量。在进行节点的分裂时，需要计算每个特征的增益，最终选增益最大的那个特征去做分裂，那么各个特征的增益计算就可以开多线程进行，即在不同的特征属性上采用多线程并行方式寻找最佳分割点。  </li>
+</ul>
+<h5 id="7、评估指标f1和auc的区别是哪些"><a href="#7、评估指标f1和auc的区别是哪些" class="headerlink" title="7、评估指标f1和auc的区别是哪些?"></a>7、评估指标f1和auc的区别是哪些?</h5><p>准确率(accuracy)的概念，代表分类器对整个样本判断正确的比重。<br><img src="/2018/03/29/interview-preparation2/accuracy.gif" alt=""><br>混淆矩阵:一个判断分类好坏程度的方法<br><img src="/2018/03/29/interview-preparation2/WX20190402-141634@2x.png" alt=""><br>如上表，可以将结果分为四类： </p>
+<ul>
+<li>真正(True Positive, TP)：被模型分类正确的正样本； </li>
+<li>假负(False Negative, FN)：被模型分类错误的正样本； </li>
+<li>假正(False Positive, FP)：被模型分类错误的负样本； </li>
+<li>真负(True Negative, TN)：被模型分类正确的负样本； </li>
+</ul>
+<p>精准度(precision)：指被分类器判定正例中的正样本的比重<br><img src="/2018/03/29/interview-preparation2/precision.gif" alt=""><br>召回率(recall)：指的是被预测为正例的占总的正例的比重<br><img src="/2018/03/29/interview-preparation2/recall.gif" alt=""><br>F1分数（F1-score）是分类问题的一个衡量指标。一些多分类问题的机器学习竞赛，常常将F1-score作为最终测评的方法。它是精确率和召回率的调和平均数，最大为1，最小为0。<br><img src="/2018/03/29/interview-preparation2/f1.gif" alt="">  </p>
+<p>比较老说，accuracy是一种比较简单的评估指标，没有考虑到样本正负例不均衡的情况。  </p>
+<p>8、sigmoid用作激活函数时，分类为什么要用交叉熵损失，而不用均方损失？<br><img src="/2018/03/29/interview-preparation2/WX20190402-162437@2x.gif" alt="">  </p>
+<p>从以上公式可以看出：均方差对参数的偏导的结果都乘了sigmoid的导数σ′(z)x，而之前看图发现sigmoid导数在其变量值很大或很小时趋近于0，所以偏导数很有可能接近于0。<br>由参数更新公式： 参数=参数−学习率×损失函数对参数的偏导 参数=参数-学习率×损失函数对参数的偏导参数=参数−学习率×损失函数对参数的偏导<br>可知，偏导很小时，参数更新速度会变得很慢，而当偏导接近于0时，参数几乎就不更新了。</p>
+<p>反观交叉熵对参数的偏导就没有sigmoid导数，所以不存在这个问题。这就是选择交叉熵而不选择均方差的原因。</p>
+<h4 id="二、NLP高频问题"><a href="#二、NLP高频问题" class="headerlink" title="二、NLP高频问题."></a>二、NLP高频问题.</h4><h5 id="1、word2vec和tf-idf-相似度计算时的区别？"><a href="#1、word2vec和tf-idf-相似度计算时的区别？" class="headerlink" title="1、word2vec和tf-idf 相似度计算时的区别？"></a>1、word2vec和tf-idf 相似度计算时的区别？</h5><p>word2vec 1、稠密的 低维度的 2、表达出相似度； 3、表达能力强；4、泛化能力强；  </p>
+<h5 id="2、word2vec和NNLM对比有什么区别？（word2vec-vs-NNLM）"><a href="#2、word2vec和NNLM对比有什么区别？（word2vec-vs-NNLM）" class="headerlink" title="2、word2vec和NNLM对比有什么区别？（word2vec vs NNLM）"></a>2、word2vec和NNLM对比有什么区别？（word2vec vs NNLM）</h5><p>1）其本质都可以看作是语言模型；</p>
+<p>2）词向量只不过NNLM一个产物，word2vec虽然其本质也是语言模型，但是其专注于词向量本身，因此做了许多优化来提高计算效率：  </p>
+<ul>
+<li>与NNLM相比，词向量直接sum，不再拼接，并舍弃隐层；</li>
+<li>考虑到sofmax归一化需要遍历整个词汇表，采用hierarchical softmax 和negative sampling进行优化，hierarchical softmax 实质上生成一颗带权路径最小的哈夫曼树，让高频词搜索路劲变小；negative sampling更为直接，实质上对每一个样本中每一个词都进行负例采样；  </li>
+</ul>
+<h5 id="3、-word2vec负采样有什么作用？"><a href="#3、-word2vec负采样有什么作用？" class="headerlink" title="3、 word2vec负采样有什么作用？"></a>3、 word2vec负采样有什么作用？</h5><p>负采样这个点引入word2vec非常巧妙，两个作用，1.加速了模型计算，2.保证了模型训练的效果，一个是模型每次只需要更新采样的词的权重，不用更新所有的权重，那样会很慢，第二，中心词其实只跟它周围的词有关系，位置离着很远的词没有关系，也没必要同时训练更新，作者这点非常聪明。  </p>
+<h5 id="4、word2vec和fastText对比有什么区别？（word2vec-vs-fastText）"><a href="#4、word2vec和fastText对比有什么区别？（word2vec-vs-fastText）" class="headerlink" title="4、word2vec和fastText对比有什么区别？（word2vec vs fastText）."></a>4、word2vec和fastText对比有什么区别？（word2vec vs fastText）.</h5><p>1）都可以无监督学习词向量， fastText训练词向量时会考虑subword；</p>
+<p>2）fastText还可以进行有监督学习进行文本分类，其主要特点：  </p>
+<ul>
+<li>结构与CBOW类似，但学习目标是人工标注的分类结果；</li>
+<li>采用hierarchical softmax对输出的分类标签建立哈夫曼树，样本中标签多的类别被分配短的搜寻路径；</li>
+<li>引入N-gram，考虑词序特征；</li>
+<li>引入subword来处理长词，处理未登陆词问题；  </li>
+</ul>
+<h5 id="5、glove和word2vec、-LSA对比有什么区别？（word2vec-vs-glove-vs-LSA）"><a href="#5、glove和word2vec、-LSA对比有什么区别？（word2vec-vs-glove-vs-LSA）" class="headerlink" title="5、glove和word2vec、 LSA对比有什么区别？（word2vec vs glove vs LSA）."></a>5、glove和word2vec、 LSA对比有什么区别？（word2vec vs glove vs LSA）.</h5><p>1）glove vs LSA</p>
+<ul>
+<li>LSA（Latent Semantic Analysis）可以基于co-occurance matrix构建词向量，实质上是基于全局语料采用SVD进行矩阵分解，然而SVD计算复杂度高；</li>
+<li>glove可看作是对LSA一种优化的高效矩阵分解算法，采用Adagrad对最小平方损失进行优化；</li>
+</ul>
+<p>2）word2vec vs LSA</p>
+<ul>
+<li>主题模型和词嵌入两类方法最大的不同在于模型本身。</li>
+<li>主题模型是一种基于概率图模型的生成式模型。其似然函数可以写为若干条件概率连乘的形式，其中包含需要推测的隐含变量(即主题)</li>
+<li>词嵌入模型一般表示为神经网络的形式，似然函数定义在网络的输出之上。需要学习网络的权重来得到单词的稠密向量表示。</li>
+</ul>
+<p>3）word2vec vs glove</p>
+<ul>
+<li>word2vec是局部语料库训练的，其特征提取是基于滑窗的；而glove的滑窗是为了构建co-occurance matrix，是基于全局语料的，可见glove需要事先统计共现概率；因此，word2vec可以进行在线学习，glove则需要统计固定语料信息。</li>
+<li>word2vec是无监督学习，同样由于不需要人工标注；glove通常被认为是无监督学习，但实际上glove还是有label的，即共现次数log(X_{ij})。</li>
+<li>word2vec损失函数实质上是带权重的交叉熵，权重固定；glove的损失函数是最小平方损失函数，权重可以做映射变换。</li>
+<li>总体来看，glove可以被看作是更换了目标函数和权重函数的全局word2vec。  </li>
+</ul>
+<h5 id="6、-elmo、GPT、bert三者之间有什么区别？（elmo-vs-GPT-vs-bert）"><a href="#6、-elmo、GPT、bert三者之间有什么区别？（elmo-vs-GPT-vs-bert）" class="headerlink" title="6、 elmo、GPT、bert三者之间有什么区别？（elmo vs GPT vs bert）"></a>6、 elmo、GPT、bert三者之间有什么区别？（elmo vs GPT vs bert）</h5><p>之前介绍词向量均是静态的词向量，无法解决一次多义等问题。下面介绍三种elmo、GPT、bert词向量，它们都是基于语言模型的动态词向量。下面从几个方面对这三者进行对比：  </p>
+<p>（1）特征提取器：elmo采用LSTM进行提取，GPT和bert则采用Transformer进行提取。很多任务表明Transformer特征提取能力强于LSTM，elmo采用1层静态向量+2层LSTM，多层提取能力有限，而GPT和bert中的Transformer可采用多层，并行计算能力强。  </p>
+<p>（2）单/双向语言模型：</p>
+<ul>
+<li>GPT采用单向语言模型，elmo和bert采用双向语言模型。但是elmo实际上是两个单向语言模型（方向相反）的拼接，这种融合特征的能力比bert一体化融合特征方式弱。</li>
+<li><p>GPT和bert都采用Transformer，Transformer是encoder-decoder结构，GPT的单向语言模型采用decoder部分，decoder的部分见到的都是不完整的句子；bert的双向语言模型则采用encoder部分，采用了完整句子。<br>7、LSTM和GRU的区别？</p>
+</li>
+<li><p>GRU和LSTM的性能在很多任务上不分伯仲。</p>
+</li>
+<li>GRU 参数更少因此更容易收敛，但是数据集很大的情况下，LSTM表达性能更好。</li>
+<li>从结构上来说，GRU只有两个门（update和reset），LSTM有三个门（forget，input，output），GRU直接将hidden state 传给下一个单元，而LSTM则用memory cell 把hidden state 包装起来。  </li>
+</ul>
+<p><a href="https://zhuanlan.zhihu.com/p/56382372" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/56382372</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/03/20/interview-preparation/" rel="next" title="interview preparation">
+                <i class="fa fa-chevron-left"></i> interview preparation
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/04/02/w2v-contrast/" rel="prev" title="w2v-contrast">
+                w2v-contrast <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="MCF">
+            
+              <p class="site-author-name" itemprop="name">MCF</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">34</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#一、AI算法基础"><span class="nav-number">1.</span> <span class="nav-text">一、AI算法基础.</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1、样本不平衡的解决方法？"><span class="nav-number">1.1.</span> <span class="nav-text">1、样本不平衡的解决方法？</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#数据层面处理办法"><span class="nav-number">1.1.1.</span> <span class="nav-text">数据层面处理办法</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#算法层面的处理方法"><span class="nav-number">1.1.2.</span> <span class="nav-text">算法层面的处理方法</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2、交叉熵函数系列问题？与最大似然函数的关系和区别？"><span class="nav-number">1.2.</span> <span class="nav-text">2、交叉熵函数系列问题？与最大似然函数的关系和区别？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3、HMM、MEMM-vs-CRF-对比？"><span class="nav-number">1.3.</span> <span class="nav-text">3、HMM、MEMM vs CRF 对比？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#4、RF、GBDT、XGBoost"><span class="nav-number">1.4.</span> <span class="nav-text">4、RF、GBDT、XGBoost</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#1、RF与GBDT之间的区别"><span class="nav-number">1.4.1.</span> <span class="nav-text">1、RF与GBDT之间的区别</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#2、分类树和回归树的区别"><span class="nav-number">1.4.2.</span> <span class="nav-text">2、分类树和回归树的区别</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#3：说一下GBDT"><span class="nav-number">1.4.3.</span> <span class="nav-text">3：说一下GBDT</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#4：Xgboost和GBDT的区别"><span class="nav-number">1.4.4.</span> <span class="nav-text">4：Xgboost和GBDT的区别</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#5-N问GBDT"><span class="nav-number">1.4.5.</span> <span class="nav-text">5:N问GBDT</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#7、评估指标f1和auc的区别是哪些"><span class="nav-number">1.5.</span> <span class="nav-text">7、评估指标f1和auc的区别是哪些?</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二、NLP高频问题"><span class="nav-number">2.</span> <span class="nav-text">二、NLP高频问题.</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1、word2vec和tf-idf-相似度计算时的区别？"><span class="nav-number">2.1.</span> <span class="nav-text">1、word2vec和tf-idf 相似度计算时的区别？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2、word2vec和NNLM对比有什么区别？（word2vec-vs-NNLM）"><span class="nav-number">2.2.</span> <span class="nav-text">2、word2vec和NNLM对比有什么区别？（word2vec vs NNLM）</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3、-word2vec负采样有什么作用？"><span class="nav-number">2.3.</span> <span class="nav-text">3、 word2vec负采样有什么作用？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#4、word2vec和fastText对比有什么区别？（word2vec-vs-fastText）"><span class="nav-number">2.4.</span> <span class="nav-text">4、word2vec和fastText对比有什么区别？（word2vec vs fastText）.</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#5、glove和word2vec、-LSA对比有什么区别？（word2vec-vs-glove-vs-LSA）"><span class="nav-number">2.5.</span> <span class="nav-text">5、glove和word2vec、 LSA对比有什么区别？（word2vec vs glove vs LSA）.</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#6、-elmo、GPT、bert三者之间有什么区别？（elmo-vs-GPT-vs-bert）"><span class="nav-number">2.6.</span> <span class="nav-text">6、 elmo、GPT、bert三者之间有什么区别？（elmo vs GPT vs bert）</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">MCF</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

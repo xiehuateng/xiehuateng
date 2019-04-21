@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="ML,机器学习,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="极大似然和EM算法，与其说是一种算法，不如说是一种解决问题的思想，解决一类 问题的框架，和线性回归，逻辑回归，决策树等一些具体的算法不同，极大似然和EM算法更加抽象，更像一种算法思想，是很多具体算法的基础。   1.从极大似然到EM1.1极大似然1.1.1问题描述（这也是个极大似然解决高斯分布问题的例子）假设我们需要调查我们学校学生的身高分布。我们先假设学校所有学生的身高服从正太分布$N(\mu,">
+<meta name="keywords" content="ML,机器学习">
+<meta property="og:type" content="article">
+<meta property="og:title" content="EM算法理解">
+<meta property="og:url" content="http://yoursite.com/2018/02/27/EM/index.html">
+<meta property="og:site_name" content="Mcf&#39;s Blog">
+<meta property="og:description" content="极大似然和EM算法，与其说是一种算法，不如说是一种解决问题的思想，解决一类 问题的框架，和线性回归，逻辑回归，决策树等一些具体的算法不同，极大似然和EM算法更加抽象，更像一种算法思想，是很多具体算法的基础。   1.从极大似然到EM1.1极大似然1.1.1问题描述（这也是个极大似然解决高斯分布问题的例子）假设我们需要调查我们学校学生的身高分布。我们先假设学校所有学生的身高服从正太分布$N(\mu,">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="http://yoursite.com/2018/02/27/EM/pic001.png">
+<meta property="og:image" content="http://yoursite.com/2018/02/27/EM/20131201144547375.png">
+<meta property="og:image" content="http://yoursite.com/2018/02/27/EM/coin_game.png">
+<meta property="og:updated_time" content="2019-04-21T03:22:54.163Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="EM算法理解">
+<meta name="twitter:description" content="极大似然和EM算法，与其说是一种算法，不如说是一种解决问题的思想，解决一类 问题的框架，和线性回归，逻辑回归，决策树等一些具体的算法不同，极大似然和EM算法更加抽象，更像一种算法思想，是很多具体算法的基础。   1.从极大似然到EM1.1极大似然1.1.1问题描述（这也是个极大似然解决高斯分布问题的例子）假设我们需要调查我们学校学生的身高分布。我们先假设学校所有学生的身高服从正太分布$N(\mu,">
+<meta name="twitter:image" content="http://yoursite.com/2018/02/27/EM/pic001.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/02/27/EM/">
+
+
+
+
+
+  <title>EM算法理解 | Mcf's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Mcf's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/02/27/EM/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="MCF">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Mcf's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">EM算法理解</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-02-27T13:37:11+08:00">
+                2018-02-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/ML/" itemprop="url" rel="index">
+                    <span itemprop="name">ML</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>极大似然和EM算法，与其说是一种算法，不如说是一种解决问题的思想，解决一类 问题的框架，和线性回归，逻辑回归，决策树等一些具体的算法不同，极大似然和EM算法更加抽象，更像一种算法思想，是很多具体算法的基础。  </p>
+<h4 id="1-从极大似然到EM"><a href="#1-从极大似然到EM" class="headerlink" title="1.从极大似然到EM"></a>1.从极大似然到EM</h4><h5 id="1-1极大似然"><a href="#1-1极大似然" class="headerlink" title="1.1极大似然"></a>1.1<a href="https://xiehuateng.github.io/2019/02/25/basic-statistic2/" target="_blank" rel="noopener">极大似然</a></h5><h6 id="1-1-1问题描述（这也是个极大似然解决高斯分布问题的例子）"><a href="#1-1-1问题描述（这也是个极大似然解决高斯分布问题的例子）" class="headerlink" title="1.1.1问题描述（这也是个极大似然解决高斯分布问题的例子）"></a>1.1.1问题描述（这也是个极大似然解决高斯分布问题的例子）</h6><p>假设我们需要调查我们学校学生的身高分布。我们先假设学校所有学生的身高服从正太分布$N(\mu,\sigma^{2})$。（<strong>注意：极大似然估计的前提一定是要假设数据总体的分布，如果不知道数据分布，是无法使用极大似然估计的。</strong>求解的参数$\theta$为该分布的参数，像之前的抛硬币例子就是二项分布），这个分布的均值$\mu$和方差$\sigma^{2}$未知，如果我们估计出这两个参数，那我们就得到了结果。那么怎样估计这两个参数呢?  </p>
+<p>学校的学生这么多，我们不可能挨个统计吧?这时候我们需要用到概率统计的思想，也就是抽样，根据样本估算总体。我们可以先对学生进行抽样。假设我们随机抽到了200个人(也就是200个身高的样本数据，为了方便表示，下面，“人”的意思就是对应的身高)。然后统计抽样这200个人的身高。根据这200个人的身高估计均值$\mu$和方差$\sigma^{2}$。  </p>
+<p>用数学的语言来说就是:为了统计学校学生的身高分布，我们独立地按照概率密度$p(x|\theta)$抽取了200个(身高)，组成样本集$X=\{x_{1},x_{2},…,x_{N}\}$(其中表示抽到的第i个人的身高，这里N 就是200，表示样本个数)，我们想通过样本集X来估计出未知参数$\theta$。这里概率密度$p(x|\theta)$ 服从高斯分布$N(\mu,\theta^{2})$，其中的未知参数是$\theta=[\mu,\sigma]^{T}$。  </p>
+<p>那么问题来了怎样估算参数$\theta$呢？  </p>
+<h6 id="1-1-2估计参数"><a href="#1-1-2估计参数" class="headerlink" title="1.1.2估计参数"></a>1.1.2估计参数</h6><p>我们先回答几个小问题：  </p>
+<p><strong>问题一：抽到这200个人的概率是多少呢？</strong>  </p>
+<p>由于每个样本都是独立地从$p(x|\theta)$中抽取的，换句话说这个200个学生随便捉的，他们之间是没有关系的，即他们之间是互相独立的。假如抽到学生A（的身高）的概率是$p(x_{A}|\theta)$，抽到学生B的概率是$p(x_{B}|\theta)$，那么同时抽到男生A和男生B的概率是$p(x_{A}|\theta)*p(x_{B}|\theta)$，同理，我们同时抽到这200个学生的概率就是他们各自概率的乘积了，即为他们的联合概率用下式表示：  </p>
+<script type="math/tex; mode=display">
+L(\theta) = L({x_{1},x_{2},...,x_{n}};\theta) = \prod_{i=1}^{n}{p(x_{i}|\theta)}</script><p>这个概率反映了，在概率密度函数的参数是$\theta$时，得到X这组样本的概率。等式右侧只有$\theta$是未知数，所以它是$\theta$的函数。  </p>
+<p>这个函数反映的是在不同的参数$\theta$取值下，取得当前这个样本集的可能性，因此称为参数相对于样本集X的似然函数（likelihood function），记为$L(\theta)$。  </p>
+<p>为了便于分析，还可以定义对数似然函数，将其变成连加的，称为对数似然函数：  </p>
+<script type="math/tex; mode=display">
+H(\theta) =logL(\theta)=log\prod_{i=1}^{n}{p(x_{i}|\theta)} = \sum_{i=1}^{n}{logp(x_{i}|\theta)}</script><p><strong>问题二：学校那么多学生，为什么就签好抽到了这200个人（身高）呢？</strong>  </p>
+<p>在学校那么多学生中，我一抽就抽到这200个学生（身高），而不是其他人，你是不是表示在整个学校中，这200个人（的身高）出现个概率极大啊，也就是其对应的似然函数$L(\theta)$极大，即  </p>
+<script type="math/tex; mode=display">
+\hat{\theta}=argmaxL(\theta)</script><p>$\hat{\theta}$这个叫做$\theta$的极大似然估计量，即为我们所求的值。  </p>
+<p><strong>问题三：那么怎么计算极大似然函数？</strong>  </p>
+<p>求$L(\theta)$对所有参数的偏导数，然后让这些偏导数为0，假设有n个参数，就有n个方程组成的方程组，那么方程组的解就是似然函数的极值点了，从而得到对应的$\theta$了。  </p>
+<h6 id="1-1-3极大似然估计总结"><a href="#1-1-3极大似然估计总结" class="headerlink" title="1.1.3极大似然估计总结"></a>1.1.3极大似然估计总结</h6><p>极大似然估计你可以把它看作是一个反推。多数情况下我们是根据已知条件来推算结果，而极大似然估计是已经知道了结果，然后寻求是该结果出现的可能性极大的条件，以此作为估算值。<br>比如说,  </p>
+<ul>
+<li>假如一个学校的学生男女比例为9：1（条件），那么你可以推算出，你在这个学校里更可能性遇到的是男生（结果）；</li>
+<li>假如你不知道男女比例，你走在路上，碰到100个人，发现男生就有90个（结果），这时候你可以推断这个学校的男女比例更有可能为9：1（条件），这就是极大似然估计。  </li>
+</ul>
+<p>极大似然估计，只是一种概率论在统计学的应用，它是参数估计的方法之一。说的是已知某个随机样本满足某种概率分布，但是其中具体的参数不清楚，通过若干次试验，观察其结果，利用结果推出参数的大概值。  </p>
+<p>极大似然估计是建立在这样的思想上:已知某个参数能使这个样本出现的概率极大，我们当然不会再去选择其他小概率的样本，所以干脆就把这个参数作为估计的真实值。  </p>
+<h6 id="1-1-4求极大似然函数估计值的一般步骤："><a href="#1-1-4求极大似然函数估计值的一般步骤：" class="headerlink" title="1.1.4求极大似然函数估计值的一般步骤："></a>1.1.4求极大似然函数估计值的一般步骤：</h6><p>（1）写出似然函数；<br>（2）对似然函数取对数，并整理；<br>（3）求导数，令导数为0，得到似然函数方程；<br>（4）解似然方程，得到参数。    </p>
+<h6 id="1-1-5极大似然函数的应用"><a href="#1-1-5极大似然函数的应用" class="headerlink" title="1.1.5极大似然函数的应用"></a>1.1.5极大似然函数的应用</h6><p><strong>应用一：回归问题中的极小化平方和（极小化代价函数）</strong><br>假设线性回归模型具有如下形式：$h(x)=\sum_{i=1}^{d}{\theta_{i}x_{i}+\epsilon} = \theta^{T}x+\epsilon$，其中$x\in{R^{1\times{d}}},\theta\in{R^{1\times{d}}}$，误差$\epsilon\in{R}$，当前已知$X=(x_{1},x_{2},…,x_{m})^{T}&ensp;\in{R^{m\times{d}}}, y\in{R^{m\times{1}}}$，如何求$\theta$呢？  </p>
+<ul>
+<li>最小二乘法估计：最合理参数估计量应该使得模型能最好地拟合样本数据，也就是估计值和观测值之差的平方和最小，其推导过程如下所示：<br>$J(\theta)=\sum_{i=1}^{n}{(h_{\theta}(x_{i})-y_{i})^{2}}$<br>求解方法是通过梯度下降算法，通过训练数据不断迭代得到最终的值。</li>
+<li>极大似然法：最合理的参数估计量应该使得从模型中抽取该m组样本观测值的概率极大，也就是似然函数极大。<br>假设误差项$\epsilon\in{N(0,\sigma^{2})}$，则$y_{i}\in{N(\theta x_{i},\sigma^{2})}$（建议复习一下正太分布的概率密度函数和相关性质）<script type="math/tex; mode=display">
+p(y_{i}|x_{i};\theta)=\frac{1}{\sqrt{2\pi}\sigma}exp(-\frac{(y_{i}-\theta^{T}x_{i})^{2}}{2\sigma^{2}})</script><script type="math/tex; mode=display">
+L(\theta)=\prod_{i=1}^{m}{p(y_{i}|x_{i};\theta)}\\
+=\prod_{i=1}^{m}{\frac{1}{\sqrt{2\pi}\sigma}exp(-\frac{(y_{i}-\theta^{T}x_{i})^{2}}{2\sigma^{2}})}</script><script type="math/tex; mode=display">
+H(\theta)=log(L(\theta))\\
+=log\prod_{i=1}^{m}{\frac{1}{\sqrt{2\pi}\sigma}exp(-\frac{(y_{i}-\theta^{T}x_{i})^{2}}{2\sigma^{2}})}\\
+=\sum_{i=1}^{m}log\frac{1}{\sqrt{2\pi}\sigma}exp(-\frac{(y_{i}-\theta^{T}x_{i})^{2}}{2\sigma^{2}})\\
+=-\frac{1}{2\sigma^{2}}\sum_{i=1}^{m}{(y_{i}-\theta^{T}x_{i})^{2}}-mlog\sigma\sqrt{2\pi}</script>令$J(\theta)=\frac{1}{2}\sum_{i=1}^{m}{(y_{i}-\theta^{T}x_{i})^{2}}$则$argmax_{\theta}H(\theta)\Leftarrow \Rightarrow argmin_{\theta}J(\theta)$，即将极大似然函数等价于极小化平方和。<br>这时可以发现，此时的极大化似然函数和最初的最小二乘损失函数的估计结果是等价的。但是要注意着两者只是恰好有着相同的表达结果，原理和出发点完全不同。（在这里极大似然估计是需要假设数据符合正太分布的，而最小二乘是不需要的） </li>
+</ul>
+<p><strong>应用二：分类问题中极小化交叉熵（极小化代价函数）</strong><br>在分类问题中，交叉熵的本质就是似然函数的极大化，逻辑回归的假设函数为：  </p>
+<script type="math/tex; mode=display">
+h(x)=\hat{y}=\frac{1}{1+e^{-\theta^{T}x+b}}</script><p>根据之前学过的内容我们知道$\hat{y}=p(y=1|x,\theta)$，<br>当y=1时，$p_{1}=p(y=1|x,\theta)=\hat{y}$<br>当y=0时，$p_{0}=p(y=0|x,\theta)=1-\hat{y}$<br>合并上面两式子，可以得到<br>$p(y|x,\theta)=\hat{\ y}^{y}(1-\hat{\ y})^{1-y}$</p>
+<script type="math/tex; mode=display">
+L(\theta)=\prod_{i=1}^{m}{p(y_{i}|x_{i};\theta)}\\
+=\prod_{i=1}^{m}{\hat{y_{i}}^{y_{i}}(1-\hat{y_{i}})^{1-y_{i}}}</script><script type="math/tex; mode=display">
+H(\theta)=log(L(\theta))\\
+=log\prod_{i=1}^{m}{\hat{y_{i}}^{y_{i}}(1-\hat{y_{i}})^{1-y_{i}}}\\
+=\sum_{i=1}^{m}{log\hat{y_{i}}^{y_{i}}(1-\hat{y_{i}})^{1-y_{i}}}\\
+=\sum_{i=1}^{m}{y_{i}log\hat{y_{i}}+(1-y_{i})log(1-\hat{y_{i}})}</script><p>令$J(\theta)=H(\theta)=-sum_{i=1}^{m}{y_{i}log\hat{y_{i}}+(1-y_{i})log(1-\hat{y_{i}})}$，则$argmax_{\theta}H(\theta)\Leftarrow \Rightarrow argmin_{\theta}J(\theta)$，即将极大似然函数等价于极小化交叉熵。  </p>
+<h5 id="1-2-EM算法"><a href="#1-2-EM算法" class="headerlink" title="1.2 EM算法"></a>1.2 EM算法</h5><h6 id="1-2-1问题描述"><a href="#1-2-1问题描述" class="headerlink" title="1.2.1问题描述"></a>1.2.1问题描述</h6><p>上面我们先假设学校所有学生的身高服从正太分布$N(\mu,\sigma^{2})$。实际情况并不是这样的，男生和女生分别服从两种不同的正太分布，即男生$\in{N(\mu_{1},\sigma_{1}^{2})}$，女生$\in{N(\mu_{2},\sigma_{2}^{2})}$，<strong>（注意：EM算法和极大似然估计的前提是一样的，都是要假设数据总体的分布，如果不知道数据分布，是无法使用EM算法的）</strong>那么该怎样评估学生的身高分布呢？  </p>
+<p>简单啊，我们可以随便抽100个男生和100个女生，将男生和女生分开，对他们单独进行极大似然估计。分别求出男生和女生的分布。  </p>
+<p>假如某些男生和女生好上了，纠缠起来了。咱们也不想那么残忍，赢把他们拉扯开。这时候，你从这200个人（的身高）里面随便给我指一个人（的身高），我都无法确定这个人（的身高）是男生（的身高）还是女生（的身高）。用数学的语言就是，抽取得到的每个样本都不知道是从哪个分布来的。那怎么办呢？  </p>
+<h6 id="1-2-2-EM算法"><a href="#1-2-2-EM算法" class="headerlink" title="1.2.2 EM算法"></a>1.2.2 EM算法</h6><p>这个时候，对于每一个样本或者你抽取到的人，就有两个问题需要估计了，一是这个人是男的还是女的，二是男生和女生对应的身高的正太分布的参数是多少。这两个问题是互相依赖的：  </p>
+<ul>
+<li>当我们知道了每个人是男生还是女生，我们可以很容易利用极大似然对男女各自的身高的分布进行估计。</li>
+<li>反过来，当我们知道可男女身高的分布参数我们才能知道每一个人更有可能是男生还是女生。例如我们已知男生的身高分布为$N(\mu_{1}=172,\sigma_{1}^{2}=5^{2})$，女生的身高分布为$N(\mu_{2}=162,\sigma_{2}^{2}=5^{2})$，一个学生的身高为180，我们可以推断出这个学生为男生的可能性更大。  </li>
+</ul>
+<p>但是现在我们既不知道每个学生是男生还是女生，也不知道男生和女生的身高分布。这就成了一个现有鸡还是现有蛋的问题了。鸡说，没有我，谁把你生出来的啊。蛋不服，说，没有我，你从哪里蹦出来啊。为了解决这个你依赖我，我依赖你的循环依赖问题，总得有一方要先打破僵局，说，不管了，我先随便整一个值出来，看你怎么变，然后我在根据你的变化调整我的变化，然后如此迭代着不断互相推导，最终就会收敛到一个解。这就是EM算法的基本思想了。  </p>
+<p>EM的意思是“Expectation Maximization”，具体方法为：  </p>
+<ul>
+<li>先设定男生和女生的身高分布参数（初始值），例如男生的身高分布为$N(\mu_{1}=172,\sigma_{1}^{2}=5^{2})$，女生的身高分布为$N(\mu_{2}=162,\sigma_{2}^{2}=5^{2})$，当然了，刚开始肯定没那么准；  </li>
+<li>然后计算出每个人更可能属于第一个还是第二个正态分布中的（例如，这个人的身高是180，那很明显，他极大可能属于男生的那个分布），这个是属于Expectation一步；  </li>
+<li>我们已经大概地按上面的方法将这200个人分为男生和女生两部分，我们就可以根据之前说的极大似然估计分别对男生和女生的身高分布参数进行估计。这个是Maximization；  </li>
+<li>然后，当我们更新这两个分布的时候，每一个学生属于女生还是男生的概率又变了，那么我们就在需要调整E步；</li>
+<li>…如此往复，知道参数基本不再发生变化或满足结束条件为止。  </li>
+</ul>
+<h6 id="1-2-3总结"><a href="#1-2-3总结" class="headerlink" title="1.2.3总结"></a>1.2.3总结</h6><p>上面的学生属于男生还是女生我们称之为隐含参数，女生和男生的身高分布参数称为模型参数。  </p>
+<p>EM算法解决这个的思路是使用启发式的迭代方法，既然我们无法直接求出模型分布参数，那么我们可以先猜想隐含参数（EM算法的E步），接着基于观察数据和猜测的隐含参数一起来极大化对数似然，求解我们的模型参数（EM算法的M步）。由于我们之前的隐含参数是猜测的，所以此时得到的模型参数一般还不是我们想要的结果。我们基于当前得到的模型参数，继续猜测隐含参数（EM算法的E步），然后继续极大化对数似然，求解我们的模型参数（EM算法的M步）。以此类推，不断的迭代下去，直到模型分布参数基本无变化，算法收敛，找到合适的模型参数。</p>
+<h4 id="EM算法推导"><a href="#EM算法推导" class="headerlink" title="EM算法推导"></a>EM算法推导</h4><h5 id="2-1基础知识"><a href="#2-1基础知识" class="headerlink" title="2.1基础知识"></a>2.1基础知识</h5><h6 id="2-1-1凸函数"><a href="#2-1-1凸函数" class="headerlink" title="2.1.1凸函数"></a>2.1.1凸函数</h6><p>假设是定义在实数域上的函数，如果对于任意的实数，都有：  </p>
+<script type="math/tex; mode=display">
+f''\geq0</script><p>那么是凸函数。若不是单个实数，而是由实数组成的向量，此时，如果函数的Hesse矩阵是半正定的，即  </p>
+<script type="math/tex; mode=display">
+H''\geq0</script><p>那么是凸函数。特别地，如果$f’’\gt0$或者$H’’\gt0$，那么称为严格凸函数。  </p>
+<h6 id="2-1-2Jensen不等式"><a href="#2-1-2Jensen不等式" class="headerlink" title="2.1.2Jensen不等式"></a>2.1.2Jensen不等式</h6><p>如下公式，如果函数f是凸函数，x是随机变量，有0.5的概率是a，有0.5的概率是b，x的期望值就是a和b的中值了，那么：  </p>
+<script type="math/tex; mode=display">
+E[f(x)]\geq f(E(x))</script><p>其中，$E[f(x)]=0.5f(a)+0.5f(b),f(E(x))=f(0.5a+0.5b)$，这里a和b的权值为0.5，f(a)与a的权值相等，f(b)与b的权值相等。  </p>
+<p>特别地，如果函数f是严格凸函数，当且仅当：$p(x=E(x))=1$(即随机变量是常数)时等号成立。</p>
+<p><div align="center">
+  <img width="300" src="/2018/02/27/EM/pic001.png">
+</div><br>注：若函数f是凹函数，Jensen不等式符号相反。  </p>
+<h6 id="2-1-3期望"><a href="#2-1-3期望" class="headerlink" title="2.1.3期望"></a>2.1.3期望</h6><p>对于离散型随机变量X的概率分布为$p_{i}=p{X = x_{i}}$，数学期望E(X)为：  </p>
+<script type="math/tex; mode=display">
+E(X)=\sum_{i}{x_{i}p_{i}}</script><p>$p_{i}$是权值，满足两个条件$1\geq p_{i} \geq 0，\ \sum_{i}{p_{i}}=1$。<br>若连续型随机变量X的概率密度函数为f(x)，则数学期望E(X)为：</p>
+<script type="math/tex; mode=display">
+E(X)=\int_{-\infty}^{+\infty}{xf(x)dx}</script><p>设$Y=g(X)$，若X是离散型随机变量，则： </p>
+<script type="math/tex; mode=display">
+E(Y)=\sum_{i}{g(x_{i})p_{i}}</script><p>若f(x)是连续型随机变量，则：  </p>
+<script type="math/tex; mode=display">
+E(X)=\int_{-\infty}^{+\infty}{g(x)f(x)dx}</script><h5 id="2-2EM算法的推导"><a href="#2-2EM算法的推导" class="headerlink" title="2.2EM算法的推导"></a>2.2EM算法的推导</h5><p>对于m个相互独立的样本$x=(x^{(1)},x^{(2)},…,x^{(m)})$，对应的隐含数据$z=(z^{(1)},z^{(1)},…,z^{(1)})$，此时$(x,z)$即为完整数据，样本的模型参数为$\theta$，则观测数据$x^{(i)}$的概率为$p(x^{(i)}|\theta)$，完全数据$(x^{(i)},z^{(i)})$的似然函数为$p(x^{(i)},z^{(i)}|\theta)$。<br>假如没有隐含变量z，我们仅需要找到合适的$\theta$极大化对数似然函数即可：  </p>
+<script type="math/tex; mode=display">
+\theta=argmax_{\theta}L(\theta)=argmax_{\theta}\sum_{i=1}^{m}{logp(x^{(i)}|\theta)}</script><p>增加隐含变量z之后，我们的目标变成了找到合适的$\theta$和z让对数似然函数极大：（这里的转换根据边缘概率公式）  </p>
+<script type="math/tex; mode=display">
+\theta,z = argmax_{\theta,z}L(\theta,z)=argmax_{\theta,z}\sum_{i=1}^{m}{log\sum_{z^{(i)}}p(x^{(i),z^{(i)}|\theta})}</script><p>不就是多了一个隐变量z吗？那我们自然而然会想到分别对未知的$\theta$和z分别求偏导，这样做可行吗？  </p>
+<p>理论上是可行的，然而如果分别对未知的$\theta$和z分别求偏导，由于$logp(x^{(i)}|\theta)$是$p(x^{(i)},z^{(i)}|\theta)$边缘概率，转化为$logp(x^{(i)}|\theta)$求导后形式会非常复杂（可以想象下$log(f_{1}(x)+f_{2}(x)+…)$复合函数的求导，所以很难求解得到$z$和$\theta$。那么我们想一下可不可以将加号从log中提取出来呢？我们可以对这个式子进行缩放如下：  </p>
+<script type="math/tex; mode=display">
+\sum_{i=1}^{m}{log\sum_{z^{(i)}}{p(x^{(i),z^{(i)}|\theta})}} = \sum_{i=1}^{m}{log\sum_{z^{(i)}}{Q_{i}(z^{(i)})\frac{p(x^{(i)},z^{(i)}|\theta)}{Q_{i}(z^{(i)})}}}(1)</script><script type="math/tex; mode=display">
+\geq \sum_{i=1}^{m}{\sum_{z^{(i)}}{Q_{i}(z^{(i)})log\frac{p(x^{(i)},z^{(i)}|\theta)}{Q_{i}(z^{(i)})}}}(2)</script><p>上面第（1）式引入了一个未知的新的分布$Q_{i}(z^{(i)})$，满足：  </p>
+<script type="math/tex; mode=display">
+\sum_{z}{Q_{i}(z)}=1, 0\leq Q_{i}(z) \leq 1</script><p>第（2）式用到了Jensen不等式（对数函数是凹函数）：</p>
+<script type="math/tex; mode=display">
+log(E(y)) \geq E(log(y))</script><p>其中：  </p>
+<script type="math/tex; mode=display">
+E(y) = \sum\limits_i\lambda_iy_i, 1 \geq \lambda_i \geq 0, \sum\limits_i\lambda_i =1</script><script type="math/tex; mode=display">
+y_{i}=\frac{p(x^{(i)},z^{(i)}|\theta)}{Q_{i}(z^{(i)})}</script><script type="math/tex; mode=display">
+\lambda_i = Q_{i} (z^{(i)})</script><p>也就是说$\frac{p(x^{(i)},z^{(i)}|\theta)}{Q_{i}(z^{(i)})}$为第i个样本，$Q_{i}(z^{i})$为第i个样本对应的权重，那么：  </p>
+<script type="math/tex; mode=display">
+E(\frac{p(x^{(i)},z^{(i)}|\theta)}{Q_{i}(z^{(i)})})= \sum_{z^{(i)}}{Q_{i}(z^{(i)})\frac{p(x^{(i)},z^{(i)}|\theta)}{Q_{i}(z^{(i)})}}</script><p>上式实际是我们构建了$L(\theta,z)$的下界（E步），下一步要做的就是寻找一个合适的$Q_{i}(z)$最优化这个下界（M步）。假设$\theta$已经给定，那么$logL(\theta)$的值就取决于$Q_{i}(z^{(i)})$和$p(x^{(i)},z^{(i)})$了。我们可以通过调整这两个概率使下界逼近$logL(\theta)$的真实值，当不等式变成等式时，说明我们调整后的下界能够等价于$logL(\theta)$了。由Jensen不等式可知，等式成立的条件是随机变量是常数，则有：(我们的原始目标是最大化上面式（1）的左边，当随机变量为常数时，（2）等式成立，这时我们最大化（2）的右边，是等价的，即最大化下界。)  </p>
+<script type="math/tex; mode=display">
+\frac{p(x^{(i)},z^{(i)}|\theta)}{Q_{i}(z^{(i)})} = c</script><p>其中c为常数，对于任意i，我们得到：  </p>
+<script type="math/tex; mode=display">
+p(x^{(i)},z^{(i)}|\theta) = c Q_{i}(z^{(i)})</script><p>方程两边同时累加和： </p>
+<script type="math/tex; mode=display">
+\sum_{z}{p(x^{(i)},z^{(i)}|\theta)} = c \sum_{z}{Q_{i}(z^{(i)})}</script><p>由于$\sum_{z}{Q_{i}(z^{(i)})}=1$。从上面两式，我们可以得到：  </p>
+<script type="math/tex; mode=display">
+\sum_{z}{p(x^{(i)},z^{(i)}|\theta)} = c</script><script type="math/tex; mode=display">
+Q_{i}(z^{(i)}) = \frac{p(x^{(i)},z^{(i)}|\theta)}{c} = \frac{p(x^{(i)},z^{(i)}|\theta)}{\sum_{z}{p(x^{(i)},z^{(i)}|\theta)} }=\frac{p(x^{(i)},z^{(i)}|\theta)}{p(x^{(i)}|\theta)}=p(z^{(i)}|x^{(i)},\theta)</script><p>其中：<br>边缘概率公式：$p(x^{(i)}|\theta)= \sum_{z}{p(x^{(i)},z^{(i)}|\theta)}$<br>条件概率公式：$\frac{p(x^{(i)},z^{(i)}|\theta)}{p(x^{(i)}|\theta)}=p(z^{(i)}|x^{(i)},\theta)$<br>从上式可以发现$Q(z)$是已知样本和模型参数下的<strong>隐变量分布</strong>。<br>如果$Q_{i}(z^{(i)})=p(z^{(i)}|x^{(i)},\theta)$，则第（2）式是我们的包含隐藏数据的对数似然的一个下界。如果我们能极大化这个下界，则也在尝试极大化我们的对数似然。即我们需要极大化下式：  </p>
+<script type="math/tex; mode=display">
+argmax_{\theta}\sum_{i=1}^{m}{\sum_{z^{(i)}}{Q_{i}(z^{(i)})log\frac{p(x^{(i)},z^{(i)}|\theta)}{Q_{i}(z^{(i)})}}}</script><p>去掉上式中为常数的部分，则我们需要极大化的对数似然下界为(因为$Q_{i}(z^{(i)})$是固定的，$log \frac{p}{Q}$可写成相减，求解最大化问题时，减去一个常数(logQ)，可去掉不影响求解)：  </p>
+<script type="math/tex; mode=display">
+argmax_{\theta}\sum_{i=1}^{m}{\sum_{z^{(i)}}{Q_{i}(z^{(i)})logp(x^{(i)},z^{(i)}|\theta)}}</script><p>至此，我们推出了在固定参数$\theta$后分布$Q_{i}(z^{(i)})$的选择问题（求解$p(z^{(i)}|x^{(i)},\theta)$），从而建立了$logL(\theta)$的下界，这是E步，接下来的M步就是固定$Q_{i}(z^{(i)})$后，调整$\theta$的下界。  </p>
+<h5 id="2-3EM算法流程"><a href="#2-3EM算法流程" class="headerlink" title="2.3EM算法流程"></a>2.3EM算法流程</h5><p>现在我们总结下EM算法的流程。<br>输入：观察数据$x = (x^{(1)},x^{(2)},…,x^{(m)})$，联合分布$p(x,z|\theta)$，条件分布$p(z|x,\theta)$，极大迭代次数J。<br>1）随机初始化模型参数$\theta$的初始值$\theta^{0}$<br>2)for j from 1 to J :<br>a)E步：计算联合分布的条件概率期望：  </p>
+<script type="math/tex; mode=display">
+Q_{i}(z^{(i)}):=p(z^{(i)}|x^{(i)},\theta)</script><p>b）M步：极大化$L(\theta)$，得到$\theta$：  </p>
+<script type="math/tex; mode=display">
+\theta:=argmax_{\theta}\sum_{i=1}^{m}{\sum_{z^{(i)}}{logp(x^{(i)},z^{(i)}|\theta)}}</script><p>c）重复E、M步骤直到$\theta$收敛<br>输出：模型参数$\theta$  </p>
+<h5 id="2-4EM算法另一种理解"><a href="#2-4EM算法另一种理解" class="headerlink" title="2.4EM算法另一种理解"></a>2.4EM算法另一种理解</h5><p>坐标上升法（Coordinate ascent）类似于梯度下降法，梯度下降法的目的是最小化代价函数，坐标上升法的目的 是最大化似然函数;梯度下降每一个循环仅仅更新模型参数就可以了，EM算法每一个循环既需要更新隐含参数和 也需要更新模型参数。  </p>
+<p><div align="center">
+  <img width="300" src="/2018/02/27/EM/20131201144547375.png">
+</div><br>图中的直线式迭代优化的路径，可以看到每一步都会向最优值前进一步，而且前进路线是平行于坐标轴的，因为每一步只优化一个变量。  </p>
+<p>这犹如在x-y坐标系中找一个曲线的极值，然而曲线函数不能直接求导，因此什么梯度下降方法就不适用了。但固定一个变量后，另外一个可以通过求导得到，因此可以使用坐标上升法，一次固定一个变量，对另外的求极值，最后逐步逼近极值。对应到EM上，E步:固定θ，优化Q;M步:固定Q，优化θ;交替将极值推向极大。  </p>
+<h5 id="2-5EM算法的收敛性思考"><a href="#2-5EM算法的收敛性思考" class="headerlink" title="2.5EM算法的收敛性思考"></a>2.5EM算法的收敛性思考</h5><p>EM算法的流程并不复杂，但是还有两个问题需要我们思考:<br>1) EM算法能保证收敛吗?<br>2) EM算法如果收敛，那么能保证收敛到全局极大值吗?  </p>
+<p>首先我们来看第一个问题, EM 算法的收敛性。要证明 EM 算法收敛，则我们需要证明我们的对数似然函数的值在迭 代的过程中一直在增大。即:  </p>
+<script type="math/tex; mode=display">
+\sum_{i=1}^{m}{logp(x^{(i)}|\theta^{j+1})}\geq \sum_{i=1}^{m}{logp(x^{(i)}|\theta^{j})}</script><p>由于：(这里$\theta^{j}$指上次迭代固定好的参数，求得Q，即$p(z^{(i)}|x^{(i)},\theta^{j}),\theta$指这次要优化的参数)  </p>
+<script type="math/tex; mode=display">
+L(\theta,\theta^{j}) = \sum_{i=1}^{m}{\sum_{z^{(i)}}{p(z^{(i)}|x^{(i)},\theta^{j})logp(x^{(i)},z^{(i)}|\theta)}}</script><p>令：  </p>
+<script type="math/tex; mode=display">
+H(\theta,\theta^{j}) = \sum_{i=1}^{m}{\sum_{z^{(i)}}{p(z^{(i)}|x^{(i)},\theta^{j})logp(x^{(i)}|z^{(i)},\theta)}}</script><p>上两式相减得到：  </p>
+<script type="math/tex; mode=display">
+\sum_{i=1}^{m}{logp(x^{(i)}|\theta)} = L(\theta,\theta^{j}) - H(\theta,\theta^{j})</script><p>在上式中分别取$\theta$为$\theta^{j}$和$\theta^{j+1}$，并相减得到：  </p>
+<script type="math/tex; mode=display">
+\sum_{i=1}^{m}{logp(x^{(i)}|\theta^{j+1})} - \sum_{i=1}^{m}{logp(x^{(i)}|\theta^{j})} = [L(\theta^{j+1},\theta^{j}) -L(\theta^{j},\theta^{j})] - [H(\theta^{j+1},\theta^{j}) -H(\theta^{j},\theta^{j})]</script><p>要证明EM算法的收敛性，我们只需要证明上式的右边是非负的即可。<br>由于$\theta^{j+1}$使得$L(\theta,\theta^{j})$极大，因此有：  </p>
+<script type="math/tex; mode=display">
+L(\theta^{j+1},\theta^{j}) - L(\theta^{j},\theta^{j}) \geq 0</script><p>而对于第二部分，我们有：  </p>
+<script type="math/tex; mode=display">
+H(\theta^{j+1},\theta^{j}) - H(\theta^{j},\theta^{j})=\sum_{i=1}^{m}{\sum_{z^{(i)}}{p(z^{(i)}|x^{(i)},\theta^{j})log\frac{p(z^{(i)}|x^{(i)},\theta^{j+1})}{p(z^{(i)}|x^{(i)},theta^{j})}}}  (3)\\
+\leq \sum_{i=1}^{m}{log(\sum_{z^{(i)}}{p(z^{(i)}|x^{(i)},\theta^{j})})\frac{p(z^{(i)}|x^{(i)},\theta^{j+1})}{p(z^{(i)}|x^{(i)},theta^{j})}}  (4)\\
+=\sum_{i=1}^{m}{log(\sum_{z^{(i)}}{p(z^{(i)}|x^{(i)},\theta^{j})}} (5)</script><p>其中第（4）式用到了Jensen不等式，只不过和第二节的使用相反而已，第（5）式用到了概率分布累积为1的性质。<br>至此，我们得到了：$\sum_{i=1}^{m}{logp(x^{(i)}|\theta^{j+1})} - \sum_{i=1}^{m}{logp(x^{(i)}|\theta^{j})} \geq 0$，证明了EM算法的收敛性。<br>从上面的推导可以看出，EM算法可以保证收敛到一个稳定点，但是却不能保证收敛到全局的极大值点，因此它是局部最优解的算法，当然，如果我们的优化目标$L(\theta,\theta^{j})$是凸的，则EM算法可以保证收敛到全局极大值，这点和梯度下降法这样的迭代算法相同。至此我们也回答了上面提到的第二个问题。  </p>
+<h5 id="2-6EM算法应用"><a href="#2-6EM算法应用" class="headerlink" title="2.6EM算法应用"></a>2.6EM算法应用</h5><p>如果我们从算法思想的角度来思考EM算法，我们可以发现我们的算法里已知的是观察数据，未知的是隐含数据和模型参数，在E步，我们所做的事情是固定模型参数的值，优化隐含数据的分布，而在M步，我们所做的事情是固定隐含数据分布，优化模型参数的值。EM的应用包括：  </p>
+<ul>
+<li>支持向量机的SMO算法</li>
+<li>混合高斯模型</li>
+<li>K-means</li>
+<li>隐马尔科夫模型</li>
+</ul>
+<h4 id="3-EM算法案例-两硬币模型"><a href="#3-EM算法案例-两硬币模型" class="headerlink" title="3.EM算法案例-两硬币模型"></a>3.<a href="http://ai.stanford.edu/~chuongdo/papers/em_tutorial.pdf" target="_blank" rel="noopener">EM算法案例-两硬币模型</a></h4><p>假设有两枚硬币A、B，以相同的概率随机选择一个硬币，进行如下的硬币实验：共做5次实验，每次实验独立的掷十次，结果如图中a所示，例如某次实验产生了H、T、T、T、H、H、T、H、T、H（H代表正面朝上）。a是在知道每次选择的是A还是B的情况下进行，b是在不知道选择的硬币情况下进行，问如何估计两个硬币正面出现的概率？  </p>
+<p><div align="center">
+  <img src="/2018/02/27/EM/coin_game.png">
+</div></p>
+<h5 id="CASE-a"><a href="#CASE-a" class="headerlink" title="CASE a"></a>CASE a</h5>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/ML/" rel="tag"># ML</a>
+          
+            <a href="/tags/机器学习/" rel="tag"># 机器学习</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/02/25/cross-entropy/" rel="next" title="交叉熵的理解">
+                <i class="fa fa-chevron-left"></i> 交叉熵的理解
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/03/08/pca/" rel="prev" title="pca">
+                pca <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="MCF">
+            
+              <p class="site-author-name" itemprop="name">MCF</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">34</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-从极大似然到EM"><span class="nav-number">1.</span> <span class="nav-text">1.从极大似然到EM</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-1极大似然"><span class="nav-number">1.1.</span> <span class="nav-text">1.1极大似然</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#1-1-1问题描述（这也是个极大似然解决高斯分布问题的例子）"><span class="nav-number">1.1.1.</span> <span class="nav-text">1.1.1问题描述（这也是个极大似然解决高斯分布问题的例子）</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#1-1-2估计参数"><span class="nav-number">1.1.2.</span> <span class="nav-text">1.1.2估计参数</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#1-1-3极大似然估计总结"><span class="nav-number">1.1.3.</span> <span class="nav-text">1.1.3极大似然估计总结</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#1-1-4求极大似然函数估计值的一般步骤："><span class="nav-number">1.1.4.</span> <span class="nav-text">1.1.4求极大似然函数估计值的一般步骤：</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#1-1-5极大似然函数的应用"><span class="nav-number">1.1.5.</span> <span class="nav-text">1.1.5极大似然函数的应用</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-2-EM算法"><span class="nav-number">1.2.</span> <span class="nav-text">1.2 EM算法</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#1-2-1问题描述"><span class="nav-number">1.2.1.</span> <span class="nav-text">1.2.1问题描述</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#1-2-2-EM算法"><span class="nav-number">1.2.2.</span> <span class="nav-text">1.2.2 EM算法</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#1-2-3总结"><span class="nav-number">1.2.3.</span> <span class="nav-text">1.2.3总结</span></a></li></ol></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#EM算法推导"><span class="nav-number">2.</span> <span class="nav-text">EM算法推导</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#2-1基础知识"><span class="nav-number">2.1.</span> <span class="nav-text">2.1基础知识</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#2-1-1凸函数"><span class="nav-number">2.1.1.</span> <span class="nav-text">2.1.1凸函数</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#2-1-2Jensen不等式"><span class="nav-number">2.1.2.</span> <span class="nav-text">2.1.2Jensen不等式</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#2-1-3期望"><span class="nav-number">2.1.3.</span> <span class="nav-text">2.1.3期望</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-2EM算法的推导"><span class="nav-number">2.2.</span> <span class="nav-text">2.2EM算法的推导</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-3EM算法流程"><span class="nav-number">2.3.</span> <span class="nav-text">2.3EM算法流程</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-4EM算法另一种理解"><span class="nav-number">2.4.</span> <span class="nav-text">2.4EM算法另一种理解</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-5EM算法的收敛性思考"><span class="nav-number">2.5.</span> <span class="nav-text">2.5EM算法的收敛性思考</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-6EM算法应用"><span class="nav-number">2.6.</span> <span class="nav-text">2.6EM算法应用</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-EM算法案例-两硬币模型"><span class="nav-number">3.</span> <span class="nav-text">3.EM算法案例-两硬币模型</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#CASE-a"><span class="nav-number">3.1.</span> <span class="nav-text">CASE a</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">MCF</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

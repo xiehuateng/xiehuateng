@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="-NLP,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="从传统语言模型到神经网络语言模型我们将学习到如何使用KenLM工具构建语言模型，并使用它完成一个典型的“智能纠错”文本任务。 参考资料:  Andrej Karpathy的RNN博客 Language Model: A Survey of the State-of-the-Art Technology  我们从基于n-gram的传统统计语言模型，过渡到典型的前馈神经网络模型和循环神经网络模型。 传">
+<meta name="keywords" content="-NLP">
+<meta property="og:type" content="article">
+<meta property="og:title" content="神经网络语言模型">
+<meta property="og:url" content="http://yoursite.com/2018/09/14/language-model-neural/index.html">
+<meta property="og:site_name" content="Mcf&#39;s Blog">
+<meta property="og:description" content="从传统语言模型到神经网络语言模型我们将学习到如何使用KenLM工具构建语言模型，并使用它完成一个典型的“智能纠错”文本任务。 参考资料:  Andrej Karpathy的RNN博客 Language Model: A Survey of the State-of-the-Art Technology  我们从基于n-gram的传统统计语言模型，过渡到典型的前馈神经网络模型和循环神经网络模型。 传">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="http://yoursite.com/2018/09/14/language-model-neural/L2_nnlm.png">
+<meta property="og:image" content="http://yoursite.com/2018/09/14/language-model-neural/L2_rnnLM.png">
+<meta property="og:image" content="http://yoursite.com/2018/09/14/language-model-neural/L2_rnnLM_bp.png">
+<meta property="og:image" content="http://yoursite.com/2018/09/14/language-model-neural/L2_LM_eval.png">
+<meta property="og:updated_time" content="2019-03-14T09:34:20.042Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="神经网络语言模型">
+<meta name="twitter:description" content="从传统语言模型到神经网络语言模型我们将学习到如何使用KenLM工具构建语言模型，并使用它完成一个典型的“智能纠错”文本任务。 参考资料:  Andrej Karpathy的RNN博客 Language Model: A Survey of the State-of-the-Art Technology  我们从基于n-gram的传统统计语言模型，过渡到典型的前馈神经网络模型和循环神经网络模型。 传">
+<meta name="twitter:image" content="http://yoursite.com/2018/09/14/language-model-neural/L2_nnlm.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/09/14/language-model-neural/">
+
+
+
+
+
+  <title>神经网络语言模型 | Mcf's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Mcf's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/14/language-model-neural/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="MCF">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Mcf's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">神经网络语言模型</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-09-14T19:02:51+08:00">
+                2018-09-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/NLP/" itemprop="url" rel="index">
+                    <span itemprop="name">NLP</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h4 id="从传统语言模型到神经网络语言模型"><a href="#从传统语言模型到神经网络语言模型" class="headerlink" title="从传统语言模型到神经网络语言模型"></a>从传统语言模型到神经网络语言模型</h4><p>我们将学习到如何使用KenLM工具构建语言模型，并使用它完成一个典型的“智能纠错”文本任务。</p>
+<p><strong>参考资料</strong>:</p>
+<ul>
+<li><a href="https://karpathy.github.io/2015/05/21/rnn-effectiveness/" target="_blank" rel="noopener">Andrej Karpathy的RNN博客</a></li>
+<li><a href="https://medium.com/syncedreview/language-model-a-survey-of-the-state-of-the-art-technology-64d1a2e5a466" target="_blank" rel="noopener">Language Model: A Survey of the State-of-the-Art Technology</a></li>
+</ul>
+<p>我们从基于n-gram的传统统计语言模型，过渡到典型的前馈神经网络模型和循环神经网络模型。</p>
+<h5 id="传统语言模型"><a href="#传统语言模型" class="headerlink" title="传统语言模型"></a>传统语言模型</h5><p>从前面的内容，大家可以看到传统的语言模型构建方法是基于统计，比如bigram或者n-gram语言模型，是对n个连续的单词出现概率进行建模。这类模型基于马尔可夫假设，将n个单词出现的概率：$p(w_1,w_2,…,w_n)$ 的估计任务分解为依次估计每个单词出现的条件概率。出于计算和推导便利性的考虑，这个条件不是基于该单词出现之前所有出现的单词，而是前m个单词：</p>
+<script type="math/tex; mode=display">
+   p(w_n | w_{n-1}, w_{n-2}, \cdots, w_1) \approx p(w_n | w_{n-1}, \cdots, w_{n-m})</script><p>上述公式表明，传统的语言模型假设我们对于一个单词在某个位置出现概率的估计可以通过计算该单词与前面m个单词同时出现频率相对于前面的m个单词同时出现的频率的比获得。这是朴素贝叶斯的思路。</p>
+<ol>
+<li>如果m为0，我们的估计只基于该单词在全部文本中相对于其他所有单词的频率，这个模型就是unigram模型；</li>
+<li>如果m为1，那么这个模型就是常见的bigram模型，</li>
+<li>如果m为2，那么这个模型就是trigram模型，其计算公式如下：</li>
+</ol>
+<script type="math/tex; mode=display">
+   p(w_n | w_{n-1}, w_{n-2}) = \frac{\textrm{count}(w_n, w_{n-1}, w_{n-2})}{\sum_j \textrm{count}(w_j, w_{n-1}, w_{n-2})}</script><p>传统n-gram模型简单实用，但是数据的稀疏性和泛化能力有很大的问题。</p>
+<h6 id="文本稀疏性"><a href="#文本稀疏性" class="headerlink" title="文本稀疏性"></a>文本稀疏性</h6><p>因为n-gram模型只能对文本中出现的单词或者单词组进行建模，当新的文本中出现意义相近但是没有在训练文本中出现的单词或者单词组的时候，传统离散模型无法正确计算这些训练样本中未出现的单词的应有概率，他们都会被赋予0概率预测值。这是非常不符合语言规律的事情。</p>
+<p>举个例来讲，在一组旅游新闻中，“酒店”和“宾馆”是同义词，可以交替出现，但是假设整个训练集中没有出现过“宾馆”这个单词，那么在传统模型中对于“宾馆”这个词的出现概率会输出接近于0的结果。</p>
+<p>但是上述相似例子在实际生活中却是非常比比皆是，由于计算资源与数据的限制，我们经常会发现模型在使用中遇见在整个训练集中从未出现的单词组的情况。为了解决这种矛盾，传统方法是引入一些平滑或者back-off的技巧，整体上，效果并没有预想的好。</p>
+<h6 id="泛化能力不佳"><a href="#泛化能力不佳" class="headerlink" title="泛化能力不佳"></a>泛化能力不佳</h6><p>除了对未出现的单词本身进行预测非常困难之外，离散模型还依赖于固定单词组合，需要完全的模式匹配，否则也无法正确输出单词组出现的概率。假设新闻中一段话是“食物可口的酒店”，这句话和“餐食美味的宾馆”本身意思相近，一个好的语言模型是应该能够识别出后面这句话与前面那句无论从语法还是语义上都是非常近似，应该有近似的概率分布，但是离散模型是无法达到这个要求的。这就使得此类模型的泛化能力不足。Bengio等人在发布其神经网络语言模型的时候就专门指出了传统离散模型的这个弱点。</p>
+<p>此外，对于n-gram模型来说，第一个公式的马尔可夫假设太强。人在对文字进行处理的时候，是能够将很长一段上下文纳入考虑，但是n-gram的离散模型只考虑待预测单词前面的n-1个单词，这个马尔可夫假设与实际情况并不相符，使得第一个公式中两个概率近似的要求其实并不能满足。</p>
+<p>离散模型在计算上还存在“维度诅咒”的困难。从上面的公式可以看出，当我们将更多单词组合挑出来之后才能更精准地预测特定单词组出现的概率，但是这种组合的量是非常大的。假设我们的词库有一万个独立单词，对于一个包含4个单词的词组模式，潜在的单词组合多达$10000^4$。这使得突破一定的预测精度非常困难。</p>
+<h5 id="神经网络语言模型"><a href="#神经网络语言模型" class="headerlink" title="神经网络语言模型"></a>神经网络语言模型</h5><p>传统语言模型的上述几个内在缺陷使得人们开始把目光转向神经网络模型，期望深度学习技术能够自动化地学习代表语法和语义的特征，解决稀疏性问题，并提高泛化能力。我们这里主要介绍两类神经网络模型：前馈神经网络模型（FFLM）和循环神经网络模型（RNNLM）。前者主要设计来解决稀疏性问题，而后者主要设计来解决泛化能力，尤其是对长上下文信息的处理。在实际工作中，基于循环神经网络及其变种的模型已经实现了非常好的效果。</p>
+<p>我们前面提到，语言模型的一个主要任务就是要解决给定到当前的上下文的文字信息，如何估计现在每一个单词出现的概率。Bengio等人提出的第一个前馈神经网络模型利用一个三层，包含一个嵌入层、一个全连接层、一个输出层，的全连接神经网络模型来估计给定n-1个上文的情况下，第n个单词出现的概率。其架构如下图所示：<br><img src="/2018/09/14/language-model-neural/L2_nnlm.png" alt=""></p>
+<h5 id="RNN语言模型"><a href="#RNN语言模型" class="headerlink" title="RNN语言模型"></a>RNN语言模型</h5><p>另一类循环神经网络模型不要求固定窗口的数据训练。FFLM假设每个输入都是独立的，但是这个假设并不合理。经常一起出现的单词以后也经常出现的概率会更高，并且当前应该出现的词通常是由前面一段文字决定的，利用这个相关性能提高模型的预测能力。循环神经网络的结构能利用文字的这种上下文序列关系，从而有利于对文字建模。这一点相比FFLM模型更接近人脑对文字的处理模型。比如一个人说：”我是中国人，我的母语是___ “。 对于在“__”中需要填写的内容，通过前文的“母语”知道需要是一种语言，通过“中国”知道这个语言需要是“中文”。通过RNNLM能回溯到前两个分句的内容，形成对“母语”，“中国”等上下文的记忆。一个典型的RNNLM模型结构如下图所示。<br><img src="/2018/09/14/language-model-neural/L2_rnnLM.png" alt=""></p>
+<h5 id="RNN语言模型反向传播"><a href="#RNN语言模型反向传播" class="headerlink" title="RNN语言模型反向传播"></a>RNN语言模型反向传播</h5><p><img src="/2018/09/14/language-model-neural/L2_rnnLM_bp.png" alt=""></p>
+<h5 id="语言模型评估"><a href="#语言模型评估" class="headerlink" title="语言模型评估"></a>语言模型评估</h5><p>迷惑度/困惑度/混乱度（perplexity），其基本思想是给测试集的句子赋予较高概率值的语言模型较好,当语言模型训练完之后，测试集中的句子都是正常的句子，那么训练好的模型就是在测试集上的概率越高越好。迷惑度越小，句子概率越大，语言模型越好。<br><img src="/2018/09/14/language-model-neural/L2_LM_eval.png" alt=""></p>
+<h5 id="RNN语言模型实现"><a href="#RNN语言模型实现" class="headerlink" title="RNN语言模型实现"></a>RNN语言模型实现</h5><p>用pytorch来实现一下循环神经网络语言模型。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 实现参考 https://github.com/pytorch/examples/tree/master/word_language_model</span></span><br><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">import</span> torch.nn <span class="keyword">as</span> nn</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">from</span> torch.nn.utils <span class="keyword">import</span> clip_grad_norm_</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Dictionary</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        self.word2idx = &#123;&#125;</span><br><span class="line">        self.idx2word = &#123;&#125;</span><br><span class="line">        self.idx = <span class="number">0</span></span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">add_word</span><span class="params">(self, word)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> word <span class="keyword">in</span> self.word2idx:</span><br><span class="line">            self.word2idx[word] = self.idx</span><br><span class="line">            self.idx2word[self.idx] = word</span><br><span class="line">            self.idx += <span class="number">1</span></span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__len__</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> len(self.word2idx)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Corpus</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        self.dictionary = Dictionary()</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_data</span><span class="params">(self, path, batch_size=<span class="number">20</span>)</span>:</span></span><br><span class="line">        <span class="comment"># 添加词到字典</span></span><br><span class="line">        <span class="keyword">with</span> open(path, <span class="string">'r'</span>) <span class="keyword">as</span> f:</span><br><span class="line">            tokens = <span class="number">0</span></span><br><span class="line">            <span class="keyword">for</span> line <span class="keyword">in</span> f:</span><br><span class="line">                words = line.split() + [<span class="string">'&lt;eos&gt;'</span>]</span><br><span class="line">                tokens += len(words)</span><br><span class="line">                <span class="keyword">for</span> word <span class="keyword">in</span> words: </span><br><span class="line">                    self.dictionary.add_word(word)  </span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 对文件做Tokenize</span></span><br><span class="line">        ids = torch.LongTensor(tokens)</span><br><span class="line">        token = <span class="number">0</span></span><br><span class="line">        <span class="keyword">with</span> open(path, <span class="string">'r'</span>) <span class="keyword">as</span> f:</span><br><span class="line">            <span class="keyword">for</span> line <span class="keyword">in</span> f:</span><br><span class="line">                words = line.split() + [<span class="string">'&lt;eos&gt;'</span>]</span><br><span class="line">                <span class="keyword">for</span> word <span class="keyword">in</span> words:</span><br><span class="line">                    ids[token] = self.dictionary.word2idx[word]</span><br><span class="line">                    token += <span class="number">1</span></span><br><span class="line">        num_batches = ids.size(<span class="number">0</span>) // batch_size</span><br><span class="line">        print(ids[:<span class="number">10</span>])</span><br><span class="line">        ids = ids[:num_batches*batch_size]</span><br><span class="line">        <span class="keyword">return</span> ids.view(batch_size, <span class="number">-1</span>)</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 有gpu的情况下使用gpu</span></span><br><span class="line">device = torch.device(<span class="string">'cuda'</span> <span class="keyword">if</span> torch.cuda.is_available() <span class="keyword">else</span> <span class="string">'cpu'</span>)</span><br><span class="line"><span class="comment">#device = torch.device('cpu')</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 超参数的设定</span></span><br><span class="line">embed_size = <span class="number">128</span>    <span class="comment"># 词嵌入的维度</span></span><br><span class="line">hidden_size = <span class="number">1024</span>  <span class="comment"># LSTM的hidden size</span></span><br><span class="line">num_layers = <span class="number">1</span></span><br><span class="line">num_epochs = <span class="number">5</span>      <span class="comment"># 迭代轮次</span></span><br><span class="line">num_samples = <span class="number">1000</span>  <span class="comment"># 测试语言模型生成句子时的样本数</span></span><br><span class="line">batch_size = <span class="number">20</span>     <span class="comment"># 一批样本的数量</span></span><br><span class="line">seq_length = <span class="number">30</span>     <span class="comment"># 序列长度</span></span><br><span class="line">learning_rate = <span class="number">0.002</span> <span class="comment"># 学习率</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 加载数据集</span></span><br><span class="line">corpus = Corpus()</span><br><span class="line">ids = corpus.get_data(<span class="string">'data/train.txt'</span>, batch_size)</span><br><span class="line">vocab_size = len(corpus.dictionary)</span><br><span class="line">num_batches = ids.size(<span class="number">1</span>) // seq_length</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">s = torch.zeros(num_layers,batch_size,hidden_size)</span><br><span class="line">s.shape</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># RNN语言模型</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">RNNLM</span><span class="params">(nn.Module)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, vocab_size, embed_size, hidden_size, num_layers)</span>:</span></span><br><span class="line">        super(RNNLM, self).__init__()</span><br><span class="line">        self.embed = nn.Embedding(vocab_size, embed_size)</span><br><span class="line">        self.lstm = nn.LSTM(embed_size, hidden_size, num_layers, batch_first=<span class="keyword">True</span>)</span><br><span class="line">        self.linear = nn.Linear(hidden_size, vocab_size)</span><br><span class="line">        </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, x, h)</span>:</span></span><br><span class="line">        <span class="comment"># 词嵌入</span></span><br><span class="line">        x = self.embed(x)</span><br><span class="line">        <span class="comment"># LSTM前向运算</span></span><br><span class="line">        out,(h,c) = self.lstm(x)</span><br><span class="line">        <span class="comment"># 把结果变更为(batch_size*sequence_length, hidden_size)的维度</span></span><br><span class="line">        out = out.reshape(out.size(<span class="number">0</span>)*out.size(<span class="number">1</span>),out.size(<span class="number">2</span>))</span><br><span class="line">        <span class="comment"># 全连接</span></span><br><span class="line">        out = self.linear(out)</span><br><span class="line">        <span class="keyword">return</span> out,(h,c)</span><br><span class="line"></span><br><span class="line">model = RNNLM(vocab_size, embed_size, hidden_size, num_layers).to(device)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 损失构建与优化</span></span><br><span class="line">criterion = nn.CrossEntropyLoss()</span><br><span class="line">optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 反向传播过程“截断”(不复制gradient)</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">detach</span><span class="params">(states)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> [state.detach() <span class="keyword">for</span> state <span class="keyword">in</span> states] </span><br><span class="line"></span><br><span class="line"><span class="comment"># 训练模型</span></span><br><span class="line"><span class="keyword">for</span> epoch <span class="keyword">in</span> range(num_epochs):</span><br><span class="line">    <span class="comment"># 初始化为0</span></span><br><span class="line">    states = (torch.zeros(num_layers,batch_size,hidden_size).to(device),</span><br><span class="line">             torch.zeros(num_layers,batch_size,hidden_size).to(device))</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>, ids.size(<span class="number">1</span>) - seq_length, seq_length):</span><br><span class="line">        <span class="comment"># 获取mini batch的输入和输出</span></span><br><span class="line">        inputs = ids[:,i:i+seq_length].to(device)</span><br><span class="line">        targets = ids[:,(i+<span class="number">1</span>):(i+<span class="number">1</span>)+seq_length].to(device)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 前向运算</span></span><br><span class="line">        states = detach(states)</span><br><span class="line">        outputs,states = model(inputs,states)</span><br><span class="line">        loss = criterion(outputs,targets.reshape(<span class="number">-1</span>))</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 反向传播与优化</span></span><br><span class="line">        model.zero_grad()</span><br><span class="line">        loss.backward()</span><br><span class="line">        clip_grad_norm_(model.parameters(),<span class="number">0.5</span>)</span><br><span class="line">        optimizer.step()</span><br><span class="line"></span><br><span class="line">        step = (i+<span class="number">1</span>) // seq_length</span><br><span class="line">        <span class="keyword">if</span> step % <span class="number">100</span> == <span class="number">0</span>:</span><br><span class="line">            <span class="keyword">print</span> (<span class="string">'全量数据迭代轮次 [&#123;&#125;/&#123;&#125;], Step数[&#123;&#125;/&#123;&#125;], 损失Loss: &#123;:.4f&#125;, 困惑度/Perplexity: &#123;:5.2f&#125;'</span></span><br><span class="line">                   .format(epoch+<span class="number">1</span>, num_epochs, step, num_batches, loss.item(), np.exp(loss.item())))</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 测试语言模型</span></span><br><span class="line"><span class="keyword">with</span> torch.no_grad():</span><br><span class="line">    <span class="keyword">with</span> open(<span class="string">'sample.txt'</span>, <span class="string">'w'</span>) <span class="keyword">as</span> f:</span><br><span class="line">        <span class="comment"># 初始化为0</span></span><br><span class="line">        state = (torch.zeros(num_layers, <span class="number">1</span>, hidden_size).to(device),</span><br><span class="line">                 torch.zeros(num_layers, <span class="number">1</span>, hidden_size).to(device))</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 随机选择一个词作为输入</span></span><br><span class="line">        prob = torch.ones(vocab_size)</span><br><span class="line">        input = torch.multinomial(prob, num_samples=<span class="number">1</span>).unsqueeze(<span class="number">1</span>).to(device)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(num_samples):</span><br><span class="line">            <span class="comment"># 从输入词开始，基于语言模型前推计算</span></span><br><span class="line">            output, state = model(input, state)</span><br><span class="line"></span><br><span class="line">            <span class="comment"># 做预测</span></span><br><span class="line">            prob = output.exp()</span><br><span class="line">            word_id = torch.multinomial(prob, num_samples=<span class="number">1</span>).item()</span><br><span class="line"></span><br><span class="line">            <span class="comment"># 填充预估结果（为下一次预估储备输入数据）</span></span><br><span class="line">            input.fill_(word_id)</span><br><span class="line"></span><br><span class="line">            <span class="comment"># 写出输出结果</span></span><br><span class="line">            word = corpus.dictionary.idx2word[word_id]</span><br><span class="line">            word = <span class="string">'\n'</span> <span class="keyword">if</span> word == <span class="string">'&lt;eos&gt;'</span> <span class="keyword">else</span> word + <span class="string">' '</span></span><br><span class="line">            f.write(word)</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (i+<span class="number">1</span>) % <span class="number">100</span> == <span class="number">0</span>:</span><br><span class="line">                print(<span class="string">'生成了 [&#123;&#125;/&#123;&#125;] 个词，存储到 &#123;&#125;'</span>.format(i+<span class="number">1</span>, num_samples, <span class="string">'sample.txt'</span>))</span><br><span class="line"></span><br><span class="line"><span class="comment"># 存储模型的保存点(checkpoints)</span></span><br><span class="line">torch.save(model.state_dict(), <span class="string">'model.ckpt'</span>)</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/NLP/" rel="tag"># -NLP</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/09/13/language-model-statistic/" rel="next" title="统计语言模型">
+                <i class="fa fa-chevron-left"></i> 统计语言模型
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/10/12/text-topic-extraction-1/" rel="prev" title="文本主题抽取与表示（一）TD-IDF">
+                文本主题抽取与表示（一）TD-IDF <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="MCF">
+            
+              <p class="site-author-name" itemprop="name">MCF</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">34</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#从传统语言模型到神经网络语言模型"><span class="nav-number">1.</span> <span class="nav-text">从传统语言模型到神经网络语言模型</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#传统语言模型"><span class="nav-number">1.1.</span> <span class="nav-text">传统语言模型</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#文本稀疏性"><span class="nav-number">1.1.1.</span> <span class="nav-text">文本稀疏性</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#泛化能力不佳"><span class="nav-number">1.1.2.</span> <span class="nav-text">泛化能力不佳</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#神经网络语言模型"><span class="nav-number">1.2.</span> <span class="nav-text">神经网络语言模型</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#RNN语言模型"><span class="nav-number">1.3.</span> <span class="nav-text">RNN语言模型</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#RNN语言模型反向传播"><span class="nav-number">1.4.</span> <span class="nav-text">RNN语言模型反向传播</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#语言模型评估"><span class="nav-number">1.5.</span> <span class="nav-text">语言模型评估</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#RNN语言模型实现"><span class="nav-number">1.6.</span> <span class="nav-text">RNN语言模型实现</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">MCF</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

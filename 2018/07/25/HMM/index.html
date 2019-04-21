@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="ML,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="概述马尔科夫链，并不是一个完美的模型。 很明显，前后关系的缺失，带来了信息的缺失:比如我们的股市，如果只是观测市场，我们只能知道当天的价格、成交量等信息， 但是并不知道当前股市处于什么样的状态(牛市、熊市、震荡、反弹等等)， 在这种情况下我们有两个状态集合，一个可以观察到的状态集合 (股市价格成交量状态等)和一个隐藏的状态集合(股市状况)。(隐藏状态是马尔科夫链，前后关系通过观测状态来补全？)">
+<meta name="keywords" content="ML">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HMM">
+<meta property="og:url" content="http://yoursite.com/2018/07/25/HMM/index.html">
+<meta property="og:site_name" content="Mcf&#39;s Blog">
+<meta property="og:description" content="概述马尔科夫链，并不是一个完美的模型。 很明显，前后关系的缺失，带来了信息的缺失:比如我们的股市，如果只是观测市场，我们只能知道当天的价格、成交量等信息， 但是并不知道当前股市处于什么样的状态(牛市、熊市、震荡、反弹等等)， 在这种情况下我们有两个状态集合，一个可以观察到的状态集合 (股市价格成交量状态等)和一个隐藏的状态集合(股市状况)。(隐藏状态是马尔科夫链，前后关系通过观测状态来补全？)">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="http://yoursite.com/2018/07/25/HMM/WX20190325-124846@2x.png">
+<meta property="og:image" content="http://yoursite.com/2018/07/25/HMM/WX20190327-105353@2x.png">
+<meta property="og:image" content="http://yoursite.com/2018/07/25/HMM/WX20190327-105852@2x.png">
+<meta property="og:image" content="http://yoursite.com/2018/07/25/HMM/WX20190327-111855@2x.png">
+<meta property="og:image" content="http://yoursite.com/2018/07/25/HMM/WX20190327-153634@2x.png">
+<meta property="og:image" content="http://yoursite.com/2018/07/25/HMM/WX20190327-203639@2x.png">
+<meta property="og:updated_time" content="2019-04-21T03:22:00.557Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="HMM">
+<meta name="twitter:description" content="概述马尔科夫链，并不是一个完美的模型。 很明显，前后关系的缺失，带来了信息的缺失:比如我们的股市，如果只是观测市场，我们只能知道当天的价格、成交量等信息， 但是并不知道当前股市处于什么样的状态(牛市、熊市、震荡、反弹等等)， 在这种情况下我们有两个状态集合，一个可以观察到的状态集合 (股市价格成交量状态等)和一个隐藏的状态集合(股市状况)。(隐藏状态是马尔科夫链，前后关系通过观测状态来补全？)">
+<meta name="twitter:image" content="http://yoursite.com/2018/07/25/HMM/WX20190325-124846@2x.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/07/25/HMM/">
+
+
+
+
+
+  <title>HMM | Mcf's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Mcf's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/25/HMM/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="MCF">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Mcf's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">HMM</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-07-25T12:26:02+08:00">
+                2018-07-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h4 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h4><p>马尔科夫链，并不是一个完美的模型。 很明显，前后关系的缺失，带来了信息的缺失:比如我们的股市，如果只是观测市场，我们只能知道当天的价格、成交量等信息， 但是并不知道当前股市处于什么样的状态(牛市、熊市、震荡、反弹等等)， 在这种情况下我们有两个状态集合，一个可以观察到的状态集合 (股市价格成交量状态等)和一个隐藏的状态集合(股市状况)。(隐藏状态是马尔科夫链，前后关系通过观测状态来补全？)  </p>
+<p>我们希望能找到一个算法可以根据股市价格成交量状况和马尔科夫假设来预测股市的状况。 在上面的这些情况下，可以观察到的状态序列和隐藏的状态序列是概率相关的。 于是我们可以将这种类型的过程建模为有一个隐藏的马尔科夫过程和 一个与这个隐藏马尔科夫过程概率相关的并且可以观察到的状态集合，就是隐马尔可夫模型。  </p>
+<p>隐马尔可夫模型(Hidden Markov Model) 是一种统计模型，用来描述一个含有隐含未知参数的马尔可夫 过程。 其难点是从可观察的参数中确定该过程的隐含参数，然后利用这些参数来作进一步的分析。<br><img src="/2018/07/25/HMM/WX20190325-124846@2x.png" alt=""><br>隐马尔可夫模型示意图:<br><img src="/2018/07/25/HMM/WX20190327-105353@2x.png" alt=""><br>隐含状态转换示意图:  </p>
+<p><div align="center">
+  <img width="300" src="/2018/07/25/HMM/WX20190327-105852@2x.png">
+</div><br>隐马尔科夫链三大问题:<br>1.还是知道骰子有几种(隐含状态数量)，每种骰子是什么(转换概率)， 根据掷骰子掷出的结果(可见状态链)，我想知道掷出这个结果的概率。<br>2.知道骰子有几种(隐含状态数量)，每种骰子是什么(转换概率)，根据掷骰子掷出的结果(可见状态链)，我想知道每次掷出来的都是哪种骰子(隐含状态链）<br>3.知道骰子有几种(隐含状态数量)，不知道每种骰子是什么(转换概率)， 观测到很多次掷骰子的结果(可见状态链)，我想反推出每种骰子是什么(转换概率)。<br>公式描述如下：<br><strong>Evaluation</strong><br>Given the observation sequence $O=O_{1}O_{2}…O_{T}$ and a model $\lambda = (A,B,\pi )$,how do we efficiently compute $P(O|\lambda)$, i.e., the probability of the observation sequence given the model.  </p>
+<p><strong>Recognition</strong><br>Given the observation sequence $O=O_{1}O_{2}…O_{T}$ and a model $\lambda = (A,B,\pi )$,how do we choose a corresponding state sequence $Q = q_{1}q_{2}…q_{T}$ which is optimal in some sense, i.e., best explians ths observations.  </p>
+<p><strong>Training</strong><br>Given the observation sequence $O=O_{1}O_{2}…O_{T}$, how di we adjust the model parameters $\lambda = (A,B,\pi )$ to maximize $P(O|\lambda)$.  </p>
+<p><img src="/2018/07/25/HMM/WX20190327-111855@2x.png" alt=""><br>如上，初始概率分布 π；状态转移矩阵 A；观测量的概率分布 B； 同时有两个状态； 三种可能的观测值。<br>问题1，已知整个模型，我观测到连续三天做的事情是:散步，购物，收拾。 那么，根据模型，计算产生这些行为的概率是多少。<br>问题2，同样知晓这个模型，同样是这三件事，我想猜，这三天的天气是怎么样的。<br>问题3，最复杂的，我只知道这三天做了这三件事儿，而其他什么信息都没有。 我得建立一个模型，晴雨转换概率，第一天天气情况的概率分布， 根据天气情况选择做某事的概率分布。  </p>
+<h4 id="解法"><a href="#解法" class="headerlink" title="解法"></a>解法</h4><ul>
+<li>问题一： 遍历算法，前向算法（Forward Algorithm），或者后向算法（Backward Algorithm）。  </li>
+<li>问题二： 维特比算法（Viterbi Algorithm）。  </li>
+<li>问题三： 鲍姆-韦尔奇算法（Baum-Welch Algorithm）。  </li>
+</ul>
+<h5 id="遍历算法"><a href="#遍历算法" class="headerlink" title="遍历算法"></a>遍历算法</h5><ul>
+<li>We need $P(O|\lambda)$, i.e., the probability of the observation sequence $O=O_{1}O_{2}…O_{T}$ given the model $\lambda$.  </li>
+<li>So we can enumerate every possible state sequence $Q = q_{1}q_{2}…q_{T}$.  </li>
+<li>For a sample sequence Q  <script type="math/tex; mode=display">
+P(O|Q,\lambda) = \prod_{t=1}^{T}{P(O_{t}|q_{t},\lambda)} = \prod_{t=1}^{T}{b_{q_{t}O_{t}}}</script></li>
+<li>The probability of such a state sequence Q is  <script type="math/tex; mode=display">
+P(Q|\lambda) = P(q_{1})\prod_{t=2}^{T}{P(q_{t}|q_{t-1})} = \pi_{q_{1}}\prod_{t=2}^{T}{a_{q_{t-1} q_{t}}}</script></li>
+<li>Therefore the joint probability  <script type="math/tex; mode=display">
+P(O,Q|\lambda) = P(Q|\lambda)P(O|Q,\lambda) = \pi_{q_{1}}\prod_{t=2}^{T}{a_{q_{t-1} q_{t}}} \prod_{t=1}^{T}{b_{q_{t}O_{t}}}</script></li>
+<li>By considering all possible state sequences  <script type="math/tex; mode=display">
+P(O|\lambda) = \sum_{Q}{\pi_{q_{1}}b_{q_{1}O_{1}}\prod_{t=2}^{T}{a_{q_{t-1} q_{t}}b_{q_{t}O_{t}}}}</script></li>
+<li>Problem: order of $2TN^{T}$ calculations <ul>
+<li>$N^{T}$ possible state sequence  </li>
+<li>about 2T calculations for each sequence  </li>
+</ul>
+</li>
+</ul>
+<p>举例其中一种隐状态序列为：雨-雨-雨  </p>
+<script type="math/tex; mode=display">
+P(O|\lambda) = P(雨1，雨2，雨3) = P(雨1)*P(W)*P(雨2|雨1)*P(S)*P(雨3|雨2，雨1)*P(C) \\
+= 0.6*0.1*0.7*0.4*0.7*0.5 = 0.00588</script><p>再把$N^{t}$中可能的隐状态序列累加起来：  </p>
+<script type="math/tex; mode=display">
+P(O|\lambda) = \sum_{Q}{\pi_{q_{1}}b_{q_{1}O_{1}}\prod_{t=2}^{T}{a_{q_{t-1} q_{t}}b_{q_{t}O_{t}}}}</script><h5 id="前向算法"><a href="#前向算法" class="headerlink" title="前向算法"></a>前向算法</h5><ul>
+<li>We define a forward variable $\alpha_{j}(t)$ as the probability of the partial observation seq. until time $t$, with state $S_{j}$ at time $t$（前向变量）   <script type="math/tex; mode=display">
+\alpha_{j}(t) = P(O_{1}O_{2}...O_{t},q_{t}=S_{j}|\lambda)</script></li>
+<li>This can be computed inductively  <script type="math/tex; mode=display">
+\alpha_{j}(1) = \pi_{j}b_{jO_{1}},     1\leq j \leq N</script><script type="math/tex; mode=display">
+\alpha_{j}(t+1) = (\sum_{i=1}^{N}{\alpha_{i}(t)a_{ij}})b_{jO_{t+1}},  1\leq t \leq T-1</script></li>
+<li>Then with $N^{2}T$ operations:  <script type="math/tex; mode=display">
+P(O|\lambda) = \sum_{i=1}^{N}{P(O,q_{T}=S_{i}|\lambda)} = \sum_{i=1}^{N}{\alpha_{i}(T)}</script>举例，t=1 ($\alpha_{j}(1) = $)：  <script type="math/tex; mode=display">
+P(雨1，W) = \pi_{j}b_{jO_{1}} = 0.6*0.1 = 0.06 \\
+P(晴1，W) = \pi_{j}b_{jO_{1}} = 0.4*0.6 = 0.24</script>t=2($\alpha_{j}(t+1)$):  <script type="math/tex; mode=display">
+P(雨2，S) = (\sum_{i=1}^{N}{\alpha_{i}(t)a_{ij}})b_{jO_{t+1}} \\
+= (P(雨1，W)*P(雨2|雨1)+P(晴1，W)*P(雨2|晴1))*P(S|雨2) \\
+= (0.06*0.7+0.24*0.4)*0.4 = 0.0552</script><script type="math/tex; mode=display">
+P(晴2，S) = (\sum_{i=1}^{N}{\alpha_{i}(t)a_{ij}})b_{jO_{t+1}} \\
+= (P(雨1，W)*P(晴2|雨1)+P(晴1，W)*P(晴2|晴1))*P(S|晴2)</script>如此往下计算，t=…T;在最后把第T步的所有隐状态可能加起来即可。   </li>
+</ul>
+<p><strong>（从上面的这些算法可见，马尔科夫链都是应用在隐状态上）</strong>  </p>
+<h5 id="后向算法"><a href="#后向算法" class="headerlink" title="后向算法"></a>后向算法</h5><p><div align="center">
+  <img width="300" src="/2018/07/25/HMM/WX20190327-153634@2x.png">
+</div><br>Figure:Operations for computing the backward variable $\beta_{i}(t)$ (后向变量)  </p>
+<ul>
+<li>We define a backward variable $\beta_{i}(t)$ as the probability of the partial observation seq. after time $t$, given stat $S_{i}$ at time $t$.  <script type="math/tex; mode=display">
+\beta_{i}(t) = P(O_{t+1}P_{t+2}...O_{T}|q_{t}=S_{i},\lambda)</script></li>
+<li>This can be computed inductively as well  <script type="math/tex; mode=display">
+\beta_{i}(T) = 1 ,  1\leq i \leq N</script><script type="math/tex; mode=display">
+\beta_{i}(t-1) = \sum_{j=1}^{N}{a_{ij}b_{jO_{t}}\beta_{j}(t)} , 2\leq t \leq T</script>举例，初始化，时刻t=3:<script type="math/tex; mode=display">
+\beta_{雨}(3) = 1 \\
+\beta_{晴}(3) = 1</script>时刻t=2：  <script type="math/tex; mode=display">
+\beta_{雨}(2) = \sum_{j=1}^{N}{a_{ij}b_{jO_{t}}\beta_{j}(t)}\\
+=P(雨3|雨2)*P(C|雨3)*\beta_{雨}(3)+P(晴3|雨2)*P(C|晴3)*\beta_{晴}(3)\\
+= 0.7*0.5*1 + 0.3*0.1*1 = 0.38</script><script type="math/tex; mode=display">
+\beta_{晴}(2) = \sum_{j=1}^{N}{a_{ij}b_{jO_{t}}\beta_{j}(t)}\\
+=P(雨3|晴2)*P(C|雨3)*\beta_{雨}(3)+P(晴3|晴2)*P(C|晴3)*\beta_{晴}(3)\\
+= 0.3*0.5*1 + 0.6*0.1*1 = 0.21</script>同理计算t=1：<script type="math/tex; mode=display">
+\beta_{雨}(1)
+\beta_{晴}(1)</script>最终计算$\beta(0)$：  <script type="math/tex; mode=display">
+P(O|\lambda) = P(W,S,C) = \pi_{雨}*P(W|雨1)*\beta_{雨}(1) + \pi_{晴}*P(W|晴1)*\beta_{晴}(1)</script></li>
+</ul>
+<h5 id="Viterbi算法"><a href="#Viterbi算法" class="headerlink" title="Viterbi算法"></a>Viterbi算法</h5><ul>
+<li>Finding the best single sequence means computing $argmax_{Q} P(Q|O,\lambda)$, equivalent to $argmax_{Q} P(Q,O|\lambda)$  </li>
+<li>The Viterbi algorithm (dynamix programming) defines \delta_{j}(t), i.e., the highest probability of a single path of length $t$ which accounts for the observations and ends in state $S_{j}$  <script type="math/tex; mode=display">
+\delta_{j}(t) = max_{q_1,q_2,...,q_{t-1}} P(q_{1}q_{2}...q_{t}=j,O_{1}O_{2}...O_{t}|\lambda)</script></li>
+<li>By induction  <script type="math/tex; mode=display">
+\delta_{j}(1) = \pi_{j}b_{jO_{1}}, 1 \leq j \leq N\\
+\delta_{j}(t+1) = (max_{i}\delta_{i}(t)a_{ij})b_{jO_{t+1}},  1\ leq t \leq T-1</script></li>
+<li>With backtracking (keeping the maximizing argument for each $t$ and $j$) we fing the optimal solution.  </li>
+</ul>
+<p>举例，t=1：</p>
+<script type="math/tex; mode=display">
+\delta_{雨}(1) = \pi_{雨}*P(W|雨1) = 0.6*0.1 = 0.06\\
+\delta_{晴}(1) = \pi_{晴}*P(W|晴1) = 0.4*0.6 = 0.24</script><p>初始化路径：  </p>
+<script type="math/tex; mode=display">
+\phi_{雨}(1) = 0\\
+\phi_{晴}(1) = 0</script><p>t=2：</p>
+<script type="math/tex; mode=display">
+\delta_{雨}(2) = max[\delta_{雨}(1)*a_{雨1->雨2}|\delta_{晴}(1)*a_{晴1->雨2}]*b_{雨O_{2}}\\
+=max[0.06*0.7|0.24*0.4]*0.4 = 0.096*0.4 = 0.0384\\</script><p>因为通过计算，由晴1-&gt;雨2概率比较大，记录最优路径$\phi_{雨}(2)$ = 晴。</p>
+<script type="math/tex; mode=display">
+\delta_{晴}(2) =  max[\delta_{雨}(1)*a_{雨1->晴2}|\delta_{晴}(1)*a_{晴1->晴2}]*b_{晴O_{2}}\\
+=max[0.06*0.3|0.24*0.6]*0.3 = 0.144*0.3 = 0.0434</script><p>由晴1-&gt;晴2概率比较大，记录最优路径$\phi_{晴}(2)$ = 晴。</p>
+<p>同理，计算t=3：<br>记录最优路径，假设$\phi_{雨}(3)$ = 晴，$\phi_{晴}(3)$ = 雨。又假设我们计算得到$\delta_{雨}(3) \geq \delta_{晴}(3) $，所以由最后往前回溯得到路径：$\phi_{雨}(3)=晴 -&gt; \phi_{晴}(2)=晴 -&gt; \phi_{晴}(1) = 0$ , 即路径为：雨-晴-晴-0。  </p>
+<h5 id="Baum-Welch算法"><a href="#Baum-Welch算法" class="headerlink" title="Baum-Welch算法"></a>Baum-Welch算法</h5><ul>
+<li>There is no knoew way to analytically solve for the model which maximizes the probability of the observation sequence  </li>
+<li>We can choose $\lambda=(A,B,\pi)$ which locally maxizizes P(O|\lambda)  <ul>
+<li>gradient techniques (梯度下降法)</li>
+<li>Baum-Welch reestimation(equivalent to EM)  </li>
+</ul>
+</li>
+<li>We need to define $\xi_{ij}(t)$, i.e., the probability of being in state $S_{i}$ at time $t$ and in state $S_{j}$ at time $t+1$  <script type="math/tex; mode=display">
+\xi_(ij) = P(q_{t}=S_{i},q_{t+1}=S_{j}|O,\lambda)</script><script type="math/tex; mode=display">
+\xi_(ij) = \frac{\alpha_{i}(t)a_{ij}b_{jO_{t+1}}\beta_{j}(t+1)}{P(O|\lambda)}\\
+=\frac{\alpha_{i}(t)a_{ij}b_{jO_{t+1}}\beta_{j}(t+1)}{\sum_{i=1}^{N}\sum_{i=1}^{N}\alpha_{i}(t)a_{ij}b_{jO_{t+1}}\beta_{j}(t+1)}</script>Figure: Operations for computing the $\xi_{ij}(t)$  <div align="center">
+<img width="300" src="/2018/07/25/HMM/WX20190327-203639@2x.png">
+</div></li>
+<li>Recall that $\gamma_{i}(t)$ is a probability of state $S_{i}$ at time $t$, hence  <script type="math/tex; mode=display">
+\gamma_{i}(t) = \sum_{j=1}^{N}{\xi_{ij}(t)}</script></li>
+<li>Now if we sum over the time index t  <ul>
+<li>$\sum_{t=1}^{T-1}{\gamma_{i}(t)}$ = expected number of times that $S_{i}$ is visited = expected number of transitions from state $S_{i}$</li>
+<li>$\sum_{t=1}^{T-1}{\xi_{i}(t)}$ = expected number of transitions from $S_{i}$ to $S_{j}$  </li>
+</ul>
+</li>
+<li>Reestimation formulas  <script type="math/tex; mode=display">
+\bar{\pi_{i}} = \gamma_{i}(1) \\
+\bar(a_{ij}) = \frac{\sum_{t=1}^{T-1}{\xi_{i}(t)}}{\sum_{t=1}^{T-1}{\gamma_{i}(t)}} \\
+\bar{b_{jk}} = \frac{\sum_{O_{t}=V_{k}}{\gamma_{j}(t)}}{\sum_{t=1}^{T}{\gamma_{j}(t)}}</script><strong>(这里主要思想就是评率的概率，分母为总次数，分子为某一类次数)</strong>  </li>
+<li>Baum et al. proved that if current model id $\lambda = (A,B,\pi)$ and we use the above to compute $\bar{\lambda} = (\bar{A},\bar{B},\bar{\pi})$ then either <ul>
+<li>$\bar{\lambda} = \lambda$ we are in a critical point if the likelihood function  </li>
+<li>$P(O|\bar{\lambda}) &gt; P(O|\lambda)$ model $\bar{\lambda}$ is more likely  </li>
+</ul>
+</li>
+<li>If we iteratively reestimate the parameters we obtain a maximum likelihood estimate of the HMM  </li>
+<li>Unfortunately this finds a local maximum and the surface can be very complex.<br><strong>定义出模型参数$\bar{\lambda} = (\bar{A},\bar{B},\bar{\pi})$后，就是EM算法的求解了。</strong></li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/ML/" rel="tag"># ML</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/06/13/transformer/" rel="next" title="图解Transformer">
+                <i class="fa fa-chevron-left"></i> 图解Transformer
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/07/28/tf-nmt-seq2seq/" rel="prev" title="tensorflow-nmt(seq2seq)模型（官方）">
+                tensorflow-nmt(seq2seq)模型（官方） <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="MCF">
+            
+              <p class="site-author-name" itemprop="name">MCF</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">34</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#概述"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#解法"><span class="nav-number">2.</span> <span class="nav-text">解法</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#遍历算法"><span class="nav-number">2.1.</span> <span class="nav-text">遍历算法</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#前向算法"><span class="nav-number">2.2.</span> <span class="nav-text">前向算法</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#后向算法"><span class="nav-number">2.3.</span> <span class="nav-text">后向算法</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Viterbi算法"><span class="nav-number">2.4.</span> <span class="nav-text">Viterbi算法</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Baum-Welch算法"><span class="nav-number">2.5.</span> <span class="nav-text">Baum-Welch算法</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">MCF</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

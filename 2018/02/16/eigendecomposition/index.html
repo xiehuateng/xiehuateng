@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Linear Algebra,线性代数,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="先看大佬是怎么说的：https://www.zhihu.com/question/21874816以下是个人的简单理解，方便记忆。   特征分解是使用最广的矩阵分解之一，即我们矩阵分解成一组特征向量和特征值。 方阵 A 的特征向量（eigenvector）是指与A相乘后相当于对该向量进行缩放的非零向量v：    Av = \lambda v其中标量$\lambda$称为这个特征向量的特征值（eig">
+<meta name="keywords" content="Linear Algebra,线性代数">
+<meta property="og:type" content="article">
+<meta property="og:title" content="矩阵特征分解">
+<meta property="og:url" content="http://yoursite.com/2018/02/16/eigendecomposition/index.html">
+<meta property="og:site_name" content="Mcf&#39;s Blog">
+<meta property="og:description" content="先看大佬是怎么说的：https://www.zhihu.com/question/21874816以下是个人的简单理解，方便记忆。   特征分解是使用最广的矩阵分解之一，即我们矩阵分解成一组特征向量和特征值。 方阵 A 的特征向量（eigenvector）是指与A相乘后相当于对该向量进行缩放的非零向量v：    Av = \lambda v其中标量$\lambda$称为这个特征向量的特征值（eig">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="http://yoursite.com/2018/02/16/eigendecomposition/v2-9c697544d33a102f75e33dfc1fc2bcd3_hd.jpg">
+<meta property="og:image" content="http://yoursite.com/2018/02/16/eigendecomposition/v2-72998d1d940aec9a4e79fd4548cfc32b_hd.jpg">
+<meta property="og:image" content="http://yoursite.com/2018/02/16/eigendecomposition/v2-d1f9c14af565b0833c07e5f009c4022d_hd.jpg">
+<meta property="og:image" content="http://yoursite.com/2018/02/16/eigendecomposition/v2-3064249b9e5593e8de34fd704dc72dbc_hd.jpg">
+<meta property="og:image" content="http://yoursite.com/2018/02/16/eigendecomposition/v2-251d988d7f010e199b9f8895dd4dcd43_hd.jpg">
+<meta property="og:image" content="http://yoursite.com/2018/02/16/eigendecomposition/v2-b48642e5416d3130656ff23b7a2fc385_hd.jpg">
+<meta property="og:updated_time" content="2019-04-21T03:23:02.247Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="矩阵特征分解">
+<meta name="twitter:description" content="先看大佬是怎么说的：https://www.zhihu.com/question/21874816以下是个人的简单理解，方便记忆。   特征分解是使用最广的矩阵分解之一，即我们矩阵分解成一组特征向量和特征值。 方阵 A 的特征向量（eigenvector）是指与A相乘后相当于对该向量进行缩放的非零向量v：    Av = \lambda v其中标量$\lambda$称为这个特征向量的特征值（eig">
+<meta name="twitter:image" content="http://yoursite.com/2018/02/16/eigendecomposition/v2-9c697544d33a102f75e33dfc1fc2bcd3_hd.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/02/16/eigendecomposition/">
+
+
+
+
+
+  <title>矩阵特征分解 | Mcf's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Mcf's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/02/16/eigendecomposition/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="MCF">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Mcf's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">矩阵特征分解</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-02-16T19:52:16+08:00">
+                2018-02-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>先看大佬是怎么说的：<a href="https://www.zhihu.com/question/21874816" target="_blank" rel="noopener">https://www.zhihu.com/question/21874816</a><br>以下是个人的简单理解，方便记忆。  </p>
+<p>特征分解是使用最广的矩阵分解之一，即我们矩阵分解成一组特征向量和特征值。</p>
+<p>方阵 A 的特征向量（eigenvector）是指与A相乘后相当于对该向量进行缩放的非零向量v：  </p>
+<script type="math/tex; mode=display">
+Av = \lambda v</script><p>其中标量$\lambda$称为这个特征向量的特征值（eigenvalue）。  </p>
+<p>如果v是A的特征向量，那么任何缩放后的向量sv（$s\in R$,$s&ne;0$）也是A的特征向量。此外，sv和v有相同的特征值。基于这个原因，通常我们只考虑单位特征向量。（单位向量$\parallel x\parallel _{2}=1$）  </p>
+<p>假设矩阵A有n个线性无关的特征向量{$v_1,v_2,…,v_n$},对应着特征值{$\lambda _{1},\lambda _{2},…,\lambda _{n}$}。我们将特征向量连接成一个矩阵，使得每一列是一个特征向量：$V = [v_1,v_2,…,v_n]$。类似的，我们也可以将特征值连接成一个向量$\lambda = [\lambda _{1},\lambda _{2},…,\lambda _{n}]^{T}$。因此A的特征分解可以记作：  </p>
+<script type="math/tex; mode=display">
+A = Vdiag(\lambda)V^{-1}</script><p>不是每一个矩阵都可以分解成特征向量和特征值的。在某些情况下，特征分解存在，但是会涉及复数而非实数。在深度学习领域，我们通常只要分解一类有简单分解的矩阵。具体来讲，每个实对称矩阵都可以分解成实特征向量和特征值：  </p>
+<script type="math/tex; mode=display">
+A = Q\Lambda Q^{T}</script><p>其中Q是A的特征向量组成的正交矩阵，$\Lambda$是对角矩阵。特征值$\Lambda _{i}$，i对应的特征向量是矩阵Q的第i列，记作$Q_{:,i}$。  </p>
+<p>一个简单的理解，如果把矩阵看作是运动，对于运动而言，最重要的当然就是运动的速度和方向，那么：  </p>
+<ul>
+<li>特征值就是运动的速度</li>
+<li>特征向量就是运动的方向  </li>
+</ul>
+<p>既然运动最重要的两方面都被描述了，特征值，特征向量自然可以称为运动（即矩阵）的特征。反复运用矩阵乘法，矩阵所代表的运动最明显的特征，即速度最大的方向，就由最大特征值对应的特征向量展现了出来。  </p>
+<h5 id="几何意义"><a href="#几何意义" class="headerlink" title="几何意义"></a>几何意义</h5><p>说明下，因为线性变换总是在各种基之间变来变去，所以下面的画图都会把作图所用的基和原点画出来。  </p>
+<p>在$\vec{i}$，$\vec{j}$下面有个$\vec{v}$：<br><img src="/2018/02/16/eigendecomposition/v2-9c697544d33a102f75e33dfc1fc2bcd3_hd.jpg" alt="pic_001"><br>随便左乘一个矩阵A，图像看上去没有什么特殊的：<br><img src="/2018/02/16/eigendecomposition/v2-72998d1d940aec9a4e79fd4548cfc32b_hd.jpg" alt="pic_002"><br>调整下$\vec{v}$的方向，图像看上去就有点特殊了：<br><img src="/2018/02/16/eigendecomposition/v2-d1f9c14af565b0833c07e5f009c4022d_hd.jpg" alt="pic_003"><br>可以观察到，调整后的$\vec{v}$和$A\vec{v}$在同一直线上，只是$A\vec{v}$的长度相对$\vec{v}$的长度变长了。此时，我们就称$\vec{v}$是$A$的特征向量，而$A\vec{v}$的长度是$\vec{v}$的$\lambda$倍，$\lambda$就是特征值。从而，特征值与特征向量的定义式就是这样的：<br><img src="/2018/02/16/eigendecomposition/v2-3064249b9e5593e8de34fd704dc72dbc_hd.jpg" alt="pic_004"><br>之前的$A$不止一个特征向量，还有一个特征向量：<br><img src="/2018/02/16/eigendecomposition/v2-251d988d7f010e199b9f8895dd4dcd43_hd.jpg" alt="pic_005"><br>容易从$A\vec{v}$相对于$\vec{v}$是变长了还是缩短看出，这两个特征向量对应的特征值$\lambda$，一个大于1，一个小于1。  </p>
+<p>从特征向量和特征值的定义式还可以看出，特征向量所在直线上的向量都是特征向量：<br><img src="/2018/02/16/eigendecomposition/v2-b48642e5416d3130656ff23b7a2fc385_hd.jpg" alt="pic_006"><br>特征值越大，说明矩阵在对应的特征向量上的方差越大，功率越大，信息量越多。  </p>
+<p>例如图片压缩的例子，一副512*512的图片只保留前面50个的特征值（也就是最大的50个，其实也只占了所有特征值的百分之十），其它的都填0，就能复原出基本图像，效果还可以。其实一两百个特征值之和可能就占了所有特征值和的百分之九十了，其他的特征值都可以丢弃了。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Linear-Algebra/" rel="tag"># Linear Algebra</a>
+          
+            <a href="/tags/线性代数/" rel="tag"># 线性代数</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/02/21/xavier/" rel="prev" title="深度学习之参数初始化（一）——Xavier初始化和He初始化">
+                深度学习之参数初始化（一）——Xavier初始化和He初始化 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="MCF">
+            
+              <p class="site-author-name" itemprop="name">MCF</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">34</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-5"><a class="nav-link" href="#几何意义"><span class="nav-number">1.</span> <span class="nav-text">几何意义</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">MCF</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

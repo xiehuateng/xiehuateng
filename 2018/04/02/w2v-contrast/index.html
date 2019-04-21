@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="NLP,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="一、文本表示和个词向量间的对比1.文本表示进行一个归纳，也就是对于一篇文本可以如何使用数学语言表示呢？ 基于one-hot、tf-idf、textrank等的bag-of-words； 主题模型：LSA（SVD）、pLSA、LDA；   基于词向量的固定表征：word2vec、fastText、glove； 基于词向量的动态表征：elmo、GPT、bert。    2.怎么从语言模型理解词向量？怎">
+<meta name="keywords" content="NLP">
+<meta property="og:type" content="article">
+<meta property="og:title" content="w2v-contrast">
+<meta property="og:url" content="http://yoursite.com/2018/04/02/w2v-contrast/index.html">
+<meta property="og:site_name" content="Mcf&#39;s Blog">
+<meta property="og:description" content="一、文本表示和个词向量间的对比1.文本表示进行一个归纳，也就是对于一篇文本可以如何使用数学语言表示呢？ 基于one-hot、tf-idf、textrank等的bag-of-words； 主题模型：LSA（SVD）、pLSA、LDA；   基于词向量的固定表征：word2vec、fastText、glove； 基于词向量的动态表征：elmo、GPT、bert。    2.怎么从语言模型理解词向量？怎">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="http://yoursite.com/2018/04/02/w2v-contrast/20180824144924114.png">
+<meta property="og:image" content="http://yoursite.com/2018/04/02/w2v-contrast/00001.png">
+<meta property="og:image" content="http://yoursite.com/2018/04/02/w2v-contrast/00002.png">
+<meta property="og:image" content="http://yoursite.com/2018/04/02/w2v-contrast/00001.png">
+<meta property="og:image" content="http://yoursite.com/2018/04/02/w2v-contrast/00002.png">
+<meta property="og:image" content="http://yoursite.com/2018/04/02/w2v-contrast/00003.png">
+<meta property="og:updated_time" content="2019-04-21T03:19:20.443Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="w2v-contrast">
+<meta name="twitter:description" content="一、文本表示和个词向量间的对比1.文本表示进行一个归纳，也就是对于一篇文本可以如何使用数学语言表示呢？ 基于one-hot、tf-idf、textrank等的bag-of-words； 主题模型：LSA（SVD）、pLSA、LDA；   基于词向量的固定表征：word2vec、fastText、glove； 基于词向量的动态表征：elmo、GPT、bert。    2.怎么从语言模型理解词向量？怎">
+<meta name="twitter:image" content="http://yoursite.com/2018/04/02/w2v-contrast/20180824144924114.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/04/02/w2v-contrast/">
+
+
+
+
+
+  <title>w2v-contrast | Mcf's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Mcf's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/02/w2v-contrast/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="MCF">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Mcf's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">w2v-contrast</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-04-02T19:14:59+08:00">
+                2018-04-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h4 id="一、文本表示和个词向量间的对比"><a href="#一、文本表示和个词向量间的对比" class="headerlink" title="一、文本表示和个词向量间的对比"></a>一、文本表示和个词向量间的对比</h4><h5 id="1-文本表示进行一个归纳，也就是对于一篇文本可以如何使用数学语言表示呢？"><a href="#1-文本表示进行一个归纳，也就是对于一篇文本可以如何使用数学语言表示呢？" class="headerlink" title="1.文本表示进行一个归纳，也就是对于一篇文本可以如何使用数学语言表示呢？"></a>1.文本表示进行一个归纳，也就是对于一篇文本可以如何使用数学语言表示呢？</h5><ul>
+<li>基于one-hot、tf-idf、textrank等的bag-of-words；</li>
+<li>主题模型：LSA（SVD）、pLSA、LDA；  </li>
+<li>基于词向量的固定表征：word2vec、fastText、glove；</li>
+<li>基于词向量的动态表征：elmo、GPT、bert。  </li>
+</ul>
+<h5 id="2-怎么从语言模型理解词向量？怎么理解分布式假设？"><a href="#2-怎么从语言模型理解词向量？怎么理解分布式假设？" class="headerlink" title="2.怎么从语言模型理解词向量？怎么理解分布式假设？"></a>2.怎么从语言模型理解词向量？怎么理解分布式假设？</h5><p>上面给出的4个类型也是nlp领域最为常用的文本表示了，文本是由每个单词构成的，而谈起词向量，one-hot是可认为是最为简单的词向量，但存在维度灾难和语义鸿沟等问题；通过构建共现矩阵并利用SVD、求解构建词向量，则计算复杂度高；而早期词向量的研究通常来源于语言模型，比如NNLM和RNNLM，其主要目的是语言模型，而词向量只是一个副产物。<br><img src="/2018/04/02/w2v-contrast/20180824144924114.png" alt=""><br>所谓分布式假设，用一句话可以表达：<strong>相同上下文语境的词有相似的含义</strong>。而由此引申出了word2vec、fastText，在此类词向量中，虽然其本质仍然是语言模型，但是它的目的并不是语言模型本身，而是词向量，其所作的一系列优化，都是为了更快更好的得到词向量。glove则是基于全局预料库、并结合上下文语境构建词向量，结合了LSA和word2vec的优点。  </p>
+<h5 id="3-传统的词向量有什么问题？怎么解决？各种词向量的特点是什么？"><a href="#3-传统的词向量有什么问题？怎么解决？各种词向量的特点是什么？" class="headerlink" title="3.传统的词向量有什么问题？怎么解决？各种词向量的特点是什么？"></a>3.传统的词向量有什么问题？怎么解决？各种词向量的特点是什么？</h5><p>上述方法得到的词向量是固定表征的，无法解决一词多义等问题。为此引入基于语言模型的动态表征方法：elmo、GPT、bert。  </p>
+<p><strong>各种词向量的特点：</strong><br>（1）One-hot表示：维度灾难、语义鸿沟；<br>（2）分布式表示（distributed representation）：  </p>
+<ul>
+<li>矩阵分解（LSA）：利用全局预料特征，但SVD求解计算复杂度大；  </li>
+<li>基于NNLM/RNNLM的词向量：词向量为副产物，存在效率不高等问题；</li>
+<li>word2vec、fastText：优化效率高，但是基于局部预料；   </li>
+<li>glove：基于全局预料，结合了LSA和word2vec的优点；  </li>
+<li>elmo、GPT、bert：动态表征；  </li>
+</ul>
+<h5 id="4-word2vec和NNLM对比有什么区别？（word2vec-vs-NNLM）"><a href="#4-word2vec和NNLM对比有什么区别？（word2vec-vs-NNLM）" class="headerlink" title="4.word2vec和NNLM对比有什么区别？（word2vec vs NNLM）"></a>4.word2vec和NNLM对比有什么区别？（word2vec vs NNLM）</h5><p>1）其本质都可以看作是语言模型；<br>2）词向量只不过NNLM的一个产物，word2vec虽然其本质也是语言模型，但是其专注于词向量本身，因此做了许多优化来提高计算效率；  </p>
+<ul>
+<li>于NNLM相比，词向量直接sum，不在拼接，并舍弃隐层；  </li>
+<li>考虑到sofemax归一化需要遍历整个词汇表，采用hierarchical softmax和negative sampling进行优化，hierarchical softmax 实质上生成一颗带权路径最小的哈夫曼树，让高频词搜索路劲变小；negative sampling更为直接，实质上对每一个样本中每一个词都进行负例采样；  </li>
+</ul>
+<h5 id="5-word2vec和fastText对比有什么区别？（word2vec-vs-fastText）"><a href="#5-word2vec和fastText对比有什么区别？（word2vec-vs-fastText）" class="headerlink" title="5.word2vec和fastText对比有什么区别？（word2vec vs fastText）"></a>5.word2vec和fastText对比有什么区别？（word2vec vs fastText）</h5><p>1）都可以无监督学习词向量，fastText训练词向量时会考虑subword；<br>2）fastText还可以进行有监督学习进行文本分类，其主要特点：  </p>
+<ul>
+<li>结构与CBOW类似，但学习目标是人工标注的分类结果；  </li>
+<li>采用hierarchical sofemax对输出的分类标签建立哈夫曼树，样本中标签多的类别被分配短的搜寻路径；  </li>
+<li>引入N-gram，考虑词序特征；  </li>
+<li>引入subword来处理长词，处理未登录词问题；  </li>
+</ul>
+<h5 id="6-glove和word2vec、LSA对比有什么区别？（word2vec-vs-glove-vs-LSA）"><a href="#6-glove和word2vec、LSA对比有什么区别？（word2vec-vs-glove-vs-LSA）" class="headerlink" title="6.glove和word2vec、LSA对比有什么区别？（word2vec vs glove vs LSA）"></a>6.glove和word2vec、LSA对比有什么区别？（word2vec vs glove vs LSA）</h5><p>1）glove vs LSA  </p>
+<ul>
+<li>LSA（Latent Semantic Analysis）可以基于（co-occurance matrix）共现矩阵构建词向量，实质上是基于全局语料采用SVD进行矩阵分解，然而SVD计算复杂度高；  </li>
+<li>glove可看作是对LSA一种优化的高效矩阵分解算法，采用Adagrad对最小平方损失进行优化；  </li>
+</ul>
+<p>2）word2vec vs glove  </p>
+<ul>
+<li>word2vec是局部语料训练的，其特征提取是基于滑窗的；而glove的滑窗是为了构建co-occurance matrix，是基于全局语料的，可见glove需要事先统计共现概率；因此，word2vec可以进行在线学习，glove则需要统计固定语料信息。  </li>
+<li>word2vec是无监督学习，同样由于不需要人工标注；glove通常被认为是无监督学习，但实际上glove还是有label的，即共现次数$log(X_{ij})$。  </li>
+<li>word2vec损失函数实质上是带权重的交叉熵，权重固定；glove的损失函数是最小平方损失函数，权重可以做映射变换。  </li>
+<li>总体来看，glove可以被看作是更换了目标函数和权重函数的全局word2vec。  </li>
+</ul>
+<h5 id="7-elmo、GPT、bert三者之间有什么区别？（elmo-vs-GPT-vs-bert）"><a href="#7-elmo、GPT、bert三者之间有什么区别？（elmo-vs-GPT-vs-bert）" class="headerlink" title="7.elmo、GPT、bert三者之间有什么区别？（elmo vs GPT vs bert）."></a>7.elmo、GPT、bert三者之间有什么区别？（elmo vs GPT vs bert）.</h5><p>之前介绍词向量均是静态的词向量，无法解决一次多义等问题。下面介绍三种elmo、GPT、bert词向量，它们都是基于语言模型的动态词向量。下面从几个方面对这三者进行对比：<br>(1)特征提取器：elmo采用LSTM进行提取，GPT和bert则采用Transformer进行提取。很多任务表明Transformer特征提取能力强于LSTM，elmo采用1层静态向量+2层LSTM，多层提取能力有限，而GPT和bert中的Transformer可采用多层，并行计算能力强。<br>(2）单/双向语言模型：</p>
+<ul>
+<li>GPT采用单向语言模型，elmo和bert采用双向语言模型。但是elmo实际上是两个单向语言模型（方向相反）的拼接，这种融合特征的能力比bert一体化融合特征方式弱。  </li>
+<li>GPT和bert都采用Transformer，Transformer是encoder-decoder结构，GPT的单向语言模型采用decoder部分，decoder的部分见到的都是不完整的句子；bert的双向语言模型则采用encoder部分，采用了完整句子。  </li>
+</ul>
+<h4 id="二、深入解剖word2vec"><a href="#二、深入解剖word2vec" class="headerlink" title="二、深入解剖word2vec"></a>二、深入解剖word2vec</h4><h5 id="1、word2vec的两种模型分别是什么？"><a href="#1、word2vec的两种模型分别是什么？" class="headerlink" title="1、word2vec的两种模型分别是什么？"></a>1、word2vec的两种模型分别是什么？</h5><p>word2Vec 有两种模型：CBOW 和 Skip-Gram：  </p>
+<ul>
+<li>CBOW 在已知 context(w) 的情况下，预测 w；</li>
+<li>Skip-Gram在已知 w 的情况下预测 context(w) ；<br><img src="/2018/04/02/w2v-contrast/00001.png" alt=""><br>与NNLM相比，word2vec的主要目的是生成词向量而不是语言模型，在CBOW中，投射层将词向量直接相加而不是拼接起来，并舍弃了隐层，这些牺牲都是为了减少计算量，使训练更加快。  <h5 id="2、word2vec的两种优化方法是什么？它们的目标函数怎样确定的？训练过程又是怎样的？"><a href="#2、word2vec的两种优化方法是什么？它们的目标函数怎样确定的？训练过程又是怎样的？" class="headerlink" title="2、word2vec的两种优化方法是什么？它们的目标函数怎样确定的？训练过程又是怎样的？"></a>2、word2vec的两种优化方法是什么？它们的目标函数怎样确定的？训练过程又是怎样的？</h5>不经过优化的CBOW和Skip-gram中 ,在每个样本中每个词的训练过程都要遍历整个词汇表，也就是都需要经过softmax归一化，计算误差向量和梯度以更新两个词向量矩阵（这两个词向量矩阵实际上就是最终的词向量，可认为初始化不一样），当语料库规模变大、词汇表增长时，训练变得不切实际。为了解决这个问题，word2vec支持两种优化方法：hierarchical softmax 和negative sampling。此部分仅做关键介绍，数学推导请仔细阅读《word2vec 中的数学原理详解》。  </li>
+</ul>
+<p>（1）基于hierarchical softmax 的 CBOW 和 Skip-gram<br><img src="/2018/04/02/w2v-contrast/00002.png" alt=""><br>hierarchical softmax 使用一颗二叉树表示词汇表中的单词，每个单词都作为二叉树的叶子节点。对于一个大小为V的词汇表，其对应的二叉树包含V-1非叶子节点。假如每个非叶子节点向左转标记为1，向右转标记为0，那么每个单词都具有唯一的从根节点到达该叶子节点的由｛0 1｝组成的代号（实际上为哈夫曼编码，为哈夫曼树，是带权路径长度最短的树，哈夫曼树保证了词频高的单词的路径短，词频相对低的单词的路径长，这种编码方式很大程度减少了计算量）。  </p>
+<p>（2）基于negative sampling的 CBOW 和 Skip-gram<br>negative sampling是一种不同于hierarchical softmax的优化策略，相比于hierarchical softmax，negative sampling的想法更直接——为每个训练实例都提供负例。  </p>
+<p>负采样算法实际上就是一个带权采样过程，负例的选择机制是和单词词频联系起来的。  </p>
+<h4 id="三、深入解剖Glove详解"><a href="#三、深入解剖Glove详解" class="headerlink" title="三、深入解剖Glove详解"></a>三、深入解剖Glove详解</h4><p>看另一篇文章。  </p>
+<h4 id="四、深入解剖bert（与elmo和GPT比较）"><a href="#四、深入解剖bert（与elmo和GPT比较）" class="headerlink" title="四、深入解剖bert（与elmo和GPT比较）"></a>四、深入解剖bert（与elmo和GPT比较）</h4><p>bert的全称是Bidirectional Encoder Representation from Transformers，bert的核心是双向Transformer Encoder，提出以下问题并进行解答：  </p>
+<h5 id="1、为什么bert采取的是双向Transformer-Encoder，而不叫decoder？"><a href="#1、为什么bert采取的是双向Transformer-Encoder，而不叫decoder？" class="headerlink" title="1、为什么bert采取的是双向Transformer Encoder，而不叫decoder？"></a>1、为什么bert采取的是双向Transformer Encoder，而不叫decoder？</h5><p>BERT Transformer 使用双向self-attention，而GPT Transformer 使用受限制的self-attention，其中每个token只能处理其左侧的上下文。双向 Transformer 通常被称为“Transformer encoder”，而左侧上下文被称为“Transformer decoder”，decoder是不能获要预测的信息的。  </p>
+<h5 id="2、elmo、GPT和bert在单双向语言模型处理上的不同之处？"><a href="#2、elmo、GPT和bert在单双向语言模型处理上的不同之处？" class="headerlink" title="2、elmo、GPT和bert在单双向语言模型处理上的不同之处？"></a>2、elmo、GPT和bert在单双向语言模型处理上的不同之处？</h5><p>在上述3个模型中，只有bert共同依赖于左右上下文。那elmo不是双向吗？实际上elmo使用的是经过独立训练的从左到右和从右到左LSTM的串联拼接起来的。而GPT使用从左到右的Transformer，实际就是“Transformer decoder”。  </p>
+<h5 id="3、bert构建双向语言模型不是很简单吗？不也可以直接像elmo拼接Transformer-decoder吗？"><a href="#3、bert构建双向语言模型不是很简单吗？不也可以直接像elmo拼接Transformer-decoder吗？" class="headerlink" title="3、bert构建双向语言模型不是很简单吗？不也可以直接像elmo拼接Transformer decoder吗？"></a>3、bert构建双向语言模型不是很简单吗？不也可以直接像elmo拼接Transformer decoder吗？</h5><p>BERT 的作者认为，这种拼接式的bi-directional 仍然不能完整地理解整个语句的语义。更好的办法是用上下文全向来预测[mask]，也就是用 “能/实现/语言/表征/../的/模型”，来预测[mask]。BERT 作者把上下文全向的预测方法，称之为 deep bi-directional。  </p>
+<h5 id="4、bert为什么要采取Marked-LM，而不直接应用Transformer-Encoder？"><a href="#4、bert为什么要采取Marked-LM，而不直接应用Transformer-Encoder？" class="headerlink" title="4、bert为什么要采取Marked LM，而不直接应用Transformer Encoder？"></a>4、bert为什么要采取Marked LM，而不直接应用Transformer Encoder？</h5><p>我们知道向Transformer这样深度越深，学习效果会越好。可是为什么不直接应用双向模型呢？因为随着网络深度增加会导致标签泄露。如下图：<br><img src="/2018/04/02/w2v-contrast/00001.png" alt=""><br>看不懂！！！！</p>
+<p>深度双向模型比left-to-right 模型或left-to-right and right-to-left模型的浅层连接更强大。遗憾的是，标准条件语言模型只能从左到右或从右到左进行训练，因为双向条件作用将允许每个单词在多层上下文中间接地“see itself”。  </p>
+<p>为了训练一个深度双向表示（deep bidirectional representation），研究团队采用了一种简单的方法，即随机屏蔽（masking）部分输入token，然后只预测那些被屏蔽的token。论文将这个过程称为“masked LM”(MLM)。  </p>
+<h5 id="5、bert为什么并不总是用实际的-MASK-token替换被“masked”的词汇？"><a href="#5、bert为什么并不总是用实际的-MASK-token替换被“masked”的词汇？" class="headerlink" title="5、bert为什么并不总是用实际的[MASK]token替换被“masked”的词汇？"></a>5、bert为什么并不总是用实际的[MASK]token替换被“masked”的词汇？</h5><ul>
+<li>NLP必读 | 十分钟读懂谷歌BERT模型： 虽然这确实能让团队获得双向预训练模型，但这种方法有两个缺点。首先，预训练和finetuning之间不匹配，因为在finetuning期间从未看到[MASK]token。为了解决这个问题，团队并不总是用实际的[MASK]token替换被“masked”的词汇。相反，训练数据生成器随机选择15％的token。例如在这个句子“my dog is hairy”中，它选择的token是“hairy”。然后，执行以下过程：  </li>
+<li>数据生成器将执行以下操作，而不是始终用[MASK]替换所选单词：</li>
+<li>80％的时间：用[MASK]标记替换单词，例如，my dog is hairy → my dog is [MASK]</li>
+<li>10％的时间：用一个随机的单词替换该单词，例如，my dog is hairy → my dog is apple</li>
+<li>10％的时间：保持单词不变，例如，my dog is hairy → my dog is hairy. 这样做的目的是将表示偏向于实际观察到的单词。</li>
+<li>Transformer encoder不知道它将被要求预测哪些单词或哪些单词已被随机单词替换，因此它被迫保持每个输入token的分布式上下文表示。此外，因为随机替换只发生在所有token的1.5％（即15％的10％），这似乎不会损害模型的语言理解能力。</li>
+<li>使用MLM的第二个缺点是每个batch只预测了15％的token，这表明模型可能需要更多的预训练步骤才能收敛。团队证明MLM的收敛速度略慢于 left-to-right的模型（预测每个token），但MLM模型在实验上获得的提升远远超过增加的训练成本。  </li>
+</ul>
+<p>bert模型的主要创新点都在pre-train方法上，即用了Masked LM和Next Sentence Prediction两种方法分别捕捉词语和句子级别的representation。<br><img src="/2018/04/02/w2v-contrast/00002.png" alt=""><br>下面给出了Transformer Encoder模型的整体结构：<br><img src="/2018/04/02/w2v-contrast/00003.png" alt="">  </p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/NLP/" rel="tag"># NLP</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/03/29/interview-preparation2/" rel="next" title="interview-preparation2">
+                <i class="fa fa-chevron-left"></i> interview-preparation2
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/04/21/math-01/" rel="prev" title="函数的泰勒(Taylor)展开式">
+                函数的泰勒(Taylor)展开式 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="MCF">
+            
+              <p class="site-author-name" itemprop="name">MCF</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">34</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#一、文本表示和个词向量间的对比"><span class="nav-number">1.</span> <span class="nav-text">一、文本表示和个词向量间的对比</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-文本表示进行一个归纳，也就是对于一篇文本可以如何使用数学语言表示呢？"><span class="nav-number">1.1.</span> <span class="nav-text">1.文本表示进行一个归纳，也就是对于一篇文本可以如何使用数学语言表示呢？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-怎么从语言模型理解词向量？怎么理解分布式假设？"><span class="nav-number">1.2.</span> <span class="nav-text">2.怎么从语言模型理解词向量？怎么理解分布式假设？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-传统的词向量有什么问题？怎么解决？各种词向量的特点是什么？"><span class="nav-number">1.3.</span> <span class="nav-text">3.传统的词向量有什么问题？怎么解决？各种词向量的特点是什么？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#4-word2vec和NNLM对比有什么区别？（word2vec-vs-NNLM）"><span class="nav-number">1.4.</span> <span class="nav-text">4.word2vec和NNLM对比有什么区别？（word2vec vs NNLM）</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#5-word2vec和fastText对比有什么区别？（word2vec-vs-fastText）"><span class="nav-number">1.5.</span> <span class="nav-text">5.word2vec和fastText对比有什么区别？（word2vec vs fastText）</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#6-glove和word2vec、LSA对比有什么区别？（word2vec-vs-glove-vs-LSA）"><span class="nav-number">1.6.</span> <span class="nav-text">6.glove和word2vec、LSA对比有什么区别？（word2vec vs glove vs LSA）</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#7-elmo、GPT、bert三者之间有什么区别？（elmo-vs-GPT-vs-bert）"><span class="nav-number">1.7.</span> <span class="nav-text">7.elmo、GPT、bert三者之间有什么区别？（elmo vs GPT vs bert）.</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二、深入解剖word2vec"><span class="nav-number">2.</span> <span class="nav-text">二、深入解剖word2vec</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1、word2vec的两种模型分别是什么？"><span class="nav-number">2.1.</span> <span class="nav-text">1、word2vec的两种模型分别是什么？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2、word2vec的两种优化方法是什么？它们的目标函数怎样确定的？训练过程又是怎样的？"><span class="nav-number">2.2.</span> <span class="nav-text">2、word2vec的两种优化方法是什么？它们的目标函数怎样确定的？训练过程又是怎样的？</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#三、深入解剖Glove详解"><span class="nav-number">3.</span> <span class="nav-text">三、深入解剖Glove详解</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#四、深入解剖bert（与elmo和GPT比较）"><span class="nav-number">4.</span> <span class="nav-text">四、深入解剖bert（与elmo和GPT比较）</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1、为什么bert采取的是双向Transformer-Encoder，而不叫decoder？"><span class="nav-number">4.1.</span> <span class="nav-text">1、为什么bert采取的是双向Transformer Encoder，而不叫decoder？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2、elmo、GPT和bert在单双向语言模型处理上的不同之处？"><span class="nav-number">4.2.</span> <span class="nav-text">2、elmo、GPT和bert在单双向语言模型处理上的不同之处？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3、bert构建双向语言模型不是很简单吗？不也可以直接像elmo拼接Transformer-decoder吗？"><span class="nav-number">4.3.</span> <span class="nav-text">3、bert构建双向语言模型不是很简单吗？不也可以直接像elmo拼接Transformer decoder吗？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#4、bert为什么要采取Marked-LM，而不直接应用Transformer-Encoder？"><span class="nav-number">4.4.</span> <span class="nav-text">4、bert为什么要采取Marked LM，而不直接应用Transformer Encoder？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#5、bert为什么并不总是用实际的-MASK-token替换被“masked”的词汇？"><span class="nav-number">4.5.</span> <span class="nav-text">5、bert为什么并不总是用实际的[MASK]token替换被“masked”的词汇？</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">MCF</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>
