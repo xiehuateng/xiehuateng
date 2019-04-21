@@ -88,7 +88,9 @@
 <meta property="og:description" content="极大似然和EM算法，与其说是一种算法，不如说是一种解决问题的思想，解决一类 问题的框架，和线性回归，逻辑回归，决策树等一些具体的算法不同，极大似然和EM算法更加抽象，更像一种算法思想，是很多具体算法的基础。   1.从极大似然到EM1.1极大似然1.1.1问题描述（这也是个极大似然解决高斯分布问题的例子）假设我们需要调查我们学校学生的身高分布。我们先假设学校所有学生的身高服从正太分布$N(\mu,">
 <meta property="og:locale" content="default">
 <meta property="og:image" content="http://yoursite.com/2019/02/27/EM/pic001.png">
-<meta property="og:updated_time" content="2019-03-04T07:12:49.554Z">
+<meta property="og:image" content="http://yoursite.com/2019/02/27/EM/20131201144547375.png">
+<meta property="og:image" content="http://yoursite.com/2019/02/27/EM/coin_game.png">
+<meta property="og:updated_time" content="2019-03-08T09:04:21.177Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="EM算法理解">
 <meta name="twitter:description" content="极大似然和EM算法，与其说是一种算法，不如说是一种解决问题的思想，解决一类 问题的框架，和线性回归，逻辑回归，决策树等一些具体的算法不同，极大似然和EM算法更加抽象，更像一种算法思想，是很多具体算法的基础。   1.从极大似然到EM1.1极大似然1.1.1问题描述（这也是个极大似然解决高斯分布问题的例子）假设我们需要调查我们学校学生的身高分布。我们先假设学校所有学生的身高服从正太分布$N(\mu,">
@@ -432,7 +434,68 @@ E(X)=\int_{-\infty}^{+\infty}{g(x)f(x)dx}</script><h5 id="2-2EM算法的推导">
 \sum_{i=1}^{m}{log\sum_{z^{(i)}}{p(x^{(i),z^{(i)}|\theta})}} = \sum_{i=1}^{m}{log\sum_{z^{(i)}}{Q_{i}(z^{(i)})\frac{p(x^{(i)},z^{(i)}|\theta)}{Q_{i}(z^{(i)})}}}(1)</script><script type="math/tex; mode=display">
 \geq \sum_{i=1}^{m}{\sum_{z^{(i)}}{Q_{i}(z^{(i)})log\frac{p(x^{(i)},z^{(i)}|\theta)}{Q_{i}(z^{(i)})}}}(2)</script><p>上面第（1）式引入了一个未知的新的分布$Q_{i}(z^{(i)})$，满足：  </p>
 <script type="math/tex; mode=display">
-</script>
+\sum_{z}{Q_{i}(z)}=1, 0\leq Q_{i}(z) \leq 1</script><p>第（2）式用到了Jensen不等式（对数函数是凹函数）：</p>
+<script type="math/tex; mode=display">
+log(E(y)) \geq E(log(y))</script><p>其中：  </p>
+<script type="math/tex; mode=display">
+E(y) = \sum\limits_i\lambda_iy_i, 1 \geq \lambda_i \geq 0, \sum\limits_i\lambda_i =1</script><script type="math/tex; mode=display">
+y_{i}=\frac{p(x^{(i)},z^{(i)}|\theta)}{Q_{i}(z^{(i)})}</script><script type="math/tex; mode=display">
+\lambda_i = Q_{i} (z^{(i)})</script><p>也就是说$\frac{p(x^{(i)},z^{(i)}|\theta)}{Q_{i}(z^{(i)})}$为第i个样本，$Q_{i}(z^{i})$为第i个样本对应的权重，那么：  </p>
+<script type="math/tex; mode=display">
+E(\frac{p(x^{(i)},z^{(i)}|\theta)}{Q_{i}(z^{(i)})})= \sum_{z^{(i)}}{Q_{i}(z^{(i)})\frac{p(x^{(i)},z^{(i)}|\theta)}{Q_{i}(z^{(i)})}}</script><p>上式实际是我们构建了$L(\theta,z)$的下界（E步），下一步要做的就是寻找一个合适的$Q_{i}(z)$最优化这个下界（M步）。假设$\theta$已经给定，那么$logL(\theta)$的值就取决于$Q_{i}(z^{(i)})$和$p(x^{(i)},z^{(i)})$了。我们可以通过调整这两个概率使下界逼近$logL(\theta)$的真实值，当不等式变成等式时，说明我们调整后的下界能够等价于$logL(\theta)$了。由Jensen不等式可知，等式成立的条件是随机变量是常数，则有：(我们的原始目标是最大化上面式（1）的左边，当随机变量为常数时，（2）等式成立，这时我们最大化（2）的右边，是等价的，即最大化下界。)  </p>
+<script type="math/tex; mode=display">
+\frac{p(x^{(i)},z^{(i)}|\theta)}{Q_{i}(z^{(i)})} = c</script><p>其中c为常数，对于任意i，我们得到：  </p>
+<script type="math/tex; mode=display">
+p(x^{(i)},z^{(i)}|\theta) = c Q_{i}(z^{(i)})</script><p>方程两边同时累加和： </p>
+<script type="math/tex; mode=display">
+\sum_{z}{p(x^{(i)},z^{(i)}|\theta)} = c \sum_{z}{Q_{i}(z^{(i)})}</script><p>由于$\sum_{z}{Q_{i}(z^{(i)})}=1$。从上面两式，我们可以得到：  </p>
+<script type="math/tex; mode=display">
+\sum_{z}{p(x^{(i)},z^{(i)}|\theta)} = c</script><script type="math/tex; mode=display">
+Q_{i}(z^{(i)}) = \frac{p(x^{(i)},z^{(i)}|\theta)}{c} = \frac{p(x^{(i)},z^{(i)}|\theta)}{\sum_{z}{p(x^{(i)},z^{(i)}|\theta)} }=\frac{p(x^{(i)},z^{(i)}|\theta)}{p(x^{(i)}|\theta)}=p(z^{(i)}|x^{(i)},\theta)</script><p>其中：<br>边缘概率公式：$p(x^{(i)}|\theta)= \sum_{z}{p(x^{(i)},z^{(i)}|\theta)}$<br>条件概率公式：$\frac{p(x^{(i)},z^{(i)}|\theta)}{p(x^{(i)}|\theta)}=p(z^{(i)}|x^{(i)},\theta)$<br>从上式可以发现$Q(z)$是已知样本和模型参数下的<strong>隐变量分布</strong>。<br>如果$Q_{i}(z^{(i)})=p(z^{(i)}|x^{(i)},\theta)$，则第（2）式是我们的包含隐藏数据的对数似然的一个下界。如果我们能极大化这个下界，则也在尝试极大化我们的对数似然。即我们需要极大化下式：  </p>
+<script type="math/tex; mode=display">
+argmax_{\theta}\sum_{i=1}^{m}{\sum_{z^{(i)}}{Q_{i}(z^{(i)})log\frac{p(x^{(i)},z^{(i)}|\theta)}{Q_{i}(z^{(i)})}}}</script><p>去掉上式中为常数的部分，则我们需要极大化的对数似然下界为(因为$Q_{i}(z^{(i)})$是固定的，$log \frac{p}{Q}$可写成相减，求解最大化问题时，减去一个常数(logQ)，可去掉不影响求解)：  </p>
+<script type="math/tex; mode=display">
+argmax_{\theta}\sum_{i=1}^{m}{\sum_{z^{(i)}}{Q_{i}(z^{(i)})logp(x^{(i)},z^{(i)}|\theta)}}</script><p>至此，我们推出了在固定参数$\theta$后分布$Q_{i}(z^{(i)})$的选择问题（求解$p(z^{(i)}|x^{(i)},\theta)$），从而建立了$logL(\theta)$的下界，这是E步，接下来的M步就是固定$Q_{i}(z^{(i)})$后，调整$\theta$的下界。  </p>
+<h5 id="2-3EM算法流程"><a href="#2-3EM算法流程" class="headerlink" title="2.3EM算法流程"></a>2.3EM算法流程</h5><p>现在我们总结下EM算法的流程。<br>输入：观察数据$x = (x^{(1)},x^{(2)},…,x^{(m)})$，联合分布$p(x,z|\theta)$，条件分布$p(z|x,\theta)$，极大迭代次数J。<br>1）随机初始化模型参数$\theta$的初始值$\theta^{0}$<br>2)for j from 1 to J :<br>a)E步：计算联合分布的条件概率期望：  </p>
+<script type="math/tex; mode=display">
+Q_{i}(z^{(i)}):=p(z^{(i)}|x^{(i)},\theta)</script><p>b）M步：极大化$L(\theta)$，得到$\theta$：  </p>
+<script type="math/tex; mode=display">
+\theta:=argmax_{\theta}\sum_{i=1}^{m}{\sum_{z^{(i)}}{logp(x^{(i)},z^{(i)}|\theta)}}</script><p>c）重复E、M步骤直到$\theta$收敛<br>输出：模型参数$\theta$  </p>
+<h5 id="2-4EM算法另一种理解"><a href="#2-4EM算法另一种理解" class="headerlink" title="2.4EM算法另一种理解"></a>2.4EM算法另一种理解</h5><p>坐标上升法（Coordinate ascent）类似于梯度下降法，梯度下降法的目的是最小化代价函数，坐标上升法的目的 是最大化似然函数;梯度下降每一个循环仅仅更新模型参数就可以了，EM算法每一个循环既需要更新隐含参数和 也需要更新模型参数。  </p>
+<p><div align="center">
+  <img width="300" src="/2019/02/27/EM/20131201144547375.png">
+</div><br>图中的直线式迭代优化的路径，可以看到每一步都会向最优值前进一步，而且前进路线是平行于坐标轴的，因为每一步只优化一个变量。  </p>
+<p>这犹如在x-y坐标系中找一个曲线的极值，然而曲线函数不能直接求导，因此什么梯度下降方法就不适用了。但固定一个变量后，另外一个可以通过求导得到，因此可以使用坐标上升法，一次固定一个变量，对另外的求极值，最后逐步逼近极值。对应到EM上，E步:固定θ，优化Q;M步:固定Q，优化θ;交替将极值推向极大。  </p>
+<h5 id="2-5EM算法的收敛性思考"><a href="#2-5EM算法的收敛性思考" class="headerlink" title="2.5EM算法的收敛性思考"></a>2.5EM算法的收敛性思考</h5><p>EM算法的流程并不复杂，但是还有两个问题需要我们思考:<br>1) EM算法能保证收敛吗?<br>2) EM算法如果收敛，那么能保证收敛到全局极大值吗?  </p>
+<p>首先我们来看第一个问题, EM 算法的收敛性。要证明 EM 算法收敛，则我们需要证明我们的对数似然函数的值在迭 代的过程中一直在增大。即:  </p>
+<script type="math/tex; mode=display">
+\sum_{i=1}^{m}{logp(x^{(i)}|\theta^{j+1})}\geq \sum_{i=1}^{m}{logp(x^{(i)}|\theta^{j})}</script><p>由于：(这里$\theta^{j}$指上次迭代固定好的参数，求得Q，即$p(z^{(i)}|x^{(i)},\theta^{j}),\theta$指这次要优化的参数)  </p>
+<script type="math/tex; mode=display">
+L(\theta,\theta^{j}) = \sum_{i=1}^{m}{\sum_{z^{(i)}}{p(z^{(i)}|x^{(i)},\theta^{j})logp(x^{(i)},z^{(i)}|\theta)}}</script><p>令：  </p>
+<script type="math/tex; mode=display">
+H(\theta,\theta^{j}) = \sum_{i=1}^{m}{\sum_{z^{(i)}}{p(z^{(i)}|x^{(i)},\theta^{j})logp(x^{(i)}|z^{(i)},\theta)}}</script><p>上两式相减得到：  </p>
+<script type="math/tex; mode=display">
+\sum_{i=1}^{m}{logp(x^{(i)}|\theta)} = L(\theta,\theta^{j}) - H(\theta,\theta^{j})</script><p>在上式中分别取$\theta$为$\theta^{j}$和$\theta^{j+1}$，并相减得到：  </p>
+<script type="math/tex; mode=display">
+\sum_{i=1}^{m}{logp(x^{(i)}|\theta^{j+1})} - \sum_{i=1}^{m}{logp(x^{(i)}|\theta^{j})} = [L(\theta^{j+1},\theta^{j}) -L(\theta^{j},\theta^{j})] - [H(\theta^{j+1},\theta^{j}) -H(\theta^{j},\theta^{j})]</script><p>要证明EM算法的收敛性，我们只需要证明上式的右边是非负的即可。<br>由于$\theta^{j+1}$使得$L(\theta,\theta^{j})$极大，因此有：  </p>
+<script type="math/tex; mode=display">
+L(\theta^{j+1},\theta^{j}) - L(\theta^{j},\theta^{j}) \geq 0</script><p>而对于第二部分，我们有：  </p>
+<script type="math/tex; mode=display">
+H(\theta^{j+1},\theta^{j}) - H(\theta^{j},\theta^{j})=\sum_{i=1}^{m}{\sum_{z^{(i)}}{p(z^{(i)}|x^{(i)},\theta^{j})log\frac{p(z^{(i)}|x^{(i)},\theta^{j+1})}{p(z^{(i)}|x^{(i)},theta^{j})}}}  (3)\\
+\leq \sum_{i=1}^{m}{log(\sum_{z^{(i)}}{p(z^{(i)}|x^{(i)},\theta^{j})})\frac{p(z^{(i)}|x^{(i)},\theta^{j+1})}{p(z^{(i)}|x^{(i)},theta^{j})}}  (4)\\
+=\sum_{i=1}^{m}{log(\sum_{z^{(i)}}{p(z^{(i)}|x^{(i)},\theta^{j})}} (5)</script><p>其中第（4）式用到了Jensen不等式，只不过和第二节的使用相反而已，第（5）式用到了概率分布累积为1的性质。<br>至此，我们得到了：$\sum_{i=1}^{m}{logp(x^{(i)}|\theta^{j+1})} - \sum_{i=1}^{m}{logp(x^{(i)}|\theta^{j})} \geq 0$，证明了EM算法的收敛性。<br>从上面的推导可以看出，EM算法可以保证收敛到一个稳定点，但是却不能保证收敛到全局的极大值点，因此它是局部最优解的算法，当然，如果我们的优化目标$L(\theta,\theta^{j})$是凸的，则EM算法可以保证收敛到全局极大值，这点和梯度下降法这样的迭代算法相同。至此我们也回答了上面提到的第二个问题。  </p>
+<h5 id="2-6EM算法应用"><a href="#2-6EM算法应用" class="headerlink" title="2.6EM算法应用"></a>2.6EM算法应用</h5><p>如果我们从算法思想的角度来思考EM算法，我们可以发现我们的算法里已知的是观察数据，未知的是隐含数据和模型参数，在E步，我们所做的事情是固定模型参数的值，优化隐含数据的分布，而在M步，我们所做的事情是固定隐含数据分布，优化模型参数的值。EM的应用包括：  </p>
+<ul>
+<li>支持向量机的SMO算法</li>
+<li>混合高斯模型</li>
+<li>K-means</li>
+<li>隐马尔科夫模型</li>
+</ul>
+<h4 id="3-EM算法案例-两硬币模型"><a href="#3-EM算法案例-两硬币模型" class="headerlink" title="3.EM算法案例-两硬币模型"></a>3.<a href="http://ai.stanford.edu/~chuongdo/papers/em_tutorial.pdf" target="_blank" rel="noopener">EM算法案例-两硬币模型</a></h4><p>假设有两枚硬币A、B，以相同的概率随机选择一个硬币，进行如下的硬币实验：共做5次实验，每次实验独立的掷十次，结果如图中a所示，例如某次实验产生了H、T、T、T、H、H、T、H、T、H（H代表正面朝上）。a是在知道每次选择的是A还是B的情况下进行，b是在不知道选择的硬币情况下进行，问如何估计两个硬币正面出现的概率？  </p>
+<p><div align="center">
+  <img src="/2019/02/27/EM/coin_game.png">
+</div></p>
+<h5 id="CASE-a"><a href="#CASE-a" class="headerlink" title="CASE a"></a>CASE a</h5>
       
     </div>
     
@@ -474,8 +537,8 @@ E(X)=\int_{-\infty}^{+\infty}{g(x)f(x)dx}</script><h5 id="2-2EM算法的推导">
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2019/02/28/tf-nmt-seq2seq/" rel="prev" title="tensorflow-nmt(seq2seq)模型（官方）">
-                tensorflow-nmt(seq2seq)模型（官方） <i class="fa fa-chevron-right"></i>
+              <a href="/2019/02/27/CareerVillage_Recommand_alg/" rel="prev" title="Data Science for Good(CareerVillage.org)">
+                Data Science for Good(CareerVillage.org) <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -555,7 +618,7 @@ E(X)=\int_{-\infty}^{+\infty}{g(x)f(x)dx}</script><h5 id="2-2EM算法的推导">
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-count">21</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -577,7 +640,7 @@ E(X)=\int_{-\infty}^{+\infty}{g(x)f(x)dx}</script><h5 id="2-2EM算法的推导">
               
               <div class="site-state-item site-state-tags">
                 
-                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-count">12</span>
                   <span class="site-state-item-name">tags</span>
                 
               </div>
@@ -610,7 +673,7 @@ E(X)=\int_{-\infty}^{+\infty}{g(x)f(x)dx}</script><h5 id="2-2EM算法的推导">
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-从极大似然到EM"><span class="nav-number">1.</span> <span class="nav-text">1.从极大似然到EM</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-1极大似然"><span class="nav-number">1.1.</span> <span class="nav-text">1.1极大似然</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#1-1-1问题描述（这也是个极大似然解决高斯分布问题的例子）"><span class="nav-number">1.1.1.</span> <span class="nav-text">1.1.1问题描述（这也是个极大似然解决高斯分布问题的例子）</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#1-1-2估计参数"><span class="nav-number">1.1.2.</span> <span class="nav-text">1.1.2估计参数</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#1-1-3极大似然估计总结"><span class="nav-number">1.1.3.</span> <span class="nav-text">1.1.3极大似然估计总结</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#1-1-4求极大似然函数估计值的一般步骤："><span class="nav-number">1.1.4.</span> <span class="nav-text">1.1.4求极大似然函数估计值的一般步骤：</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#1-1-5极大似然函数的应用"><span class="nav-number">1.1.5.</span> <span class="nav-text">1.1.5极大似然函数的应用</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-2-EM算法"><span class="nav-number">1.2.</span> <span class="nav-text">1.2 EM算法</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#1-2-1问题描述"><span class="nav-number">1.2.1.</span> <span class="nav-text">1.2.1问题描述</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#1-2-2-EM算法"><span class="nav-number">1.2.2.</span> <span class="nav-text">1.2.2 EM算法</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#1-2-3总结"><span class="nav-number">1.2.3.</span> <span class="nav-text">1.2.3总结</span></a></li></ol></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#EM算法推导"><span class="nav-number">2.</span> <span class="nav-text">EM算法推导</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#2-1基础知识"><span class="nav-number">2.1.</span> <span class="nav-text">2.1基础知识</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#2-1-1凸函数"><span class="nav-number">2.1.1.</span> <span class="nav-text">2.1.1凸函数</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#2-1-2Jensen不等式"><span class="nav-number">2.1.2.</span> <span class="nav-text">2.1.2Jensen不等式</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#2-1-3期望"><span class="nav-number">2.1.3.</span> <span class="nav-text">2.1.3期望</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-2EM算法的推导"><span class="nav-number">2.2.</span> <span class="nav-text">2.2EM算法的推导</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-从极大似然到EM"><span class="nav-number">1.</span> <span class="nav-text">1.从极大似然到EM</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-1极大似然"><span class="nav-number">1.1.</span> <span class="nav-text">1.1极大似然</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#1-1-1问题描述（这也是个极大似然解决高斯分布问题的例子）"><span class="nav-number">1.1.1.</span> <span class="nav-text">1.1.1问题描述（这也是个极大似然解决高斯分布问题的例子）</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#1-1-2估计参数"><span class="nav-number">1.1.2.</span> <span class="nav-text">1.1.2估计参数</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#1-1-3极大似然估计总结"><span class="nav-number">1.1.3.</span> <span class="nav-text">1.1.3极大似然估计总结</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#1-1-4求极大似然函数估计值的一般步骤："><span class="nav-number">1.1.4.</span> <span class="nav-text">1.1.4求极大似然函数估计值的一般步骤：</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#1-1-5极大似然函数的应用"><span class="nav-number">1.1.5.</span> <span class="nav-text">1.1.5极大似然函数的应用</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-2-EM算法"><span class="nav-number">1.2.</span> <span class="nav-text">1.2 EM算法</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#1-2-1问题描述"><span class="nav-number">1.2.1.</span> <span class="nav-text">1.2.1问题描述</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#1-2-2-EM算法"><span class="nav-number">1.2.2.</span> <span class="nav-text">1.2.2 EM算法</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#1-2-3总结"><span class="nav-number">1.2.3.</span> <span class="nav-text">1.2.3总结</span></a></li></ol></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#EM算法推导"><span class="nav-number">2.</span> <span class="nav-text">EM算法推导</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#2-1基础知识"><span class="nav-number">2.1.</span> <span class="nav-text">2.1基础知识</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#2-1-1凸函数"><span class="nav-number">2.1.1.</span> <span class="nav-text">2.1.1凸函数</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#2-1-2Jensen不等式"><span class="nav-number">2.1.2.</span> <span class="nav-text">2.1.2Jensen不等式</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#2-1-3期望"><span class="nav-number">2.1.3.</span> <span class="nav-text">2.1.3期望</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-2EM算法的推导"><span class="nav-number">2.2.</span> <span class="nav-text">2.2EM算法的推导</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-3EM算法流程"><span class="nav-number">2.3.</span> <span class="nav-text">2.3EM算法流程</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-4EM算法另一种理解"><span class="nav-number">2.4.</span> <span class="nav-text">2.4EM算法另一种理解</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-5EM算法的收敛性思考"><span class="nav-number">2.5.</span> <span class="nav-text">2.5EM算法的收敛性思考</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-6EM算法应用"><span class="nav-number">2.6.</span> <span class="nav-text">2.6EM算法应用</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-EM算法案例-两硬币模型"><span class="nav-number">3.</span> <span class="nav-text">3.EM算法案例-两硬币模型</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#CASE-a"><span class="nav-number">3.1.</span> <span class="nav-text">CASE a</span></a></li></ol></li></ol></div>
             
 
           </div>

@@ -1,0 +1,3316 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="ML,机器学习,推荐算法,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="文章从kaggle上参加的一个比赛的kernel上导出来的，不太规范，有空整理。   IntroductionThe U.S. has almost 500 students for every guidance counselor. Underserved youth lack the network to find their career role  models, making Caree">
+<meta name="keywords" content="ML,机器学习,推荐算法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Data Science for Good(CareerVillage.org)">
+<meta property="og:url" content="http://yoursite.com/2019/02/27/CareerVillage_Recommand_alg/index.html">
+<meta property="og:site_name" content="Mcf&#39;s Blog">
+<meta property="og:description" content="文章从kaggle上参加的一个比赛的kernel上导出来的，不太规范，有空整理。   IntroductionThe U.S. has almost 500 students for every guidance counselor. Underserved youth lack the network to find their career role  models, making Caree">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="http://yoursite.com/2019/02/27/CareerVillage_Recommand_alg/output_24_0.png">
+<meta property="og:image" content="http://yoursite.com/2019/02/27/CareerVillage_Recommand_alg/output_30_1.png">
+<meta property="og:image" content="http://yoursite.com/2019/02/27/CareerVillage_Recommand_alg/output_32_1.png">
+<meta property="og:image" content="http://yoursite.com/2019/02/27/CareerVillage_Recommand_alg/output_48_0.png">
+<meta property="og:image" content="http://yoursite.com/2019/02/27/CareerVillage_Recommand_alg/output_51_0.png">
+<meta property="og:image" content="http://yoursite.com/2019/02/27/CareerVillage_Recommand_alg/output_54_0.png">
+<meta property="og:image" content="http://yoursite.com/2019/02/27/CareerVillage_Recommand_alg/output_56_0.png">
+<meta property="og:image" content="http://yoursite.com/2019/02/27/CareerVillage_Recommand_alg/output_69_1.png">
+<meta property="og:image" content="http://yoursite.com/2019/02/27/CareerVillage_Recommand_alg/output_99_1.png">
+<meta property="og:image" content="http://yoursite.com/2019/02/27/CareerVillage_Recommand_alg/output_127_1.png">
+<meta property="og:image" content="http://yoursite.com/2019/02/27/CareerVillage_Recommand_alg/output_130_1.png">
+<meta property="og:updated_time" content="2019-03-07T08:35:14.015Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Data Science for Good(CareerVillage.org)">
+<meta name="twitter:description" content="文章从kaggle上参加的一个比赛的kernel上导出来的，不太规范，有空整理。   IntroductionThe U.S. has almost 500 students for every guidance counselor. Underserved youth lack the network to find their career role  models, making Caree">
+<meta name="twitter:image" content="http://yoursite.com/2019/02/27/CareerVillage_Recommand_alg/output_24_0.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/02/27/CareerVillage_Recommand_alg/">
+
+
+
+
+
+  <title>Data Science for Good(CareerVillage.org) | Mcf's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Mcf's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/02/27/CareerVillage_Recommand_alg/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="MCF">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Mcf's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Data Science for Good(CareerVillage.org)</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-02-27T13:37:11+08:00">
+                2019-02-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/ML/" itemprop="url" rel="index">
+                    <span itemprop="name">ML</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><strong>文章从kaggle上参加的一个比赛的kernel上导出来的，不太规范，有空整理。</strong>  </p>
+<h3 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h3><p>The U.S. has almost 500 students for every guidance counselor. Underserved youth lack the network to find their career role  models, making CareerVillage.org the only option for millions of young people in America and around the globe with nowhere else to turn.</p>
+<p>Our goal is to develop a method tp recommend relevant questions to the professionals who are most likely to answer them.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np <span class="comment"># linear algebra</span></span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd <span class="comment"># data processing, CSV file I/O (e.g. pd.read_csv)</span></span><br><span class="line"><span class="keyword">import</span> seaborn <span class="keyword">as</span> sns</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line">%matplotlib inline</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> warnings</span><br><span class="line">warnings.simplefilter(<span class="string">'ignore'</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> sklearn.feature_extraction.text <span class="keyword">import</span> TfidfVectorizer, CountVectorizer</span><br><span class="line"><span class="keyword">from</span> sklearn.metrics.pairwise <span class="keyword">import</span> linear_kernel, cosine_similarity</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"><span class="keyword">import</span> string </span><br><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> Counter</span><br><span class="line"><span class="keyword">from</span> nltk.corpus <span class="keyword">import</span> stopwords</span><br><span class="line">stop = stopwords.words(<span class="string">'english'</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> plotly.offline <span class="keyword">import</span> init_notebook_mode, iplot</span><br><span class="line"><span class="keyword">import</span> plotly.graph_objs <span class="keyword">as</span> go</span><br><span class="line"><span class="keyword">import</span> plotly.plotly <span class="keyword">as</span> py</span><br><span class="line"><span class="keyword">from</span> plotly <span class="keyword">import</span> tools</span><br><span class="line">init_notebook_mode(connected=<span class="keyword">True</span>)</span><br></pre></td></tr></table></figure>
+<script type="text/javascript">window.PlotlyConfig = {MathJaxConfig: 'local'};</script><script type="text/javascript">if (window.MathJax) {MathJax.Hub.Config({SVG: {font: "STIX-Web"}});}</script><script>requirejs.config({paths: { 'plotly': ['https://cdn.plot.ly/plotly-latest.min']},});if(!window._Plotly) {require(['plotly'],function(plotly) {window._Plotly=plotly;});}</script>
+
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">emails = pd.read_csv(<span class="string">'./data/input/emails.csv'</span>) <span class="comment">#Each email corresponds to one specific email to one specific recipient. The frequency_level refers to the type of email template which includes immediate emails sent right after a question is asked, daily digests, and weekly digests.</span></span><br><span class="line">questions = pd.read_csv(<span class="string">'./data/input/questions.csv'</span>) <span class="comment">#Questions get posted by students. Sometimes they're very advanced. Sometimes they're just getting started. It's all fair game, as long as it's relevant to the student's future professional success.</span></span><br><span class="line">professionals = pd.read_csv(<span class="string">'./data/input/professionals.csv'</span>) <span class="comment">#Questions get posted by students. Sometimes they're very advanced. Sometimes they're just getting started. It's all fair game, as long as it's relevant to the student's future professional success.</span></span><br><span class="line">comments = pd.read_csv(<span class="string">'./data/input/comments.csv'</span>) <span class="comment">#Comments can be made on Answers or Questions. We refer to whichever the comment is posted to as the "parent" of that comment. Comments can be posted by any type of user. Our favorite comments tend to have "Thank you" in them :)</span></span><br><span class="line">tag_users = pd.read_csv(<span class="string">'./data/input/tag_users.csv'</span>) <span class="comment">#Users of any type can follow a hashtag. This shows you which hashtags each user follows.</span></span><br><span class="line">group_memberships = pd.read_csv(<span class="string">'./data/input/group_memberships.csv'</span>) <span class="comment">#Any type of user can join any group. There are only a handful of groups so far.</span></span><br><span class="line">tags = pd.read_csv(<span class="string">'./data/input/tags.csv'</span>) <span class="comment">#Each tag gets a name.</span></span><br><span class="line">students = pd.read_csv(<span class="string">'./data/input/students.csv'</span>) <span class="comment">#Students are the most important people on CareerVillage.org. They tend to range in age from about 14 to 24. They're all over the world, and they're the reason we exist!</span></span><br><span class="line">groups = pd.read_csv(<span class="string">'./data/input/groups.csv'</span>) <span class="comment">#Each group has a "type". For privacy reasons we have to leave the group names off.</span></span><br><span class="line">tag_questions = pd.read_csv(<span class="string">'./data/input/tag_questions.csv'</span>) <span class="comment">#Every question can be hashtagged. We track the hashtag-to-question pairings, and put them into this file.</span></span><br><span class="line">matches = pd.read_csv(<span class="string">'./data/input/matches.csv'</span>) <span class="comment">#Each row tells you which questions were included in emails. If an email contains only one question, that email's ID will show up here only once. If an email contains 10 questions, that email's ID would show up here 10 times.</span></span><br><span class="line">answers = pd.read_csv(<span class="string">'./data/input/answers.csv'</span>) <span class="comment">#Answers are what this is all about! Answers get posted in response to questions. Answers can only be posted by users who are registered as Professionals. However, if someone has changed their registration type after joining, they may show up as the author of an Answer even if they are no longer a Professional.</span></span><br><span class="line">school_memberships = pd.read_csv(<span class="string">'./data/input/school_memberships.csv'</span>)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">emails.head(<span class="number">10</span>)</span><br></pre></td></tr></table></figure>
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>emails_id</th>
+      <th>emails_recipient_id</th>
+      <th>emails_date_sent</th>
+      <th>emails_frequency_level</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>2337714</td>
+      <td>0c673e046d824ec0ad0ebe012a0673e4</td>
+      <td>2018-12-07 01:05:40 UTC+0000</td>
+      <td>email_notification_daily</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2336077</td>
+      <td>0c673e046d824ec0ad0ebe012a0673e4</td>
+      <td>2018-12-06 01:14:15 UTC+0000</td>
+      <td>email_notification_daily</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2314660</td>
+      <td>0c673e046d824ec0ad0ebe012a0673e4</td>
+      <td>2018-11-17 00:38:27 UTC+0000</td>
+      <td>email_notification_daily</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2312639</td>
+      <td>0c673e046d824ec0ad0ebe012a0673e4</td>
+      <td>2018-11-16 00:32:19 UTC+0000</td>
+      <td>email_notification_daily</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2299700</td>
+      <td>0c673e046d824ec0ad0ebe012a0673e4</td>
+      <td>2018-11-08 00:16:40 UTC+0000</td>
+      <td>email_notification_daily</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>2288533</td>
+      <td>0c673e046d824ec0ad0ebe012a0673e4</td>
+      <td>2018-11-02 23:02:12 UTC+0000</td>
+      <td>email_notification_daily</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>2280818</td>
+      <td>0c673e046d824ec0ad0ebe012a0673e4</td>
+      <td>2018-10-30 00:54:31 UTC+0000</td>
+      <td>email_notification_daily</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>2270520</td>
+      <td>0c673e046d824ec0ad0ebe012a0673e4</td>
+      <td>2018-10-25 23:44:41 UTC+0000</td>
+      <td>email_notification_daily</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>2269277</td>
+      <td>0c673e046d824ec0ad0ebe012a0673e4</td>
+      <td>2018-10-25 02:46:00 UTC+0000</td>
+      <td>email_notification_daily</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>2267396</td>
+      <td>0c673e046d824ec0ad0ebe012a0673e4</td>
+      <td>2018-10-24 04:42:34 UTC+0000</td>
+      <td>email_notification_daily</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">questions.head(<span class="number">10</span>)</span><br></pre></td></tr></table></figure>
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>questions_id</th>
+      <th>questions_author_id</th>
+      <th>questions_date_added</th>
+      <th>questions_title</th>
+      <th>questions_body</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>332a511f1569444485cf7a7a556a5e54</td>
+      <td>8f6f374ffd834d258ab69d376dd998f5</td>
+      <td>2016-04-26 11:14:26 UTC+0000</td>
+      <td>Teacher   career   question</td>
+      <td>What  is  a  maths  teacher?   what  is  a  ma...</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>eb80205482e4424cad8f16bc25aa2d9c</td>
+      <td>acccbda28edd4362ab03fb8b6fd2d67b</td>
+      <td>2016-05-20 16:48:25 UTC+0000</td>
+      <td>I want to become an army officer. What can I d...</td>
+      <td>I am Priyanka from Bangalore . Now am in 10th ...</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>4ec31632938a40b98909416bdd0decff</td>
+      <td>f2c179a563024ccc927399ce529094b5</td>
+      <td>2017-02-08 19:13:38 UTC+0000</td>
+      <td>Will going abroad for your first job increase ...</td>
+      <td>I'm planning on going abroad for my first job....</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2f6a9a99d9b24e5baa50d40d0ba50a75</td>
+      <td>2c30ffba444e40eabb4583b55233a5a4</td>
+      <td>2017-09-01 14:05:32 UTC+0000</td>
+      <td>To become a specialist in business  management...</td>
+      <td>i hear business management is a hard way to ge...</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>5af8880460c141dbb02971a1a8369529</td>
+      <td>aa9eb1a2ab184ebbb00dc01ab663428a</td>
+      <td>2017-09-01 02:36:54 UTC+0000</td>
+      <td>Are there any scholarships out there for stude...</td>
+      <td>I'm trying to find scholarships for first year...</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>7c336403258f4da3a2e0955742c76462</td>
+      <td>d1e4587c0e784c62bc27eb8d16a07f38</td>
+      <td>2017-03-01 04:27:08 UTC+0000</td>
+      <td>How many years of coege do you need to be an e...</td>
+      <td>To be an engineer #united-states</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>be3c5edfdb07423e955e9b2d7f186bce</td>
+      <td>71b4554d4a824253aa28287372c55797</td>
+      <td>2017-09-01 04:59:38 UTC+0000</td>
+      <td>I want to become a doctor because of my great ...</td>
+      <td>I am a musician and want to pursue that in col...</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>0f1d6a4f276c4a05878dd48e03e52289</td>
+      <td>585ac233015447cc9e9a217044e515e1</td>
+      <td>2016-05-19 22:16:25 UTC+0000</td>
+      <td>what kind of  college could i go  to for a soc...</td>
+      <td>I like soccer because i been playing sense i w...</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>d4999cdc470049a1a3382c4b5f14a7aa</td>
+      <td>654e1d6fd5b947249c0e70658d01b2ac</td>
+      <td>2017-08-31 19:20:47 UTC+0000</td>
+      <td>What are the college classes like for and grap...</td>
+      <td>I'm asking because I was thinking about choosi...</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>e214acfbe6644d65b889a3268828db9d</td>
+      <td>16908136951a48ed942738822cedd5c2</td>
+      <td>2012-09-09 05:33:25 UTC+0000</td>
+      <td>what does it take to be an anesthesiologist?</td>
+      <td>I am a sophomore who is interested in learning...</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">professionals.head(<span class="number">10</span>)</span><br></pre></td></tr></table></figure>
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>professionals_id</th>
+      <th>professionals_location</th>
+      <th>professionals_industry</th>
+      <th>professionals_headline</th>
+      <th>professionals_date_joined</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>9ced4ce7519049c0944147afb75a8ce3</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>2011-10-05 20:35:19 UTC+0000</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>f718dcf6d2ec4cb0a52a9db59d7f9e67</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>2011-10-05 20:49:21 UTC+0000</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0c673e046d824ec0ad0ebe012a0673e4</td>
+      <td>New York, New York</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>2011-10-18 17:31:26 UTC+0000</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>977428d851b24183b223be0eb8619a8c</td>
+      <td>Boston, Massachusetts</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>2011-11-09 20:39:29 UTC+0000</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>e2d57e5041a44f489288397c9904c2b2</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>2011-12-10 22:14:44 UTC+0000</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>c9bfa93898594cbbace436deca644c64</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>2011-12-12 14:25:46 UTC+0000</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>ed85488fb5e941eaa97014137fcbf317</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>2011-12-28 03:02:04 UTC+0000</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>102fb92c28034ad988b593d0111cb4bb</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>2011-12-26 05:00:00 UTC+0000</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>5a4a16842ec64430ac3f916aacf35fe1</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>2011-12-26 05:00:00 UTC+0000</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>81999d5ad93549dab55636a545e84f2a</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>2011-12-26 05:00:00 UTC+0000</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">comments.head(<span class="number">10</span>)</span><br></pre></td></tr></table></figure>
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>comments_id</th>
+      <th>comments_author_id</th>
+      <th>comments_parent_content_id</th>
+      <th>comments_date_added</th>
+      <th>comments_body</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>f30250d3c2ca489db1afa9b95d481e08</td>
+      <td>9fc88a7c3323466dbb35798264c7d497</td>
+      <td>b476f9c6d9cd4c50a7bacdd90edd015a</td>
+      <td>2019-01-31 23:39:40 UTC+0000</td>
+      <td>First, you speak to recruiters. They are train...</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>ca9bfc4ba9464ea383a8b080301ad72c</td>
+      <td>de2415064b9b445c8717425ed70fd99a</td>
+      <td>ef4b6ae24d1f4c3b977731e8189c7fd7</td>
+      <td>2019-01-31 20:30:47 UTC+0000</td>
+      <td>Most large universities offer study abroad pro...</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>c354f6e33956499aa8b03798a60e9386</td>
+      <td>6ed20605002a42b0b8e3d6ac97c50c7f</td>
+      <td>ca7a9d7a95df471c816db82ee758f57d</td>
+      <td>2019-01-31 18:44:04 UTC+0000</td>
+      <td>First, I want to put you at ease that the oppo...</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>73a6223948714c5da6231937157e4cb7</td>
+      <td>d02f6d9faac24997a7003a59e5f34bd3</td>
+      <td>c7a88aa76f5f49b0830bfeb46ba17e4d</td>
+      <td>2019-01-31 17:53:28 UTC+0000</td>
+      <td>Your question submission was great! I just wan...</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>55a89a9061d44dd19569c45f90a22779</td>
+      <td>e78f75c543e84e1c94da1801d8560f65</td>
+      <td>c7a88aa76f5f49b0830bfeb46ba17e4d</td>
+      <td>2019-01-31 14:51:53 UTC+0000</td>
+      <td>Thank you. I'm new to this site. I'm sorry if ...</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>3661006cdb6f4595b193b8d9fbe21228</td>
+      <td>d02f6d9faac24997a7003a59e5f34bd3</td>
+      <td>30901132449849b2aa18f308306e89a2</td>
+      <td>2019-01-30 23:15:54 UTC+0000</td>
+      <td>My pleasure! I'm so glad I was helpful!</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>2e0fd25e53bd4f6a838210d1addc50f3</td>
+      <td>da98e5a8fc6748ccac91d0951368e71f</td>
+      <td>5bf762c8501d450a97af992800980242</td>
+      <td>2019-01-30 18:03:00 UTC+0000</td>
+      <td>My suggestion is to fix a certain time to focu...</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>82934dc63c7044b4922750024d8a51ca</td>
+      <td>a303c1c4faef4adda38fcd4c0d2bade1</td>
+      <td>dee2a0bb57f446578fc9c73b745c7b15</td>
+      <td>2019-01-29 18:01:00 UTC+0000</td>
+      <td>I have a different view from Ogechi's answer. ...</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>8e319089858640779761122f270e8449</td>
+      <td>4e7876eee5b947f39602db35f4dd8162</td>
+      <td>30901132449849b2aa18f308306e89a2</td>
+      <td>2019-01-29 15:14:38 UTC+0000</td>
+      <td>Thanks so much for your answer, Bryant and wil...</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>9dc4c77e87bd406ba851628e290027b3</td>
+      <td>c1297398b70744f9a1a4ba200af28ebe</td>
+      <td>7ebb0e5e9b544c1eb0c96ffad1d73dfd</td>
+      <td>2019-01-29 08:29:30 UTC+0000</td>
+      <td>here’s another from a question 4 years ago\r\n...</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tag_users.head(<span class="number">10</span>)</span><br></pre></td></tr></table></figure>
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>tag_users_tag_id</th>
+      <th>tag_users_user_id</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>593</td>
+      <td>c72ab38e073246e88da7e9a4ec7a4472</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1642</td>
+      <td>8db519781ec24f2e8bdc67c2ac53f614</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>638</td>
+      <td>042d2184ee3e4e548fc3589baaa69caf</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>11093</td>
+      <td>c660bd0dc1b34224be78a58aa5a84a63</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>21539</td>
+      <td>8ce1dca4e94240239e4385ed22ef43ce</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>1047</td>
+      <td>3330f8a7835346a2a91f9393ae21efee</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>64</td>
+      <td>5a4a16842ec64430ac3f916aacf35fe1</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>1139</td>
+      <td>461f92b955924604832a92b6bc14ac1d</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>55</td>
+      <td>7daf1e6dfb3443b99b240890f0a4d69b</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>54</td>
+      <td>7daf1e6dfb3443b99b240890f0a4d69b</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">answers.head(<span class="number">10</span>)</span><br></pre></td></tr></table></figure>
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>answers_id</th>
+      <th>answers_author_id</th>
+      <th>answers_question_id</th>
+      <th>answers_date_added</th>
+      <th>answers_body</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>4e5f01128cae4f6d8fd697cec5dca60c</td>
+      <td>36ff3b3666df400f956f8335cf53e09e</td>
+      <td>332a511f1569444485cf7a7a556a5e54</td>
+      <td>2016-04-29 19:40:14 UTC+0000</td>
+      <td>&lt;p&gt;Hi!&lt;/p&gt;\n&lt;p&gt;You are asking a very interesti...</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>ada720538c014e9b8a6dceed09385ee3</td>
+      <td>2aa47af241bf42a4b874c453f0381bd4</td>
+      <td>eb80205482e4424cad8f16bc25aa2d9c</td>
+      <td>2018-05-01 14:19:08 UTC+0000</td>
+      <td>&lt;p&gt;Hi. I joined the Army after I attended coll...</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>eaa66ef919bc408ab5296237440e323f</td>
+      <td>cbd8f30613a849bf918aed5c010340be</td>
+      <td>eb80205482e4424cad8f16bc25aa2d9c</td>
+      <td>2018-05-02 02:41:02 UTC+0000</td>
+      <td>&lt;p&gt;Dear Priyanka,&lt;/p&gt;&lt;p&gt;Greetings! I have answ...</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1a6b3749d391486c9e371fbd1e605014</td>
+      <td>7e72a630c303442ba92ff00e8ea451df</td>
+      <td>4ec31632938a40b98909416bdd0decff</td>
+      <td>2017-05-10 19:00:47 UTC+0000</td>
+      <td>&lt;p&gt;I work for a global company who values high...</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>5229c514000446d582050f89ebd4e184</td>
+      <td>17802d94699140b0a0d2995f30c034c6</td>
+      <td>2f6a9a99d9b24e5baa50d40d0ba50a75</td>
+      <td>2017-10-13 22:07:33 UTC+0000</td>
+      <td>I agree with Denise. Every single job I've had...</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>5f62fadae80748c7907e3b0551bf4203</td>
+      <td>b03c3872daeb4a5cb1d8cd510942f0c4</td>
+      <td>2f6a9a99d9b24e5baa50d40d0ba50a75</td>
+      <td>2017-10-12 16:01:44 UTC+0000</td>
+      <td>Networking is a key component to progressing y...</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>1d804b3b9e764cdd90195fb138d1a5aa</td>
+      <td>f6c89fde797d45938bce3531f55c9b6b</td>
+      <td>5af8880460c141dbb02971a1a8369529</td>
+      <td>2017-09-29 18:50:11 UTC+0000</td>
+      <td>https://www.unigo.com/\n\nCheck out this websi...</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>08d3cf6fa20543ddbdc42f70a7bcae9e</td>
+      <td>5bc2db4d58584f95bdba30ed2c21d573</td>
+      <td>5af8880460c141dbb02971a1a8369529</td>
+      <td>2018-06-08 02:39:02 UTC+0000</td>
+      <td>&lt;p&gt;Hi Jocelyn ,&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;May I recomme...</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>9d33d099a03c44328fbf166aad585f63</td>
+      <td>8136c8653d3a4895b49cac90b88120d2</td>
+      <td>7c336403258f4da3a2e0955742c76462</td>
+      <td>2017-03-01 16:52:43 UTC+0000</td>
+      <td>&lt;p&gt;For the typical schedule it takes four year...</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>228e5feefb4e42188b7c48a5c7eb3aa8</td>
+      <td>35c8d979b56647839c8df0f0383648cd</td>
+      <td>be3c5edfdb07423e955e9b2d7f186bce</td>
+      <td>2017-10-13 18:08:20 UTC+0000</td>
+      <td>Of course! I know someone who doubled in class...</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">group_memberships.head(<span class="number">10</span>)</span><br></pre></td></tr></table></figure>
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>group_memberships_group_id</th>
+      <th>group_memberships_user_id</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>eabbdf4029734c848a9da20779637d03</td>
+      <td>9a5aead62c344207b2624dba90985dc5</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>eabbdf4029734c848a9da20779637d03</td>
+      <td>ea7122da1c7b4244a2184a4f9f944053</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>eabbdf4029734c848a9da20779637d03</td>
+      <td>cba603f34acb4a40b3ccb53fe6681b5d</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>eabbdf4029734c848a9da20779637d03</td>
+      <td>fa9a126e63714641ae0145557a390cab</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>eabbdf4029734c848a9da20779637d03</td>
+      <td>299da113c5d1420ab525106c242c9429</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>7080bf8dcf78463bb03e6863887fd715</td>
+      <td>836a747118d6436caf56ff3a3c47289a</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>7080bf8dcf78463bb03e6863887fd715</td>
+      <td>82cf96ae74fa4b3a8ffd8a74446c08ca</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>7080bf8dcf78463bb03e6863887fd715</td>
+      <td>b0f6c44506444fb99e910dcc5836b5d8</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>bc6fc50a2b444efc8ec47111b290ffb8</td>
+      <td>ab8d405cfdab4faf83ffe7f83944a87b</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>bc6fc50a2b444efc8ec47111b290ffb8</td>
+      <td>370dba85f183496186772be0c53a69b1</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tags.head(<span class="number">10</span>)</span><br></pre></td></tr></table></figure>
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>tags_tag_id</th>
+      <th>tags_tag_name</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>27490</td>
+      <td>college</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>461</td>
+      <td>computer-science</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>593</td>
+      <td>computer-software</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>27292</td>
+      <td>business</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>18217</td>
+      <td>doctor</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>54</td>
+      <td>engineering</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>129</td>
+      <td>career</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>89</td>
+      <td>medicine</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>53</td>
+      <td>science</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>55</td>
+      <td>engineer</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">students.head(<span class="number">10</span>)</span><br></pre></td></tr></table></figure>
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>students_id</th>
+      <th>students_location</th>
+      <th>students_date_joined</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>12a89e96755a4dba83ff03e03043d9c0</td>
+      <td>NaN</td>
+      <td>2011-12-16 14:19:24 UTC+0000</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>e37a5990fe354c60be5e87376b08d5e3</td>
+      <td>NaN</td>
+      <td>2011-12-27 03:02:44 UTC+0000</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>12b402cceeda43dcb6e12ef9f2d221ea</td>
+      <td>NaN</td>
+      <td>2012-01-01 05:00:00 UTC+0000</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>a0f431fc79794edcb104f68ce55ab897</td>
+      <td>NaN</td>
+      <td>2012-01-01 05:00:00 UTC+0000</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>23aea4702d804bd88d1e9fb28074a1b4</td>
+      <td>NaN</td>
+      <td>2012-01-01 05:00:00 UTC+0000</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>18a8f9363cd24a37b690e1b205146b14</td>
+      <td>NaN</td>
+      <td>2012-01-01 05:00:00 UTC+0000</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>d21c67279ada49d1bcf66ad620c00911</td>
+      <td>NaN</td>
+      <td>2012-01-01 05:00:00 UTC+0000</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>433c0f5f90344453ba50ec8aee5fdfa4</td>
+      <td>NaN</td>
+      <td>2012-01-01 05:00:00 UTC+0000</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>f0a7d23c3d374f8d9a1a5eb9b96eab0f</td>
+      <td>NaN</td>
+      <td>2012-01-01 05:00:00 UTC+0000</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>26269f6765b74347b28155aea1b57393</td>
+      <td>NaN</td>
+      <td>2012-01-01 05:00:00 UTC+0000</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">groups.head(<span class="number">10</span>)</span><br></pre></td></tr></table></figure>
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>groups_id</th>
+      <th>groups_group_type</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>eabbdf4029734c848a9da20779637d03</td>
+      <td>youth program</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>7080bf8dcf78463bb03e6863887fd715</td>
+      <td>youth program</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>bc6fc50a2b444efc8ec47111b290ffb8</td>
+      <td>youth program</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>37f002e8d5e442ca8e36e972eaa55882</td>
+      <td>youth program</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>52419ff84d4b47bebd0b0a6c1263c296</td>
+      <td>youth program</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>559dbc7bd1f64c268ff149c4d5d63500</td>
+      <td>youth program</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>528fa2c7559a40749b6151a07d3b8ef5</td>
+      <td>youth program</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>cfaac1762bed4c8bb88696267129a560</td>
+      <td>youth program</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>f79273f51df849d298bd6f4b86daee99</td>
+      <td>youth program</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>ba94226c87d249a1a2dbdc32a848b769</td>
+      <td>youth program</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">matches.head(<span class="number">10</span>)</span><br></pre></td></tr></table></figure>
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>matches_email_id</th>
+      <th>matches_question_id</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1721939</td>
+      <td>332a511f1569444485cf7a7a556a5e54</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1665388</td>
+      <td>332a511f1569444485cf7a7a556a5e54</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1636634</td>
+      <td>332a511f1569444485cf7a7a556a5e54</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1635498</td>
+      <td>332a511f1569444485cf7a7a556a5e54</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1620298</td>
+      <td>332a511f1569444485cf7a7a556a5e54</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>1618336</td>
+      <td>332a511f1569444485cf7a7a556a5e54</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>1610422</td>
+      <td>332a511f1569444485cf7a7a556a5e54</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>1601694</td>
+      <td>332a511f1569444485cf7a7a556a5e54</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>1568908</td>
+      <td>332a511f1569444485cf7a7a556a5e54</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>1551730</td>
+      <td>332a511f1569444485cf7a7a556a5e54</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tag_questions.head(<span class="number">10</span>)</span><br></pre></td></tr></table></figure>
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>tag_questions_tag_id</th>
+      <th>tag_questions_question_id</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>28930</td>
+      <td>cb43ebee01364c68ac61d347a393ae39</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>28930</td>
+      <td>47f55e85ce944242a5a347ab85a8ffb4</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>28930</td>
+      <td>ccc30a033a0f4dfdb2eb987012f25792</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>28930</td>
+      <td>e30b274e48d741f7bf50eb5e7171a3c0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>28930</td>
+      <td>3d22742052df4989b311b4195cbb0f1a</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>28930</td>
+      <td>c79baebeb6d44726b6f70a2414fb69bc</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>28930</td>
+      <td>4eb64ed1527847f29d3e3d8a713bb3dc</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>28930</td>
+      <td>bebfb741f4524b8cb871f35b5780b54f</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>28930</td>
+      <td>3e7c462a0adb4bfa8830282867f3900b</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>28930</td>
+      <td>23b52dd81ad7465a9472596c7dedc492</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+<p>Create a function to merging tables more easily.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">merging</span><span class="params">(df1, df2, left, right)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> df1.merge(df2, how=<span class="string">"inner"</span>, left_on=left, right_on=right)</span><br></pre></td></tr></table></figure>
+<p>Merging questions with answers.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">qa = merging(questions, answers, <span class="string">"questions_id"</span>, <span class="string">"answers_question_id"</span>)</span><br><span class="line">qa.head(<span class="number">3</span>).T</span><br></pre></td></tr></table></figure>
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>0</th>
+      <th>1</th>
+      <th>2</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>questions_id</th>
+      <td>332a511f1569444485cf7a7a556a5e54</td>
+      <td>eb80205482e4424cad8f16bc25aa2d9c</td>
+      <td>eb80205482e4424cad8f16bc25aa2d9c</td>
+    </tr>
+    <tr>
+      <th>questions_author_id</th>
+      <td>8f6f374ffd834d258ab69d376dd998f5</td>
+      <td>acccbda28edd4362ab03fb8b6fd2d67b</td>
+      <td>acccbda28edd4362ab03fb8b6fd2d67b</td>
+    </tr>
+    <tr>
+      <th>questions_date_added</th>
+      <td>2016-04-26 11:14:26 UTC+0000</td>
+      <td>2016-05-20 16:48:25 UTC+0000</td>
+      <td>2016-05-20 16:48:25 UTC+0000</td>
+    </tr>
+    <tr>
+      <th>questions_title</th>
+      <td>Teacher   career   question</td>
+      <td>I want to become an army officer. What can I d...</td>
+      <td>I want to become an army officer. What can I d...</td>
+    </tr>
+    <tr>
+      <th>questions_body</th>
+      <td>What  is  a  maths  teacher?   what  is  a  ma...</td>
+      <td>I am Priyanka from Bangalore . Now am in 10th ...</td>
+      <td>I am Priyanka from Bangalore . Now am in 10th ...</td>
+    </tr>
+    <tr>
+      <th>answers_id</th>
+      <td>4e5f01128cae4f6d8fd697cec5dca60c</td>
+      <td>ada720538c014e9b8a6dceed09385ee3</td>
+      <td>eaa66ef919bc408ab5296237440e323f</td>
+    </tr>
+    <tr>
+      <th>answers_author_id</th>
+      <td>36ff3b3666df400f956f8335cf53e09e</td>
+      <td>2aa47af241bf42a4b874c453f0381bd4</td>
+      <td>cbd8f30613a849bf918aed5c010340be</td>
+    </tr>
+    <tr>
+      <th>answers_question_id</th>
+      <td>332a511f1569444485cf7a7a556a5e54</td>
+      <td>eb80205482e4424cad8f16bc25aa2d9c</td>
+      <td>eb80205482e4424cad8f16bc25aa2d9c</td>
+    </tr>
+    <tr>
+      <th>answers_date_added</th>
+      <td>2016-04-29 19:40:14 UTC+0000</td>
+      <td>2018-05-01 14:19:08 UTC+0000</td>
+      <td>2018-05-02 02:41:02 UTC+0000</td>
+    </tr>
+    <tr>
+      <th>answers_body</th>
+      <td>&lt;p&gt;Hi!&lt;/p&gt;\n&lt;p&gt;You are asking a very interesti...</td>
+      <td>&lt;p&gt;Hi. I joined the Army after I attended coll...</td>
+      <td>&lt;p&gt;Dear Priyanka,&lt;/p&gt;&lt;p&gt;Greetings! I have answ...</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+<h3 id="Exploring-questions-answers-1"><a href="#Exploring-questions-answers-1" class="headerlink" title="Exploring questions_answers (1)"></a>Exploring questions_answers (1)</h3><p>Can we find out how long does it take for a question to be answered?</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">qa[<span class="string">'questions_date_added'</span>] = pd.to_datetime(qa[<span class="string">'questions_date_added'</span>])</span><br><span class="line">qa[<span class="string">'answers_date_added'</span>] = pd.to_datetime(qa[<span class="string">'answers_date_added'</span>])</span><br><span class="line">qa[<span class="string">'qa_duration'</span>] = (qa[<span class="string">'answers_date_added'</span>] - qa[<span class="string">'questions_date_added'</span>] ).dt.days</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">qa.head().T</span><br></pre></td></tr></table></figure>
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>0</th>
+      <th>1</th>
+      <th>2</th>
+      <th>3</th>
+      <th>4</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>questions_id</th>
+      <td>332a511f1569444485cf7a7a556a5e54</td>
+      <td>eb80205482e4424cad8f16bc25aa2d9c</td>
+      <td>eb80205482e4424cad8f16bc25aa2d9c</td>
+      <td>4ec31632938a40b98909416bdd0decff</td>
+      <td>2f6a9a99d9b24e5baa50d40d0ba50a75</td>
+    </tr>
+    <tr>
+      <th>questions_author_id</th>
+      <td>8f6f374ffd834d258ab69d376dd998f5</td>
+      <td>acccbda28edd4362ab03fb8b6fd2d67b</td>
+      <td>acccbda28edd4362ab03fb8b6fd2d67b</td>
+      <td>f2c179a563024ccc927399ce529094b5</td>
+      <td>2c30ffba444e40eabb4583b55233a5a4</td>
+    </tr>
+    <tr>
+      <th>questions_date_added</th>
+      <td>2016-04-26 11:14:26</td>
+      <td>2016-05-20 16:48:25</td>
+      <td>2016-05-20 16:48:25</td>
+      <td>2017-02-08 19:13:38</td>
+      <td>2017-09-01 14:05:32</td>
+    </tr>
+    <tr>
+      <th>questions_title</th>
+      <td>Teacher   career   question</td>
+      <td>I want to become an army officer. What can I d...</td>
+      <td>I want to become an army officer. What can I d...</td>
+      <td>Will going abroad for your first job increase ...</td>
+      <td>To become a specialist in business  management...</td>
+    </tr>
+    <tr>
+      <th>questions_body</th>
+      <td>What  is  a  maths  teacher?   what  is  a  ma...</td>
+      <td>I am Priyanka from Bangalore . Now am in 10th ...</td>
+      <td>I am Priyanka from Bangalore . Now am in 10th ...</td>
+      <td>I'm planning on going abroad for my first job....</td>
+      <td>i hear business management is a hard way to ge...</td>
+    </tr>
+    <tr>
+      <th>answers_id</th>
+      <td>4e5f01128cae4f6d8fd697cec5dca60c</td>
+      <td>ada720538c014e9b8a6dceed09385ee3</td>
+      <td>eaa66ef919bc408ab5296237440e323f</td>
+      <td>1a6b3749d391486c9e371fbd1e605014</td>
+      <td>5229c514000446d582050f89ebd4e184</td>
+    </tr>
+    <tr>
+      <th>answers_author_id</th>
+      <td>36ff3b3666df400f956f8335cf53e09e</td>
+      <td>2aa47af241bf42a4b874c453f0381bd4</td>
+      <td>cbd8f30613a849bf918aed5c010340be</td>
+      <td>7e72a630c303442ba92ff00e8ea451df</td>
+      <td>17802d94699140b0a0d2995f30c034c6</td>
+    </tr>
+    <tr>
+      <th>answers_question_id</th>
+      <td>332a511f1569444485cf7a7a556a5e54</td>
+      <td>eb80205482e4424cad8f16bc25aa2d9c</td>
+      <td>eb80205482e4424cad8f16bc25aa2d9c</td>
+      <td>4ec31632938a40b98909416bdd0decff</td>
+      <td>2f6a9a99d9b24e5baa50d40d0ba50a75</td>
+    </tr>
+    <tr>
+      <th>answers_date_added</th>
+      <td>2016-04-29 19:40:14</td>
+      <td>2018-05-01 14:19:08</td>
+      <td>2018-05-02 02:41:02</td>
+      <td>2017-05-10 19:00:47</td>
+      <td>2017-10-13 22:07:33</td>
+    </tr>
+    <tr>
+      <th>answers_body</th>
+      <td>&lt;p&gt;Hi!&lt;/p&gt;\n&lt;p&gt;You are asking a very interesti...</td>
+      <td>&lt;p&gt;Hi. I joined the Army after I attended coll...</td>
+      <td>&lt;p&gt;Dear Priyanka,&lt;/p&gt;&lt;p&gt;Greetings! I have answ...</td>
+      <td>&lt;p&gt;I work for a global company who values high...</td>
+      <td>I agree with Denise. Every single job I've had...</td>
+    </tr>
+    <tr>
+      <th>qa_duration</th>
+      <td>3</td>
+      <td>710</td>
+      <td>711</td>
+      <td>90</td>
+      <td>42</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># after groupby, head(1) returns the first occurrence</span></span><br><span class="line">qa.sort_values(by=<span class="string">"answers_date_added"</span>,ascending=<span class="keyword">True</span>, inplace=<span class="keyword">True</span>)</span><br><span class="line">first_qa = qa.groupby(<span class="string">'questions_id'</span>).head(<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># let's explore data from last year</span></span><br><span class="line">first_qa = first_qa[first_qa[<span class="string">'questions_date_added'</span>] &gt;= pd.datetime(<span class="number">2018</span>, <span class="number">1</span>, <span class="number">1</span>)]</span><br><span class="line"></span><br><span class="line">first_qa.loc[(first_qa[<span class="string">'qa_duration'</span>] &lt;= <span class="number">7</span>), <span class="string">'week'</span>] = <span class="number">1</span></span><br><span class="line">first_qa.loc[(first_qa[<span class="string">'qa_duration'</span>] &gt; <span class="number">7</span>) &amp; (first_qa[<span class="string">'qa_duration'</span>] &lt;= <span class="number">14</span>), <span class="string">'week'</span>] = <span class="number">2</span></span><br><span class="line">first_qa.loc[(first_qa[<span class="string">'qa_duration'</span>] &gt; <span class="number">14</span>) &amp; (first_qa[<span class="string">'qa_duration'</span>] &lt;= <span class="number">21</span>), <span class="string">'week'</span>] = <span class="number">3</span></span><br><span class="line">first_qa.loc[(first_qa[<span class="string">'qa_duration'</span>] &gt; <span class="number">21</span>) &amp; (first_qa[<span class="string">'qa_duration'</span>] &lt;= <span class="number">28</span>), <span class="string">'week'</span>] = <span class="number">4</span></span><br><span class="line">first_qa.loc[(first_qa[<span class="string">'qa_duration'</span>] &gt; <span class="number">28</span>), <span class="string">'week'</span>] = <span class="number">5</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">week_val_cnt = first_qa[<span class="string">'week'</span>].value_counts().sort_index()</span><br><span class="line"></span><br><span class="line">plt.figure(figsize=(<span class="number">8</span>,<span class="number">6</span>))</span><br><span class="line">sns.barplot(week_val_cnt.index, </span><br><span class="line">            week_val_cnt.values)</span><br><span class="line"></span><br><span class="line">plt.xlabel(<span class="string">'Week'</span>)</span><br><span class="line">plt.ylabel(<span class="string">'Responses'</span>)</span><br><span class="line">plt.title(<span class="string">'Responses vs Week'</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="/2019/02/27/CareerVillage_Recommand_alg/output_24_0.png" alt="png"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">week_val_cnt</span><br></pre></td></tr></table></figure>
+<pre><code>1.0    3967
+2.0     480
+3.0     375
+4.0     284
+5.0    2403
+Name: week, dtype: int64
+</code></pre><h3 id="Exploring-questions-and-answers-2-and-mind-blowing-observation"><a href="#Exploring-questions-and-answers-2-and-mind-blowing-observation" class="headerlink" title="Exploring questions and answers (2) and mind-blowing observation"></a>Exploring questions and answers (2) and mind-blowing observation</h3><p>We continue exploring the question body to understand why some questions have longer response time.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">process_text</span><span class="params">(df, col)</span>:</span></span><br><span class="line">    df[col] = df[col].str.replace(<span class="string">'[^\w\s]'</span>,<span class="string">''</span>) <span class="comment"># replacing punctuations</span></span><br><span class="line">    df[col] = df[col].str.replace(<span class="string">'-'</span>,<span class="string">' '</span>) <span class="comment"># replacing dashes</span></span><br><span class="line">    df[col] = df[col].str.replace(<span class="string">'\d+'</span>,<span class="string">''</span>) <span class="comment"># replacing digits</span></span><br><span class="line">    df[col] = df[col].str.lower().str.split() <span class="comment"># convert all str to lowercase    </span></span><br><span class="line">    df[col] = df[col].apply(<span class="keyword">lambda</span> x: [item <span class="keyword">for</span> item <span class="keyword">in</span> x <span class="keyword">if</span> item <span class="keyword">not</span> <span class="keyword">in</span> stop]) <span class="comment"># remove stopwords    </span></span><br><span class="line">    df[col] = df[col].apply(<span class="string">' '</span>.join) <span class="comment"># convert list to str</span></span><br><span class="line">    <span class="keyword">return</span> df</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">first_qa[<span class="string">'questions_body'</span>] = process_text(first_qa, <span class="string">'questions_body'</span>)[<span class="string">'questions_body'</span>]</span><br><span class="line"></span><br><span class="line">fast_resp = pd.Series(first_qa[first_qa[<span class="string">'week'</span>] == <span class="number">1</span>][<span class="string">'questions_body'</span>].tolist()).astype(str)</span><br><span class="line">slow_resp = pd.Series(first_qa[first_qa[<span class="string">'week'</span>] == <span class="number">5</span>][<span class="string">'questions_body'</span>].tolist()).astype(str)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">dist_fast = fast_resp.apply(<span class="keyword">lambda</span> x: len(x.split(<span class="string">' '</span>)))</span><br><span class="line">dist_slow = slow_resp.apply(<span class="keyword">lambda</span> x: len(x.split(<span class="string">' '</span>)))</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">pal = sns.color_palette()</span><br><span class="line"></span><br><span class="line">plt.figure(figsize=(<span class="number">18</span>, <span class="number">8</span>))</span><br><span class="line">plt.hist(dist_fast, bins=<span class="number">40</span>, range=[<span class="number">0</span>, <span class="number">80</span>], color=pal[<span class="number">9</span>], normed=<span class="keyword">True</span>, label=<span class="string">'fast'</span>)</span><br><span class="line">plt.hist(dist_slow, bins=<span class="number">40</span>, range=[<span class="number">0</span>, <span class="number">80</span>], color=pal[<span class="number">1</span>], normed=<span class="keyword">True</span>, alpha=<span class="number">0.5</span>, label=<span class="string">'slow'</span>)</span><br><span class="line">plt.title(<span class="string">'Normalised histogram of word count in question_body'</span>, fontsize=<span class="number">15</span>)</span><br><span class="line">plt.legend()</span><br><span class="line">plt.xlabel(<span class="string">'Number of words'</span>, fontsize=<span class="number">15</span>)</span><br><span class="line">plt.ylabel(<span class="string">'Probability'</span>, fontsize=<span class="number">15</span>)</span><br></pre></td></tr></table></figure>
+<pre><code>Text(0,0.5,&#39;Probability&#39;)
+</code></pre><p><img src="/2019/02/27/CareerVillage_Recommand_alg/output_30_1.png" alt="png"></p>
+<p>Wow! Seems like longer questions tend to have longer response time.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> wordcloud <span class="keyword">import</span> WordCloud</span><br><span class="line"></span><br><span class="line">all_q = process_text(first_qa, <span class="string">'questions_body'</span>)[<span class="string">'questions_body'</span>]</span><br><span class="line">cloud = WordCloud(width=<span class="number">1440</span>, height=<span class="number">1080</span>).generate(<span class="string">" "</span>.join(all_q.astype(str)))</span><br><span class="line">plt.figure(figsize=(<span class="number">20</span>, <span class="number">15</span>))</span><br><span class="line">plt.imshow(cloud)</span><br><span class="line">plt.axis(<span class="string">'off'</span>)</span><br></pre></td></tr></table></figure>
+<pre><code>(-0.5, 1439.5, 1079.5, -0.5)
+</code></pre><p><img src="/2019/02/27/CareerVillage_Recommand_alg/output_32_1.png" alt="png"></p>
+<p>Unsurprisingly, we see big college and career.</p>
+<p>What else differentiates a fast response and slow response question?</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">tf = TfidfVectorizer(analyzer=<span class="string">'word'</span>,</span><br><span class="line">                     <span class="comment">#min_df=3,</span></span><br><span class="line">                     <span class="comment">#max_df=0.9,</span></span><br><span class="line">                     stop_words=<span class="string">'english'</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># generate a matrix of sentences and a score for each word</span></span><br><span class="line">fast_tfidf_matrix = tf.fit_transform(fast_resp)</span><br><span class="line"></span><br><span class="line"><span class="comment"># generate a list of words from the vectorizer</span></span><br><span class="line">fast_vocab = tf.get_feature_names()</span><br><span class="line"></span><br><span class="line"><span class="comment"># repeat for slow response</span></span><br><span class="line">slow_tfidf_matrix = tf.fit_transform(slow_resp)</span><br><span class="line">slow_vocab = tf.get_feature_names()</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># sum of the scores of each word</span></span><br><span class="line"><span class="comment"># each row represents a sentence</span></span><br><span class="line"><span class="comment"># each column represents a word</span></span><br><span class="line"><span class="comment"># we have to sum across all columns</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">word_score_pair</span><span class="params">(matrix, vocab)</span>:</span></span><br><span class="line">    mat_to_arr = matrix.toarray() <span class="comment"># convert the 2d matrix to a 2d array</span></span><br><span class="line">    word_score = list(map(sum,zip(*mat_to_arr))) <span class="comment"># fastest way to sum across all columns  *反操作</span></span><br><span class="line">    rank_words_idx = np.argsort(word_score)</span><br><span class="line">    idx_list = rank_words_idx[<span class="number">-10</span>:]</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> idx <span class="keyword">in</span> idx_list:</span><br><span class="line">        print(<span class="string">"word: &#123;0&#125;, score: &#123;1:.3f&#125;"</span>.format(vocab[idx], word_score[idx]))</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">print(<span class="string">'fast_vocab\'s words and score:'</span>)</span><br><span class="line">word_score_pair(fast_tfidf_matrix, fast_vocab)</span><br></pre></td></tr></table></figure>
+<pre><code>fast_vocab&#39;s words and score:
+2674
+word: engineering, score: 75.402
+word: major, score: 79.043
+word: like, score: 79.420
+word: job, score: 81.481
+word: know, score: 102.191
+word: school, score: 108.659
+word: im, score: 121.079
+word: want, score: 121.301
+word: career, score: 131.120
+word: college, score: 216.177
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">print(<span class="string">'slow_vocab\'s words and score:'</span>)</span><br><span class="line">word_score_pair(slow_tfidf_matrix, slow_vocab)</span><br></pre></td></tr></table></figure>
+<pre><code>slow_vocab&#39;s words and score:
+1881
+word: medicine, score: 45.072
+word: major, score: 49.781
+word: like, score: 52.039
+word: career, score: 52.103
+word: scholarships, score: 60.325
+word: school, score: 68.618
+word: know, score: 69.904
+word: im, score: 72.984
+word: want, score: 90.048
+word: college, score: 130.133
+</code></pre><h4 id="IMPORTANT-OBSERVATION"><a href="#IMPORTANT-OBSERVATION" class="headerlink" title="IMPORTANT OBSERVATION:"></a>IMPORTANT OBSERVATION:</h4><ul>
+<li>Question body of slow responses are LONGER than that of fast response.</li>
+<li>Question body of slow responses are DIFFICULT to answer! They require more expertise to answer!</li>
+</ul>
+<h3 id="Exploring-students"><a href="#Exploring-students" class="headerlink" title="Exploring students"></a>Exploring students</h3><p>Where do the students come from if they are from the US?</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">state_codes = &#123;<span class="string">'District of Columbia'</span> : <span class="string">'DC'</span>,<span class="string">'Mississippi'</span>: <span class="string">'MS'</span>, <span class="string">'Oklahoma'</span>: <span class="string">'OK'</span>, </span><br><span class="line">               <span class="string">'Delaware'</span>: <span class="string">'DE'</span>, <span class="string">'Minnesota'</span>: <span class="string">'MN'</span>, <span class="string">'Illinois'</span>: <span class="string">'IL'</span>, <span class="string">'Arkansas'</span>: <span class="string">'AR'</span>, </span><br><span class="line">               <span class="string">'New Mexico'</span>: <span class="string">'NM'</span>, <span class="string">'Indiana'</span>: <span class="string">'IN'</span>, <span class="string">'Maryland'</span>: <span class="string">'MD'</span>, <span class="string">'Louisiana'</span>: <span class="string">'LA'</span>, </span><br><span class="line">               <span class="string">'Idaho'</span>: <span class="string">'ID'</span>, <span class="string">'Wyoming'</span>: <span class="string">'WY'</span>, <span class="string">'Tennessee'</span>: <span class="string">'TN'</span>, <span class="string">'Arizona'</span>: <span class="string">'AZ'</span>, </span><br><span class="line">               <span class="string">'Iowa'</span>: <span class="string">'IA'</span>, <span class="string">'Michigan'</span>: <span class="string">'MI'</span>, <span class="string">'Kansas'</span>: <span class="string">'KS'</span>, <span class="string">'Utah'</span>: <span class="string">'UT'</span>, </span><br><span class="line">               <span class="string">'Virginia'</span>: <span class="string">'VA'</span>, <span class="string">'Oregon'</span>: <span class="string">'OR'</span>, <span class="string">'Connecticut'</span>: <span class="string">'CT'</span>, <span class="string">'Montana'</span>: <span class="string">'MT'</span>, </span><br><span class="line">               <span class="string">'California'</span>: <span class="string">'CA'</span>, <span class="string">'Massachusetts'</span>: <span class="string">'MA'</span>, <span class="string">'West Virginia'</span>: <span class="string">'WV'</span>, </span><br><span class="line">               <span class="string">'South Carolina'</span>: <span class="string">'SC'</span>, <span class="string">'New Hampshire'</span>: <span class="string">'NH'</span>, <span class="string">'Wisconsin'</span>: <span class="string">'WI'</span>,</span><br><span class="line">               <span class="string">'Vermont'</span>: <span class="string">'VT'</span>, <span class="string">'Georgia'</span>: <span class="string">'GA'</span>, <span class="string">'North Dakota'</span>: <span class="string">'ND'</span>, </span><br><span class="line">               <span class="string">'Pennsylvania'</span>: <span class="string">'PA'</span>, <span class="string">'Florida'</span>: <span class="string">'FL'</span>, <span class="string">'Alaska'</span>: <span class="string">'AK'</span>, <span class="string">'Kentucky'</span>: <span class="string">'KY'</span>, </span><br><span class="line">               <span class="string">'Hawaii'</span>: <span class="string">'HI'</span>, <span class="string">'Nebraska'</span>: <span class="string">'NE'</span>, <span class="string">'Missouri'</span>: <span class="string">'MO'</span>, <span class="string">'Ohio'</span>: <span class="string">'OH'</span>, </span><br><span class="line">               <span class="string">'Alabama'</span>: <span class="string">'AL'</span>, <span class="string">'Rhode Island'</span>: <span class="string">'RI'</span>, <span class="string">'South Dakota'</span>: <span class="string">'SD'</span>, </span><br><span class="line">               <span class="string">'Colorado'</span>: <span class="string">'CO'</span>, <span class="string">'New Jersey'</span>: <span class="string">'NJ'</span>, <span class="string">'Washington'</span>: <span class="string">'WA'</span>, </span><br><span class="line">               <span class="string">'North Carolina'</span>: <span class="string">'NC'</span>, <span class="string">'New York'</span>: <span class="string">'NY'</span>, <span class="string">'Texas'</span>: <span class="string">'TX'</span>, </span><br><span class="line">               <span class="string">'Nevada'</span>: <span class="string">'NV'</span>, <span class="string">'Maine'</span>: <span class="string">'ME'</span>&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">students[<span class="string">'students_location'</span>] = students[<span class="string">'students_location'</span>].fillna(<span class="string">''</span>)</span><br><span class="line">students[<span class="string">'students_location'</span>] = students[<span class="string">'students_location'</span>].str.split(<span class="string">','</span>).str[<span class="number">1</span>]</span><br><span class="line">students[<span class="string">'students_location'</span>] = students[<span class="string">'students_location'</span>].str.lstrip() <span class="comment"># remove first white space</span></span><br><span class="line"></span><br><span class="line">s_val_cnt = students[<span class="string">'students_location'</span>].value_counts()</span><br><span class="line">s_val_cnt[:<span class="number">10</span>]</span><br></pre></td></tr></table></figure>
+<pre><code>California       4539
+Texas            2716
+New York         1783
+Florida          1478
+Massachusetts    1051
+Illinois          962
+Karnataka         896
+Pennsylvania      725
+Georgia           722
+Tamil Nadu        678
+Name: students_location, dtype: int64
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">us_states = []</span><br><span class="line"></span><br><span class="line"><span class="comment"># only get the location if it's in US</span></span><br><span class="line"><span class="keyword">for</span> s <span class="keyword">in</span> s_val_cnt.index.tolist():</span><br><span class="line">    <span class="keyword">if</span> s <span class="keyword">in</span> state_codes:</span><br><span class="line">        us_states.append(s)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">df = pd.DataFrame(&#123;<span class="string">'states'</span>: s_val_cnt.index,</span><br><span class="line">                   <span class="string">'count'</span>: s_val_cnt.values&#125;)</span><br><span class="line"></span><br><span class="line">df = df[df[<span class="string">'states'</span>].isin(us_states)]</span><br><span class="line">df[<span class="string">'states'</span>] = df[<span class="string">'states'</span>].apply(<span class="keyword">lambda</span> x: state_codes[x])</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">data = [ dict(</span><br><span class="line">        type=<span class="string">'choropleth'</span>,</span><br><span class="line">        autocolorscale = <span class="keyword">True</span>,</span><br><span class="line">        locations = df[<span class="string">'states'</span>], </span><br><span class="line">        z = df[<span class="string">'count'</span>].astype(float), </span><br><span class="line">        locationmode = <span class="string">'USA-states'</span>, </span><br><span class="line">        text = df[<span class="string">'states'</span>], </span><br><span class="line">        marker = dict(</span><br><span class="line">            line = dict (</span><br><span class="line">                color = <span class="string">'rgb(255,255,255)'</span>,</span><br><span class="line">                width = <span class="number">2</span></span><br><span class="line">            ) ),</span><br><span class="line">        colorbar = dict(  </span><br><span class="line">            title = <span class="string">"count"</span>)  </span><br><span class="line">        ) ]</span><br><span class="line"></span><br><span class="line">layout = dict(</span><br><span class="line">        title = <span class="string">'Number of Students by State&lt;br&gt;(Hover for breakdown)'</span>,</span><br><span class="line">        geo = dict(</span><br><span class="line">            scope=<span class="string">'usa'</span>,</span><br><span class="line">            projection=dict( type=<span class="string">'albers usa'</span> ),</span><br><span class="line">            showlakes = <span class="keyword">True</span>,</span><br><span class="line">            lakecolor = <span class="string">'rgb(255, 255, 255)'</span>),</span><br><span class="line">             )</span><br><span class="line"></span><br><span class="line">fig = dict(data=data, layout=layout)</span><br><span class="line">iplot(fig)</span><br></pre></td></tr></table></figure>
+<div id="3b81d84d-f0a6-483b-8c9b-bbe676f5ee65" style="height: 525px; width: 100%;" class="plotly-graph-div"></div><script type="text/javascript">require(["plotly"], function(Plotly) { window.PLOTLYENV=window.PLOTLYENV || {};window.PLOTLYENV.BASE_URL="https://plot.ly";Plotly.newPlot("3b81d84d-f0a6-483b-8c9b-bbe676f5ee65", [{"autocolorscale": true, "colorbar": {"title": {"text": "count"}}, "locationmode": "USA-states", "locations": ["CA", "TX", "NY", "FL", "MA", "IL", "PA", "GA", "NJ", "NC", "VA", "MI", "OH", "IN", "MD", "KY", "AZ", "WA", "MO", "LA", "WI", "AL", "MN", "CO", "TN", "CT", "IA", "SC", "RI", "UT", "NV", "OR", "NM", "OK", "AR", "KS", "MS", "NE", "SD", "MT", "HI", "ID", "NH", "WV", "ME", "AK", "VT", "WY", "DE", "ND"], "marker": {"line": {"color": "rgb(255,255,255)", "width": 2}}, "text": ["CA", "TX", "NY", "FL", "MA", "IL", "PA", "GA", "NJ", "NC", "VA", "MI", "OH", "IN", "MD", "KY", "AZ", "WA", "MO", "LA", "WI", "AL", "MN", "CO", "TN", "CT", "IA", "SC", "RI", "UT", "NV", "OR", "NM", "OK", "AR", "KS", "MS", "NE", "SD", "MT", "HI", "ID", "NH", "WV", "ME", "AK", "VT", "WY", "DE", "ND"], "z": [4539.0, 2716.0, 1783.0, 1478.0, 1051.0, 962.0, 725.0, 722.0, 640.0, 616.0, 591.0, 532.0, 474.0, 472.0, 432.0, 411.0, 399.0, 399.0, 384.0, 368.0, 310.0, 302.0, 293.0, 284.0, 272.0, 261.0, 240.0, 220.0, 219.0, 204.0, 188.0, 187.0, 170.0, 169.0, 146.0, 142.0, 106.0, 93.0, 74.0, 71.0, 62.0, 59.0, 44.0, 40.0, 39.0, 39.0, 35.0, 28.0, 25.0, 23.0], "type": "choropleth", "uid": "afcfd327-cf14-40e4-81b4-e4e12ca4cdd8"}], {"geo": {"lakecolor": "rgb(255, 255, 255)", "projection": {"type": "albers usa"}, "scope": "usa", "showlakes": true}, "title": {"text": "Number of Students by State<br>(Hover for breakdown)"}}, {"showLink": false, "linkText": "Export to plot.ly", "plotlyServerURL": "https://plot.ly"})});</script><script type="text/javascript">window.addEventListener("resize", function(){window._Plotly.Plots.resize(document.getElementById("3b81d84d-f0a6-483b-8c9b-bbe676f5ee65"));});</script>
+
+
+### Exploring professionals
+Merging questions_answers with professionals.
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">qap = merging(qa, professionals, <span class="string">"answers_author_id"</span>, <span class="string">"professionals_id"</span>)</span><br><span class="line">qap.head(<span class="number">3</span>).T</span><br></pre></td></tr></table></figure>
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>0</th>
+      <th>1</th>
+      <th>2</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>questions_id</th>
+      <td>f6b9ca94aed04ba28256492708e74f60</td>
+      <td>f6b9ca94aed04ba28256492708e74f60</td>
+      <td>ca209b4e19064d8e9834b3ca1a3f5361</td>
+    </tr>
+    <tr>
+      <th>questions_author_id</th>
+      <td>05444a2f42454327b2ac4b463c0adbe0</td>
+      <td>05444a2f42454327b2ac4b463c0adbe0</td>
+      <td>05444a2f42454327b2ac4b463c0adbe0</td>
+    </tr>
+    <tr>
+      <th>questions_date_added</th>
+      <td>2011-09-27 15:26:19</td>
+      <td>2011-09-27 15:26:19</td>
+      <td>2011-09-27 15:27:14</td>
+    </tr>
+    <tr>
+      <th>questions_title</th>
+      <td>What do top tier consulting firms look for in ...</td>
+      <td>What do top tier consulting firms look for in ...</td>
+      <td>What is the path to get from high school to be...</td>
+    </tr>
+    <tr>
+      <th>questions_body</th>
+      <td>Please explain the factors consulting firms lo...</td>
+      <td>Please explain the factors consulting firms lo...</td>
+      <td>What are some of the paths to getting from beg...</td>
+    </tr>
+    <tr>
+      <th>answers_id</th>
+      <td>7640a6e5d5224c8681cc58de860858f4</td>
+      <td>71229eb293314c8a9e545057ecc32c93</td>
+      <td>7d1a41e5ef48410fa7ff647a4bf87eed</td>
+    </tr>
+    <tr>
+      <th>answers_author_id</th>
+      <td>9ced4ce7519049c0944147afb75a8ce3</td>
+      <td>0c673e046d824ec0ad0ebe012a0673e4</td>
+      <td>0c673e046d824ec0ad0ebe012a0673e4</td>
+    </tr>
+    <tr>
+      <th>answers_question_id</th>
+      <td>f6b9ca94aed04ba28256492708e74f60</td>
+      <td>f6b9ca94aed04ba28256492708e74f60</td>
+      <td>ca209b4e19064d8e9834b3ca1a3f5361</td>
+    </tr>
+    <tr>
+      <th>answers_date_added</th>
+      <td>2011-10-05 20:42:09</td>
+      <td>2011-10-18 17:39:49</td>
+      <td>2011-10-18 17:50:45</td>
+    </tr>
+    <tr>
+      <th>answers_body</th>
+      <td>&lt;p&gt;Basically three things: &lt;/p&gt;\n&lt;ol&gt;\n&lt;li&gt;Big...</td>
+      <td>&lt;p&gt;I would echo CriticalMass's answer. People ...</td>
+      <td>&lt;p&gt;It's a long road to becoming a judge, and n...</td>
+    </tr>
+    <tr>
+      <th>qa_duration</th>
+      <td>8</td>
+      <td>21</td>
+      <td>21</td>
+    </tr>
+    <tr>
+      <th>professionals_id</th>
+      <td>9ced4ce7519049c0944147afb75a8ce3</td>
+      <td>0c673e046d824ec0ad0ebe012a0673e4</td>
+      <td>0c673e046d824ec0ad0ebe012a0673e4</td>
+    </tr>
+    <tr>
+      <th>professionals_location</th>
+      <td>NaN</td>
+      <td>New York, New York</td>
+      <td>New York, New York</td>
+    </tr>
+    <tr>
+      <th>professionals_industry</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>professionals_headline</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>professionals_date_joined</th>
+      <td>2011-10-05 20:35:19 UTC+0000</td>
+      <td>2011-10-18 17:31:26 UTC+0000</td>
+      <td>2011-10-18 17:31:26 UTC+0000</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+<p>What industry do the professionals come from?</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">p_industry_cnt = professionals[<span class="string">'professionals_industry'</span>].value_counts()</span><br><span class="line"></span><br><span class="line">plt.figure(figsize=(<span class="number">10</span>,<span class="number">8</span>))</span><br><span class="line">sns.barplot(p_industry_cnt.index,</span><br><span class="line">           p_industry_cnt.values,</span><br><span class="line">           order=p_industry_cnt.iloc[:<span class="number">10</span>].index)</span><br><span class="line"></span><br><span class="line">plt.xticks(rotation=<span class="number">90</span>)</span><br><span class="line">plt.xlabel(<span class="string">'professionals_industry'</span>, fontsize=<span class="number">16</span>)</span><br><span class="line">plt.ylabel(<span class="string">'counts'</span>, fontsize=<span class="number">16</span>)</span><br><span class="line">plt.title(<span class="string">'counts vs professionals_industry'</span>, fontsize=<span class="number">18</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="/2019/02/27/CareerVillage_Recommand_alg/output_48_0.png" alt="png"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">p_industry_cnt.head(<span class="number">10</span>)</span><br></pre></td></tr></table></figure>
+<pre><code>Telecommunications                     3166
+Information Technology and Services    2109
+Computer Software                      1272
+Hospital and Health Care                862
+Higher Education                        800
+Accounting                              781
+Financial Services                      639
+Education Management                    593
+Marketing and Advertising               526
+Internet                                427
+Name: professionals_industry, dtype: int64
+</code></pre><h4 id="What-are-the-professionals’-headline"><a href="#What-are-the-professionals’-headline" class="headerlink" title="What are the professionals’ headline?"></a>What are the professionals’ headline?</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">p_cnt = professionals[<span class="string">'professionals_headline'</span>].value_counts()</span><br><span class="line"></span><br><span class="line">plt.figure(figsize=(<span class="number">10</span>,<span class="number">8</span>))</span><br><span class="line">sns.barplot(p_cnt.index, </span><br><span class="line">            p_cnt.values,</span><br><span class="line">            order=p_cnt.iloc[<span class="number">1</span>:<span class="number">11</span>].index) <span class="comment"># 1 to 11 because we remove NaNs</span></span><br><span class="line"></span><br><span class="line">plt.xticks(rotation=<span class="number">90</span>)</span><br><span class="line">plt.xlabel(<span class="string">'professionals_headline'</span>, fontsize=<span class="number">16</span>)</span><br><span class="line">plt.ylabel(<span class="string">'counts'</span>, fontsize=<span class="number">16</span>)</span><br><span class="line">plt.title(<span class="string">'counts vs professionals_headline'</span>, fontsize=<span class="number">18</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="/2019/02/27/CareerVillage_Recommand_alg/output_51_0.png" alt="png"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">p_cnt.head(<span class="number">10</span>)</span><br></pre></td></tr></table></figure>
+<pre><code>--                            325
+Solutions Manager             168
+Assurance Associate at PwC     88
+General Manager                70
+Software Engineer              67
+Project Manager                50
+Senior Associate at PwC        46
+Biomedical Engineer            42
+Tax Associate at PwC           39
+Attorney                       37
+Name: professionals_headline, dtype: int64
+</code></pre><h4 id="Who-are-our-biggest-heroes"><a href="#Who-are-our-biggest-heroes" class="headerlink" title="Who are our biggest heroes?"></a>Who are our biggest heroes?</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">qap_author_id = qap[<span class="string">'answers_author_id'</span>].value_counts()</span><br><span class="line"></span><br><span class="line">plt.figure(figsize=(<span class="number">10</span>,<span class="number">8</span>))</span><br><span class="line">sns.barplot(qap_author_id.index, </span><br><span class="line">            qap_author_id.values,</span><br><span class="line">            order=qap_author_id.iloc[:<span class="number">10</span>].index)</span><br><span class="line"></span><br><span class="line">plt.xticks(rotation=<span class="number">90</span>)</span><br><span class="line">plt.xlabel(<span class="string">'answers_author_id'</span>, fontsize=<span class="number">16</span>)</span><br><span class="line">plt.ylabel(<span class="string">'counts'</span>, fontsize=<span class="number">16</span>)</span><br><span class="line">plt.title(<span class="string">'counts vs answers_author_id'</span>, fontsize=<span class="number">18</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="/2019/02/27/CareerVillage_Recommand_alg/output_54_0.png" alt="png"></p>
+<h4 id="Where-do-the-professionals-come-from-Let’s-remove-the-city-to-get-a-better-context"><a href="#Where-do-the-professionals-come-from-Let’s-remove-the-city-to-get-a-better-context" class="headerlink" title="Where do the professionals come from? Let’s remove the city to get a better context."></a>Where do the professionals come from? Let’s remove the city to get a better context.</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">p = professionals.copy()</span><br><span class="line">p[<span class="string">'professionals_location'</span>] = p[<span class="string">'professionals_location'</span>].str.split(<span class="string">','</span>).str[<span class="number">1</span>]</span><br><span class="line"></span><br><span class="line">p_cnt = p[<span class="string">'professionals_location'</span>].value_counts()</span><br><span class="line"></span><br><span class="line">plt.figure(figsize=(<span class="number">10</span>,<span class="number">8</span>))</span><br><span class="line">sns.barplot(p_cnt.index, </span><br><span class="line">            p_cnt.values,</span><br><span class="line">            order=p_cnt.iloc[<span class="number">0</span>:<span class="number">10</span>].index) <span class="comment"># 1 to 11 because we remove NaNs</span></span><br><span class="line"></span><br><span class="line">plt.xticks(rotation=<span class="number">90</span>)</span><br><span class="line">plt.xlabel(<span class="string">'professionals_location'</span>, fontsize=<span class="number">16</span>)</span><br><span class="line">plt.ylabel(<span class="string">'counts'</span>, fontsize=<span class="number">16</span>)</span><br><span class="line">plt.title(<span class="string">'counts vs professionals_location'</span>, fontsize=<span class="number">18</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="/2019/02/27/CareerVillage_Recommand_alg/output_56_0.png" alt="png"></p>
+<h4 id="Let’s-check-for-active-professionals"><a href="#Let’s-check-for-active-professionals" class="headerlink" title="Let’s check for active professionals."></a>Let’s check for active professionals.</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">pa = merging(professionals, answers, <span class="string">"professionals_id"</span>, <span class="string">"answers_author_id"</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># get active authors</span></span><br><span class="line">pa[<span class="string">'ans_cnt'</span>] = <span class="number">1</span></span><br><span class="line">p = pa.groupby(<span class="string">'professionals_id'</span>)[<span class="string">'ans_cnt'</span>].sum()</span><br><span class="line">active_p = (p[p &gt; <span class="number">5</span>].index).tolist()</span><br><span class="line"><span class="comment">#active_p</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># get an updated list of authors</span></span><br><span class="line">pa[<span class="string">'answers_date_added'</span>] = pd.to_datetime(pa[<span class="string">'answers_date_added'</span>])</span><br><span class="line">recent_p = (pa[pa[<span class="string">'answers_date_added'</span>] &gt;= pd.datetime(<span class="number">2018</span>, <span class="number">1</span>, <span class="number">1</span>)][<span class="string">'professionals_id'</span>]).tolist()</span><br><span class="line"><span class="comment">#recent_p</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># get the intersection of both recent and active authors</span></span><br><span class="line">active_recent_p = list(set(recent_p) &amp; set(active_p))</span><br><span class="line"></span><br><span class="line">len(recent_p), len(active_p), len(active_recent_p)</span><br></pre></td></tr></table></figure>
+<pre><code>(17225, 1766, 831)
+</code></pre><p>We have 17,225 authors who have answered more than 5 questions and 1,766 authors who at least answered a question in year 2018 since the data was collected up to January 31st of 2019.</p>
+<h3 id="Exploring-professionals-and-answers"><a href="#Exploring-professionals-and-answers" class="headerlink" title="Exploring professionals and answers"></a>Exploring professionals and answers</h3><p>Let’s take a closer look at the professionals’ answers.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pa = merging(professionals, answers, <span class="string">'professionals_id'</span> , <span class="string">'answers_author_id'</span>)</span><br><span class="line">pa.head().T</span><br></pre></td></tr></table></figure>
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>0</th>
+      <th>1</th>
+      <th>2</th>
+      <th>3</th>
+      <th>4</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>professionals_id</th>
+      <td>9ced4ce7519049c0944147afb75a8ce3</td>
+      <td>0c673e046d824ec0ad0ebe012a0673e4</td>
+      <td>0c673e046d824ec0ad0ebe012a0673e4</td>
+      <td>0c673e046d824ec0ad0ebe012a0673e4</td>
+      <td>0c673e046d824ec0ad0ebe012a0673e4</td>
+    </tr>
+    <tr>
+      <th>professionals_location</th>
+      <td>NaN</td>
+      <td>New York, New York</td>
+      <td>New York, New York</td>
+      <td>New York, New York</td>
+      <td>New York, New York</td>
+    </tr>
+    <tr>
+      <th>professionals_industry</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>professionals_headline</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>professionals_date_joined</th>
+      <td>2011-10-05 20:35:19 UTC+0000</td>
+      <td>2011-10-18 17:31:26 UTC+0000</td>
+      <td>2011-10-18 17:31:26 UTC+0000</td>
+      <td>2011-10-18 17:31:26 UTC+0000</td>
+      <td>2011-10-18 17:31:26 UTC+0000</td>
+    </tr>
+    <tr>
+      <th>answers_id</th>
+      <td>7640a6e5d5224c8681cc58de860858f4</td>
+      <td>f18d7fca363d4b21a81e6683c5a86b96</td>
+      <td>5d670d5f8700402ab56bae609b06d02d</td>
+      <td>6d823a750e294c75b10fafbbbaf19855</td>
+      <td>63b7a06323ee4d578a37cf780debfa58</td>
+    </tr>
+    <tr>
+      <th>answers_author_id</th>
+      <td>9ced4ce7519049c0944147afb75a8ce3</td>
+      <td>0c673e046d824ec0ad0ebe012a0673e4</td>
+      <td>0c673e046d824ec0ad0ebe012a0673e4</td>
+      <td>0c673e046d824ec0ad0ebe012a0673e4</td>
+      <td>0c673e046d824ec0ad0ebe012a0673e4</td>
+    </tr>
+    <tr>
+      <th>answers_question_id</th>
+      <td>f6b9ca94aed04ba28256492708e74f60</td>
+      <td>e214acfbe6644d65b889a3268828db9d</td>
+      <td>9d211b99e17c46fbbaca03dc6b43f1c4</td>
+      <td>e978b437413048c183e3cb556f90a878</td>
+      <td>2f2378acab3f444199ee2b69d2d3626f</td>
+    </tr>
+    <tr>
+      <th>answers_date_added</th>
+      <td>2011-10-05 20:42:09 UTC+0000</td>
+      <td>2012-10-01 04:35:42 UTC+0000</td>
+      <td>2012-10-01 04:55:03 UTC+0000</td>
+      <td>2012-02-13 16:44:10 UTC+0000</td>
+      <td>2012-09-09 13:36:44 UTC+0000</td>
+    </tr>
+    <tr>
+      <th>answers_body</th>
+      <td>&lt;p&gt;Basically three things: &lt;/p&gt;\n&lt;ol&gt;\n&lt;li&gt;Big...</td>
+      <td>&lt;html&gt;&lt;head&gt;&lt;/head&gt;&lt;body&gt;&lt;p&gt;Hi Deja,&lt;/p&gt;\n&lt;p&gt;K...</td>
+      <td>&lt;html&gt;&lt;head&gt;&lt;/head&gt;&lt;body&gt;&lt;p&gt;It looks like this...</td>
+      <td>&lt;p&gt;&lt;em&gt;[Posted on behalf of a CareerVillage Pr...</td>
+      <td>&lt;p&gt;Yes, early in your career, employers certai...</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">before = pa.iloc[<span class="number">0</span>][<span class="string">'answers_body'</span>][:<span class="number">496</span>]</span><br><span class="line">before</span><br></pre></td></tr></table></figure>
+<pre><code>&quot;&lt;p&gt;Basically three things: &lt;/p&gt;\n&lt;ol&gt;\n&lt;li&gt;Big brand name employers or schools&lt;/li&gt;\n&lt;li&gt;Academic performance (GPA)&lt;/li&gt;\n&lt;li&gt;Evidence of leadership and people management skills&lt;/li&gt;\n&lt;/ol&gt;\n&lt;p&gt;&lt;strong&gt;1) Big Brand Name Employers or Schools&lt;/strong&gt;&lt;br&gt;\nIf you&#39;re an Associate making $150,o00 – $200,000 USD per year, your employer is probably billing you out to clients at $600,000 USD/year.  That&#39;s $50,000 USD/month. The client is going to want to know what and who they are getting for that kind of&quot;
+</code></pre><p>What a messy answers_body! Let’s clean it up by stripping html, remove punctuations and stopwords. Credits to Matteo Tosi for his regex pattern. Let’s go!</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">uri_re = <span class="string">r'(?i)\b((?:https?://|www\d&#123;0,3&#125;[.]|[a-z0-9.\-]+[.][a-z]&#123;2,4&#125;/)(?:[^\s()&lt;&gt;]+|\(([^\s()&lt;&gt;]+|(\([^\s()&lt;&gt;]+\)))*\))+(?:\(([^\s()&lt;&gt;]+|(\([^\s()&lt;&gt;]+\)))*\)|[^\s`!()\[\]&#123;&#125;;:\'".,&lt;&gt;?«»“”‘’]))'</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">strip_html</span><span class="params">(s)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> re.sub(uri_re, <span class="string">' '</span>, str(s))</span><br></pre></td></tr></table></figure>
+<p>The following block of code basically strips html, replace punctuations, convert all string to lowercase and remove stopwords!</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">pa[<span class="string">'answers_body'</span>] = pa[<span class="string">'answers_body'</span>].apply(strip_html)</span><br><span class="line">pa[<span class="string">'answers_body'</span>] = pa[<span class="string">'answers_body'</span>].str.replace(<span class="string">'[^\w\s\n\t]'</span>,<span class="string">' '</span>) <span class="comment"># replace punctuations</span></span><br><span class="line">pa[<span class="string">'answers_body'</span>] = pa[<span class="string">'answers_body'</span>].str.lower().str.split() <span class="comment"># convert all str to lowercase</span></span><br><span class="line">pa[<span class="string">'answers_body'</span>] = pa[<span class="string">'answers_body'</span>].apply(<span class="keyword">lambda</span> x: [item <span class="keyword">for</span> item <span class="keyword">in</span> x <span class="keyword">if</span> item <span class="keyword">not</span> <span class="keyword">in</span> stop]) <span class="comment"># remove stopwords</span></span><br><span class="line">pa[<span class="string">'answers_body'</span>] = pa[<span class="string">'answers_body'</span>].apply(<span class="string">' '</span>.join) <span class="comment"># convert list to str</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">after = pa.iloc[<span class="number">0</span>][<span class="string">'answers_body'</span>][:<span class="number">496</span>]</span><br><span class="line">after</span><br></pre></td></tr></table></figure>
+<pre><code>&#39;p basically three things p ol li big brand name employers schools li li academic performance gpa li li evidence leadership people management skills li ol p strong 1 big brand name employers schools strong br associate making 150 o00 200 000 usd per year employer probably billing clients 600 000 usd year 50 000 usd month client going want know getting kind money answer john jane doe bs dartmouth md yale mba harvard clients respond oh wow impressive comment makes easier get new clients say yes&#39;
+</code></pre><p>Comparing before and after, we did a grea job!</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">all_a = pa[<span class="string">'answers_body'</span>]</span><br><span class="line">cloud = WordCloud(width=<span class="number">1440</span>, height=<span class="number">1080</span>).generate(<span class="string">" "</span>.join(all_a.astype(str)))</span><br><span class="line">plt.figure(figsize=(<span class="number">20</span>, <span class="number">15</span>))</span><br><span class="line">plt.imshow(cloud)</span><br><span class="line">plt.axis(<span class="string">'off'</span>)</span><br></pre></td></tr></table></figure>
+<pre><code>(-0.5, 1439.5, 1079.5, -0.5)
+</code></pre><p><img src="/2019/02/27/CareerVillage_Recommand_alg/output_69_1.png" alt="png"></p>
+<h3 id="Exploring-tags"><a href="#Exploring-tags" class="headerlink" title="Exploring tags"></a>Exploring tags</h3><p>Let’s explore the tags by first merging the tags with tag_questions and then merge the tag of each question to our questions_answers_professionals and remove some not so useful features.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ttq = merging(tags, tag_questions, <span class="string">"tags_tag_id"</span>, <span class="string">"tag_questions_tag_id"</span>)</span><br><span class="line">qttq = merging(questions, ttq, <span class="string">"questions_id"</span>, <span class="string">"tag_questions_question_id"</span>)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">tqq_list = ttq[<span class="string">'tag_questions_question_id'</span>].tolist()</span><br><span class="line">questions.shape[<span class="number">0</span>], questions[~questions[<span class="string">'questions_id'</span>].isin(tqq_list)].shape[<span class="number">0</span>]</span><br></pre></td></tr></table></figure>
+<pre><code>(23931, 643)
+</code></pre><p>Out of the 23,931 questions, 643 questions do not have tags.</p>
+<p>What are some common and rare tags?</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">qttq.head().T</span><br></pre></td></tr></table></figure>
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>0</th>
+      <th>1</th>
+      <th>2</th>
+      <th>3</th>
+      <th>4</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>questions_id</th>
+      <td>332a511f1569444485cf7a7a556a5e54</td>
+      <td>332a511f1569444485cf7a7a556a5e54</td>
+      <td>332a511f1569444485cf7a7a556a5e54</td>
+      <td>eb80205482e4424cad8f16bc25aa2d9c</td>
+      <td>eb80205482e4424cad8f16bc25aa2d9c</td>
+    </tr>
+    <tr>
+      <th>questions_author_id</th>
+      <td>8f6f374ffd834d258ab69d376dd998f5</td>
+      <td>8f6f374ffd834d258ab69d376dd998f5</td>
+      <td>8f6f374ffd834d258ab69d376dd998f5</td>
+      <td>acccbda28edd4362ab03fb8b6fd2d67b</td>
+      <td>acccbda28edd4362ab03fb8b6fd2d67b</td>
+    </tr>
+    <tr>
+      <th>questions_date_added</th>
+      <td>2016-04-26 11:14:26 UTC+0000</td>
+      <td>2016-04-26 11:14:26 UTC+0000</td>
+      <td>2016-04-26 11:14:26 UTC+0000</td>
+      <td>2016-05-20 16:48:25 UTC+0000</td>
+      <td>2016-05-20 16:48:25 UTC+0000</td>
+    </tr>
+    <tr>
+      <th>questions_title</th>
+      <td>Teacher   career   question</td>
+      <td>Teacher   career   question</td>
+      <td>Teacher   career   question</td>
+      <td>I want to become an army officer. What can I d...</td>
+      <td>I want to become an army officer. What can I d...</td>
+    </tr>
+    <tr>
+      <th>questions_body</th>
+      <td>What  is  a  maths  teacher?   what  is  a  ma...</td>
+      <td>What  is  a  maths  teacher?   what  is  a  ma...</td>
+      <td>What  is  a  maths  teacher?   what  is  a  ma...</td>
+      <td>I am Priyanka from Bangalore . Now am in 10th ...</td>
+      <td>I am Priyanka from Bangalore . Now am in 10th ...</td>
+    </tr>
+    <tr>
+      <th>tags_tag_id</th>
+      <td>27490</td>
+      <td>21438</td>
+      <td>14147</td>
+      <td>27</td>
+      <td>18016</td>
+    </tr>
+    <tr>
+      <th>tags_tag_name</th>
+      <td>college</td>
+      <td>professor</td>
+      <td>lecture</td>
+      <td>military</td>
+      <td>army</td>
+    </tr>
+    <tr>
+      <th>tag_questions_tag_id</th>
+      <td>27490</td>
+      <td>21438</td>
+      <td>14147</td>
+      <td>27</td>
+      <td>18016</td>
+    </tr>
+    <tr>
+      <th>tag_questions_question_id</th>
+      <td>332a511f1569444485cf7a7a556a5e54</td>
+      <td>332a511f1569444485cf7a7a556a5e54</td>
+      <td>332a511f1569444485cf7a7a556a5e54</td>
+      <td>eb80205482e4424cad8f16bc25aa2d9c</td>
+      <td>eb80205482e4424cad8f16bc25aa2d9c</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">val_cnt = ttq[<span class="string">'tags_tag_name'</span>].value_counts()</span><br><span class="line">to_replace = val_cnt[val_cnt &lt;= <span class="number">5</span>].index.tolist()</span><br><span class="line"></span><br><span class="line">print(<span class="string">"Top 10 most popular tags:"</span>)</span><br><span class="line">print(val_cnt[:<span class="number">10</span>], <span class="string">'\n'</span>)</span><br><span class="line">print(<span class="string">"Number of unique tags: "</span>, ttq[<span class="string">'tags_tag_name'</span>].nunique())</span><br><span class="line">print(<span class="string">"Number of tags that occur 5 times and below: "</span>, len(to_replace))</span><br></pre></td></tr></table></figure>
+<pre><code>Top 10 most popular tags:
+college          3744
+career           1566
+medicine         1324
+engineering      1083
+business          989
+doctor            946
+college-major     783
+science           701
+nursing           692
+psychology        679
+Name: tags_tag_name, dtype: int64 
+
+Number of unique tags:  7091
+Number of tags that occur 5 times and below:  5659
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">top_10_val_cnt = val_cnt[:<span class="number">10</span>]</span><br><span class="line"></span><br><span class="line">fig = &#123;</span><br><span class="line">    <span class="string">"data"</span> : [</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="string">"values"</span> : top_10_val_cnt.values,</span><br><span class="line">            <span class="string">"labels"</span> : top_10_val_cnt.index,</span><br><span class="line">            <span class="string">"domain"</span> : &#123;<span class="string">"x"</span>: [<span class="number">0</span>, <span class="number">.48</span>]&#125;,</span><br><span class="line">            <span class="string">"marker"</span> : dict(colors=[<span class="string">"#f77b9c"</span> ,<span class="string">'#ab97db'</span>,  <span class="string">'#b0b1b2'</span>]),</span><br><span class="line">            <span class="string">"name"</span> : <span class="string">"tag count"</span>,</span><br><span class="line">            <span class="string">"hoverinfo"</span>:<span class="string">"label+percent+name"</span>,</span><br><span class="line">            <span class="string">"hole"</span>: <span class="number">.5</span>,        </span><br><span class="line">            <span class="string">"type"</span>: <span class="string">"pie"</span></span><br><span class="line">        &#125;</span><br><span class="line">    ],</span><br><span class="line">    <span class="string">"layout"</span>: &#123;</span><br><span class="line">      <span class="string">"title"</span>:<span class="string">"Tags and Count"</span>,</span><br><span class="line">      <span class="string">"annotations"</span>: [</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="string">"font"</span>: &#123;</span><br><span class="line">                    <span class="string">"size"</span>: <span class="number">20</span></span><br><span class="line">                &#125;,</span><br><span class="line">                <span class="string">"showarrow"</span>: <span class="keyword">False</span>,</span><br><span class="line">                <span class="string">"text"</span>: <span class="string">"Tags"</span>,</span><br><span class="line">                <span class="string">"x"</span>: <span class="number">0.2</span>,</span><br><span class="line">                <span class="string">"y"</span>: <span class="number">0.5</span></span><br><span class="line">            &#125;]</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">iplot(fig, filename=<span class="string">'plot-0'</span>)</span><br></pre></td></tr></table></figure>
+<div id="f0013d10-110a-46d9-8163-603faf4255c1" style="height: 525px; width: 100%;" class="plotly-graph-div"></div><script type="text/javascript">require(["plotly"], function(Plotly) { window.PLOTLYENV=window.PLOTLYENV || {};window.PLOTLYENV.BASE_URL="https://plot.ly";Plotly.newPlot("f0013d10-110a-46d9-8163-603faf4255c1", [{"domain": {"x": [0, 0.48]}, "hole": 0.5, "hoverinfo": "label+percent+name", "labels": ["college", "career", "medicine", "engineering", "business", "doctor", "college-major", "science", "nursing", "psychology"], "marker": {"colors": ["#f77b9c", "#ab97db", "#b0b1b2"]}, "name": "tag count", "values": [3744, 1566, 1324, 1083, 989, 946, 783, 701, 692, 679], "type": "pie", "uid": "ceb7b4fc-6e46-4608-bb7e-6f3c2275a615"}], {"annotations": [{"font": {"size": 20}, "showarrow": false, "text": "Tags", "x": 0.2, "y": 0.5}], "title": {"text": "Tags and Count"}}, {"showLink": false, "linkText": "Export to plot.ly", "plotlyServerURL": "https://plot.ly"})});</script><script type="text/javascript">window.addEventListener("resize", function(){window._Plotly.Plots.resize(document.getElementById("f0013d10-110a-46d9-8163-603faf4255c1"));});</script>
+
+
+What are some variations of #college?
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">search_pat</span><span class="params">(pat, tags_list)</span>:</span></span><br><span class="line">    sim_pat = []</span><br><span class="line">    <span class="keyword">for</span> s <span class="keyword">in</span> tags_list:</span><br><span class="line">        <span class="keyword">if</span> pat <span class="keyword">in</span> s:</span><br><span class="line">            sim_pat.append(s)    </span><br><span class="line">    <span class="keyword">return</span> sim_pat</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">tags_list = val_cnt.index.tolist()</span><br><span class="line">c_idx = []</span><br><span class="line">c_val = []</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> c <span class="keyword">in</span> search_pat(<span class="string">"college"</span>, tags_list)[:<span class="number">10</span>]:</span><br><span class="line">    c_idx.append(c)</span><br><span class="line">    c_val.append(val_cnt[c])</span><br><span class="line"></span><br><span class="line">df = pd.DataFrame(&#123;<span class="string">'variation of #college'</span>: c_idx,</span><br><span class="line">                   <span class="string">'counts'</span>: c_val&#125;)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">fig = &#123;</span><br><span class="line">    <span class="string">"data"</span>: [</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="string">"values"</span>: df[<span class="string">'counts'</span>],</span><br><span class="line">      <span class="string">"labels"</span>: df[<span class="string">'variation of #college'</span>],</span><br><span class="line">      <span class="string">"domain"</span>: &#123;<span class="string">"x"</span>: [<span class="number">0</span>, <span class="number">.48</span>]&#125;,</span><br><span class="line">      <span class="string">"marker"</span> : dict(colors=[<span class="string">"#f77b9c"</span>,<span class="string">"#efbc56"</span>, <span class="string">"#81a7e8"</span>, <span class="string">"#e295d0"</span>]),</span><br><span class="line">      <span class="string">"name"</span>: <span class="string">"count"</span>,</span><br><span class="line">      <span class="string">"hoverinfo"</span>:<span class="string">"label+percent+name"</span>,</span><br><span class="line">      <span class="string">"hole"</span>: <span class="number">.5</span>,        </span><br><span class="line">      <span class="string">"type"</span>: <span class="string">"pie"</span></span><br><span class="line">    &#125;],</span><br><span class="line">    <span class="string">"layout"</span>: &#123;</span><br><span class="line">      <span class="string">"title"</span>:<span class="string">"#college and Count"</span>,</span><br><span class="line">      <span class="string">"annotations"</span>: [</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="string">"font"</span>: &#123;</span><br><span class="line">                    <span class="string">"size"</span>: <span class="number">20</span></span><br><span class="line">                &#125;,</span><br><span class="line">                <span class="string">"showarrow"</span>: <span class="keyword">False</span>,</span><br><span class="line">                <span class="string">"text"</span>: <span class="string">"#college"</span>,</span><br><span class="line">                <span class="string">"x"</span>: <span class="number">0.16</span>,</span><br><span class="line">                <span class="string">"y"</span>: <span class="number">0.5</span></span><br><span class="line">            &#125;]</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">        </span><br><span class="line">iplot(fig, filename=<span class="string">'plot-1'</span>)</span><br></pre></td></tr></table></figure>
+
+<div id="31be4df4-f8ed-4133-b3b2-746f4f9af408" style="height: 525px; width: 100%;" class="plotly-graph-div"></div><script type="text/javascript">require(["plotly"], function(Plotly) { window.PLOTLYENV=window.PLOTLYENV || {};window.PLOTLYENV.BASE_URL="https://plot.ly";Plotly.newPlot("31be4df4-f8ed-4133-b3b2-746f4f9af408", [{"domain": {"x": [0, 0.48]}, "hole": 0.5, "hoverinfo": "label+percent+name", "labels": ["college", "college-major", "college-advice", "college-admissions", "college-bound", "college-selection", "college-majors", "colleges", "college-jobs", "college-minor"], "marker": {"colors": ["#f77b9c", "#efbc56", "#81a7e8", "#e295d0"]}, "name": "count", "values": [3744, 783, 371, 331, 188, 161, 143, 104, 102, 78], "type": "pie", "uid": "d0b98614-ed61-4fc8-9c4b-bff1a1a96dff"}], {"annotations": [{"font": {"size": 20}, "showarrow": false, "text": "#college", "x": 0.16, "y": 0.5}], "title": {"text": "#college and Count"}}, {"showLink": false, "linkText": "Export to plot.ly", "plotlyServerURL": "https://plot.ly"})});</script><script type="text/javascript">window.addEventListener("resize", function(){window._Plotly.Plots.resize(document.getElementById("31be4df4-f8ed-4133-b3b2-746f4f9af408"));});</script>
+
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ss = search_pat(<span class="string">"college"</span>, tags_list)</span><br><span class="line">len(ss)</span><br></pre></td></tr></table></figure>
+
+    238
+
+
+
+**敲黑板**college is the most popular tag. That might just be an abuse of the tag which does not give a good indication of the nature of the question but its variation does! We should remove college tag from questions with multiple tags.
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">multi_single_tags</span><span class="params">(df, tag)</span>:</span></span><br><span class="line">    without_tag = df[df[<span class="string">'tags_tag_name'</span>] != tag][<span class="string">'tag_questions_question_id'</span>].tolist()</span><br><span class="line">    with_tag = df[df[<span class="string">'tags_tag_name'</span>] == tag][<span class="string">'tag_questions_question_id'</span>].tolist()</span><br><span class="line">    </span><br><span class="line">    only_tag = df[~df[<span class="string">'tag_questions_question_id'</span>].isin(without_tag)][<span class="string">'tag_questions_question_id'</span>].tolist() <span class="comment">#这里好绕：这里是用id去判断，去掉了是#college的条目，id就不在剩下的条目里面的，所以这些id就是只有college的id。</span></span><br><span class="line"></span><br><span class="line">    multiple_tags = list(set(with_tag) - set(only_tag))</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> multiple_tags, only_tag</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">remove_multiple</span><span class="params">(df, tag, ids_multiple, ids_single)</span>:</span></span><br><span class="line">    df = df[((df[<span class="string">'questions_id'</span>].isin(ids_multiple)) &amp; (df[<span class="string">'tags_tag_name'</span>] != tag)) | </span><br><span class="line">             (df[<span class="string">'tags_tag_name'</span>] != tag) |</span><br><span class="line">             (df[<span class="string">'questions_id'</span>].isin(ids_single))]</span><br><span class="line">    <span class="keyword">return</span> df</span><br></pre></td></tr></table></figure>
+
+After generating a list of questions with multiple tags that contain the tag college and a list of questions with only the tag college, we proceed to remove those entries that have multiple tags that contain college.
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">college_ids_multiple, college_ids_single = multi_single_tags(ttq, <span class="string">"college"</span>)</span><br><span class="line"></span><br><span class="line">print(<span class="string">'Before removing multiple tags containing #college, we have &#123;&#125; questions.'</span>.format(qttq.shape[<span class="number">0</span>]))</span><br><span class="line"></span><br><span class="line">qttq = remove_multiple(qttq, <span class="string">"college"</span>, college_ids_multiple, college_ids_single)</span><br><span class="line"></span><br><span class="line">print(<span class="string">'After removing multiple tags containing #college, we are left with &#123;&#125; questions.'</span>.format(qttq.shape[<span class="number">0</span>]))</span><br></pre></td></tr></table></figure>
+
+    Before removing multiple tags containing #college, we have 76553 questions.
+    After removing multiple tags containing #college, we are left with 73033 questions.
+
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">combine_tags</span><span class="params">(df)</span>:</span></span><br><span class="line">    grouped = df.groupby(<span class="string">'questions_id'</span>)[<span class="string">'tags_tag_name'</span>].apply(<span class="keyword">lambda</span> x: <span class="string">"%s"</span> % <span class="string">', '</span>.join(x))</span><br><span class="line">    df_c = merging(questions, pd.DataFrame(grouped), <span class="string">"questions_id"</span>, <span class="string">"questions_id"</span>)</span><br><span class="line">    <span class="keyword">return</span> df_c</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">combine_qttq = combine_tags(qttq)</span><br><span class="line">combine_qttq.head().T</span><br></pre></td></tr></table></figure>
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>0</th>
+      <th>1</th>
+      <th>2</th>
+      <th>3</th>
+      <th>4</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>questions_id</th>
+      <td>332a511f1569444485cf7a7a556a5e54</td>
+      <td>eb80205482e4424cad8f16bc25aa2d9c</td>
+      <td>4ec31632938a40b98909416bdd0decff</td>
+      <td>2f6a9a99d9b24e5baa50d40d0ba50a75</td>
+      <td>5af8880460c141dbb02971a1a8369529</td>
+    </tr>
+    <tr>
+      <th>questions_author_id</th>
+      <td>8f6f374ffd834d258ab69d376dd998f5</td>
+      <td>acccbda28edd4362ab03fb8b6fd2d67b</td>
+      <td>f2c179a563024ccc927399ce529094b5</td>
+      <td>2c30ffba444e40eabb4583b55233a5a4</td>
+      <td>aa9eb1a2ab184ebbb00dc01ab663428a</td>
+    </tr>
+    <tr>
+      <th>questions_date_added</th>
+      <td>2016-04-26 11:14:26 UTC+0000</td>
+      <td>2016-05-20 16:48:25 UTC+0000</td>
+      <td>2017-02-08 19:13:38 UTC+0000</td>
+      <td>2017-09-01 14:05:32 UTC+0000</td>
+      <td>2017-09-01 02:36:54 UTC+0000</td>
+    </tr>
+    <tr>
+      <th>questions_title</th>
+      <td>Teacher   career   question</td>
+      <td>I want to become an army officer. What can I d...</td>
+      <td>Will going abroad for your first job increase ...</td>
+      <td>To become a specialist in business  management...</td>
+      <td>Are there any scholarships out there for stude...</td>
+    </tr>
+    <tr>
+      <th>questions_body</th>
+      <td>What  is  a  maths  teacher?   what  is  a  ma...</td>
+      <td>I am Priyanka from Bangalore . Now am in 10th ...</td>
+      <td>I'm planning on going abroad for my first job....</td>
+      <td>i hear business management is a hard way to ge...</td>
+      <td>I'm trying to find scholarships for first year...</td>
+    </tr>
+    <tr>
+      <th>tags_tag_name</th>
+      <td>professor, lecture</td>
+      <td>military, army</td>
+      <td>working-abroad, overseas</td>
+      <td>business, networking</td>
+      <td>scholarships, firstgeneration, highschoolsenior</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># qapttq = merging(qap, ttq, "questions_id", "tag_questions_question_id")</span></span><br><span class="line">qapttq = merging(answers, combine_qttq, <span class="string">"answers_question_id"</span>, <span class="string">"questions_id"</span>)</span><br><span class="line">qapttq.head().T</span><br></pre></td></tr></table></figure>
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>0</th>
+      <th>1</th>
+      <th>2</th>
+      <th>3</th>
+      <th>4</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>answers_id</th>
+      <td>4e5f01128cae4f6d8fd697cec5dca60c</td>
+      <td>ada720538c014e9b8a6dceed09385ee3</td>
+      <td>eaa66ef919bc408ab5296237440e323f</td>
+      <td>1a6b3749d391486c9e371fbd1e605014</td>
+      <td>5229c514000446d582050f89ebd4e184</td>
+    </tr>
+    <tr>
+      <th>answers_author_id</th>
+      <td>36ff3b3666df400f956f8335cf53e09e</td>
+      <td>2aa47af241bf42a4b874c453f0381bd4</td>
+      <td>cbd8f30613a849bf918aed5c010340be</td>
+      <td>7e72a630c303442ba92ff00e8ea451df</td>
+      <td>17802d94699140b0a0d2995f30c034c6</td>
+    </tr>
+    <tr>
+      <th>answers_question_id</th>
+      <td>332a511f1569444485cf7a7a556a5e54</td>
+      <td>eb80205482e4424cad8f16bc25aa2d9c</td>
+      <td>eb80205482e4424cad8f16bc25aa2d9c</td>
+      <td>4ec31632938a40b98909416bdd0decff</td>
+      <td>2f6a9a99d9b24e5baa50d40d0ba50a75</td>
+    </tr>
+    <tr>
+      <th>answers_date_added</th>
+      <td>2016-04-29 19:40:14 UTC+0000</td>
+      <td>2018-05-01 14:19:08 UTC+0000</td>
+      <td>2018-05-02 02:41:02 UTC+0000</td>
+      <td>2017-05-10 19:00:47 UTC+0000</td>
+      <td>2017-10-13 22:07:33 UTC+0000</td>
+    </tr>
+    <tr>
+      <th>answers_body</th>
+      <td>&lt;p&gt;Hi!&lt;/p&gt;\n&lt;p&gt;You are asking a very interesti...</td>
+      <td>&lt;p&gt;Hi. I joined the Army after I attended coll...</td>
+      <td>&lt;p&gt;Dear Priyanka,&lt;/p&gt;&lt;p&gt;Greetings! I have answ...</td>
+      <td>&lt;p&gt;I work for a global company who values high...</td>
+      <td>I agree with Denise. Every single job I've had...</td>
+    </tr>
+    <tr>
+      <th>questions_id</th>
+      <td>332a511f1569444485cf7a7a556a5e54</td>
+      <td>eb80205482e4424cad8f16bc25aa2d9c</td>
+      <td>eb80205482e4424cad8f16bc25aa2d9c</td>
+      <td>4ec31632938a40b98909416bdd0decff</td>
+      <td>2f6a9a99d9b24e5baa50d40d0ba50a75</td>
+    </tr>
+    <tr>
+      <th>questions_author_id</th>
+      <td>8f6f374ffd834d258ab69d376dd998f5</td>
+      <td>acccbda28edd4362ab03fb8b6fd2d67b</td>
+      <td>acccbda28edd4362ab03fb8b6fd2d67b</td>
+      <td>f2c179a563024ccc927399ce529094b5</td>
+      <td>2c30ffba444e40eabb4583b55233a5a4</td>
+    </tr>
+    <tr>
+      <th>questions_date_added</th>
+      <td>2016-04-26 11:14:26 UTC+0000</td>
+      <td>2016-05-20 16:48:25 UTC+0000</td>
+      <td>2016-05-20 16:48:25 UTC+0000</td>
+      <td>2017-02-08 19:13:38 UTC+0000</td>
+      <td>2017-09-01 14:05:32 UTC+0000</td>
+    </tr>
+    <tr>
+      <th>questions_title</th>
+      <td>Teacher   career   question</td>
+      <td>I want to become an army officer. What can I d...</td>
+      <td>I want to become an army officer. What can I d...</td>
+      <td>Will going abroad for your first job increase ...</td>
+      <td>To become a specialist in business  management...</td>
+    </tr>
+    <tr>
+      <th>questions_body</th>
+      <td>What  is  a  maths  teacher?   what  is  a  ma...</td>
+      <td>I am Priyanka from Bangalore . Now am in 10th ...</td>
+      <td>I am Priyanka from Bangalore . Now am in 10th ...</td>
+      <td>I'm planning on going abroad for my first job....</td>
+      <td>i hear business management is a hard way to ge...</td>
+    </tr>
+    <tr>
+      <th>tags_tag_name</th>
+      <td>professor, lecture</td>
+      <td>military, army</td>
+      <td>military, army</td>
+      <td>working-abroad, overseas</td>
+      <td>business, networking</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">qapttq.shape[<span class="number">0</span>], combine_qttq.shape[<span class="number">0</span>]</span><br></pre></td></tr></table></figure>
+<pre><code>(49437, 23288)
+</code></pre><p>We are now left with 23,242 unique questions and 49,323 rows - indicating some questions receive multiple answers.</p>
+<h3 id="Questions"><a href="#Questions" class="headerlink" title="Questions"></a>Questions</h3><p>Let’s explore the questions body by looking at the most common bigrams. Here, I remove some “noise” that are common words, polite expressions, and others deem as unhelpful.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">noise = [<span class="string">'school'</span>,<span class="string">'would'</span>,<span class="string">'like'</span>, <span class="string">'want'</span>, <span class="string">'dont'</span>, </span><br><span class="line">         <span class="string">'become'</span>,<span class="string">'sure'</span>,<span class="string">'go'</span>, <span class="string">'get'</span>, <span class="string">'college'</span>, </span><br><span class="line">         <span class="string">'career'</span>, <span class="string">'wanted'</span>, <span class="string">'im'</span>, <span class="string">'ing'</span>, <span class="string">'ive'</span>,</span><br><span class="line">         <span class="string">'know'</span>, <span class="string">'high'</span>, <span class="string">'becom'</span>, <span class="string">'job'</span>, <span class="string">'best'</span>,</span><br><span class="line">         <span class="string">'day'</span>, <span class="string">'hi'</span>, <span class="string">'name'</span>, <span class="string">'help'</span>, <span class="string">'people'</span>,</span><br><span class="line">         <span class="string">'year'</span>, <span class="string">'years'</span>, <span class="string">'next'</span>, <span class="string">'interested'</span>, </span><br><span class="line">         <span class="string">'question'</span>, <span class="string">'questions'</span>, <span class="string">'take'</span>, <span class="string">'even'</span>,</span><br><span class="line">         <span class="string">'though'</span>, <span class="string">'please'</span>, <span class="string">'tell'</span>]</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">another_process_text</span><span class="params">(df, col)</span>:</span></span><br><span class="line">    df[col] = df[col].str.replace(<span class="string">'[^\w\s]'</span>,<span class="string">''</span>) <span class="comment"># replacing punctuations</span></span><br><span class="line">    df[col] = df[col].str.replace(<span class="string">'-'</span>,<span class="string">' '</span>) <span class="comment"># replacing dashes</span></span><br><span class="line">    df[col] = df[col].str.replace(<span class="string">'\d+'</span>,<span class="string">''</span>) <span class="comment"># replacing digits</span></span><br><span class="line">    df[col] = df[col].str.lower().str.split() <span class="comment"># convert all str to lowercase    </span></span><br><span class="line">    df[col] = df[col].apply(<span class="keyword">lambda</span> x: [item <span class="keyword">for</span> item <span class="keyword">in</span> x <span class="keyword">if</span> item <span class="keyword">not</span> <span class="keyword">in</span> stop]) <span class="comment"># remove stopwords</span></span><br><span class="line">    df[col] = df[col].apply(<span class="keyword">lambda</span> x: [item <span class="keyword">for</span> item <span class="keyword">in</span> x <span class="keyword">if</span> item <span class="keyword">not</span> <span class="keyword">in</span> noise])</span><br><span class="line">    df[col] = df[col].apply(<span class="string">' '</span>.join) <span class="comment"># convert list to str</span></span><br><span class="line">    <span class="keyword">return</span> df</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">generate_ngrams</span><span class="params">(text, N)</span>:</span></span><br><span class="line">    grams = [text[i:i+N] <span class="keyword">for</span> i <span class="keyword">in</span> range(len(text)-N+<span class="number">1</span>)]</span><br><span class="line">    grams = [<span class="string">" "</span>.join(b) <span class="keyword">for</span> b <span class="keyword">in</span> grams]</span><br><span class="line">    <span class="keyword">return</span> grams</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df = another_process_text(questions, <span class="string">'questions_body'</span>)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df[<span class="string">'bigrams'</span>] = df[<span class="string">'questions_body'</span>].apply(<span class="keyword">lambda</span> x : generate_ngrams(x.split(), <span class="number">2</span>))</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">all_bigrams = []</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> each <span class="keyword">in</span> df[<span class="string">'bigrams'</span>]:</span><br><span class="line">    all_bigrams.extend(each)</span><br><span class="line">    </span><br><span class="line">t1 = Counter(all_bigrams).most_common(<span class="number">20</span>)</span><br><span class="line">x1 = [a[<span class="number">0</span>] <span class="keyword">for</span> a <span class="keyword">in</span> t1]</span><br><span class="line">y1 = [a[<span class="number">1</span>] <span class="keyword">for</span> a <span class="keyword">in</span> t1]</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">fig, axes = plt.subplots(figsize=(<span class="number">15</span>,<span class="number">10</span>))</span><br><span class="line"></span><br><span class="line">bar = sns.barplot(y=x1, x=y1)</span><br><span class="line">bar.set(ylabel=<span class="string">'Most frequent bigrams'</span>, xlabel=<span class="string">'Frequency'</span>)</span><br></pre></td></tr></table></figure>
+<pre><code>[Text(0,0.5,&#39;Most frequent bigrams&#39;), Text(0.5,0,&#39;Frequency&#39;)]
+</code></pre><p><img src="/2019/02/27/CareerVillage_Recommand_alg/output_99_1.png" alt="png"></p>
+<h3 id="Building-tag-chart"><a href="#Building-tag-chart" class="headerlink" title="Building tag_chart"></a>Building tag_chart</h3><p>The below function takes in a tag and returns the professionals who have answered the most questions in the tag category.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">tag_chart</span><span class="params">(df, what_tag, top)</span>:</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    df: the DataFrame</span></span><br><span class="line"><span class="string">    what_tag: tags we are looking for</span></span><br><span class="line"><span class="string">    top: number of professionals in the chart after filtering</span></span><br><span class="line"><span class="string">    """</span>    </span><br><span class="line">    mod_df = df[[<span class="string">'answers_author_id'</span>, <span class="string">'tags_tag_name'</span>]].copy()</span><br><span class="line">    mod_df[<span class="string">'tag_count'</span>] = <span class="number">1</span></span><br><span class="line">    grouped = mod_df.groupby([<span class="string">'tags_tag_name'</span>, <span class="string">'answers_author_id'</span>]).sum()</span><br><span class="line">    grouped_df = (grouped.reset_index()</span><br><span class="line">                         .sort_values([<span class="string">'tags_tag_name'</span>, <span class="string">'tag_count'</span>], ascending=<span class="keyword">False</span>)</span><br><span class="line">                         .set_index([<span class="string">'answers_author_id'</span>]))</span><br><span class="line"></span><br><span class="line">    grouped_filter = grouped_df[grouped_df[<span class="string">'tags_tag_name'</span>] == what_tag][<span class="string">'tag_count'</span>].reset_index()</span><br><span class="line">    <span class="keyword">return</span> grouped_filter.head(top)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># remerge our qapttq since we modified the tags in the previous one</span></span><br><span class="line">qapttq = merging(qap, ttq, <span class="string">"questions_id"</span>, <span class="string">"tag_questions_question_id"</span>)</span><br><span class="line"></span><br><span class="line">tag_chart(qapttq, <span class="string">"college"</span>, <span class="number">5</span>), tag_chart(qapttq, <span class="string">"engineering"</span>, <span class="number">5</span>)</span><br></pre></td></tr></table></figure>
+<pre><code>(                  answers_author_id  tag_count
+ 0  36ff3b3666df400f956f8335cf53e09e        693
+ 1  05ab77d4c6a141b999044ebbf5415b0d        171
+ 2  58fa5e95fe9e480a9349bbb1d7faaddb        115
+ 3  be5d23056fcb4f1287c823beec5291e1        111
+ 4  a1006e6a58a0447592e2435caa230f78         70,
+                   answers_author_id  tag_count
+ 0  c3b4e11154f74a858779be7ba9b6f00c        194
+ 1  36ff3b3666df400f956f8335cf53e09e        151
+ 2  81a594b683d54e6dbb4b04ea00a5e25b        118
+ 3  58fa5e95fe9e480a9349bbb1d7faaddb         58
+ 4  e2b4c84bf1ca4aea9b108869692d8017         51)
+</code></pre><p>Hero “36ff3b3666df400f956f8335cf53e09e” has answered a total of 693 questions under the tag “college” while hero “c3b4e11154f74a858779be7ba9b6f00c” has answered a total of 194 questions under the tag “engineering”.</p>
+<h3 id="Content-Based-Recommender"><a href="#Content-Based-Recommender" class="headerlink" title="Content Based Recommender"></a>Content Based Recommender</h3><p>Ideally, we would like to associate a question to professionals who have been actively answering similar questions.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">combine_authors</span><span class="params">(df)</span>:</span></span><br><span class="line">    c = df.groupby(<span class="string">'questions_id'</span>)[<span class="string">'answers_author_id'</span>].apply(list)</span><br><span class="line">    df_c = merging(df, pd.DataFrame(c), <span class="string">'questions_id'</span>, <span class="string">'questions_id'</span>)</span><br><span class="line">    df_c.drop(<span class="string">'answers_author_id_x'</span>, axis=<span class="number">1</span>, inplace=<span class="keyword">True</span>)</span><br><span class="line">    df_c[<span class="string">'answers_author_id_y'</span>] = df_c[<span class="string">'answers_author_id_y'</span>].apply(<span class="string">', '</span>.join)</span><br><span class="line">    df_c.drop_duplicates(inplace=<span class="keyword">True</span>)</span><br><span class="line">    <span class="keyword">return</span> df_c</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">qa_sub = qa[[<span class="string">'questions_title'</span>, <span class="string">'questions_body'</span>, <span class="string">'answers_author_id'</span>, <span class="string">'questions_id'</span>]].copy()</span><br><span class="line"></span><br><span class="line">qa_cbr = combine_authors(qa_sub)</span><br><span class="line"></span><br><span class="line">authors_link = qa_cbr[[<span class="string">'questions_id'</span>, <span class="string">'answers_author_id_y'</span>]].copy()</span><br><span class="line"></span><br><span class="line">qa_cbr.drop(<span class="string">'answers_author_id_y'</span>, axis=<span class="number">1</span>, inplace=<span class="keyword">True</span>)</span><br><span class="line"></span><br><span class="line">qa_cbr.head()</span><br></pre></td></tr></table></figure>
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>questions_title</th>
+      <th>questions_body</th>
+      <th>questions_id</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>What is the typical compensation range for a f...</td>
+      <td>Please tell us what the common compensation ra...</td>
+      <td>edb8c179c5d64c9cb812a59a32045f55</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>What do top tier consulting firms look for in ...</td>
+      <td>Please explain the factors consulting firms lo...</td>
+      <td>f6b9ca94aed04ba28256492708e74f60</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>What are the top tier management consulting fi...</td>
+      <td>Which companies are the top-tier? #consulting</td>
+      <td>4b995e60b99d4ee18346e893e007cb8f</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>What is the entry-level salary at a consulting...</td>
+      <td>I'm interested in getting benchmarks on salari...</td>
+      <td>dd363c09e4744c4b977499f215289b35</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>What is the path to get from high school to be...</td>
+      <td>What are some of the paths to getting from beg...</td>
+      <td>ca209b4e19064d8e9834b3ca1a3f5361</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># hacky way to remove authors who are not linked</span></span><br><span class="line">authors_link = authors_link[authors_link[<span class="string">'answers_author_id_y'</span>].str.len() &gt; <span class="number">33</span>] </span><br><span class="line"></span><br><span class="line">authors_link_dic = authors_link.set_index(<span class="string">'questions_id'</span>).T.to_dict()</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">qa_cbr = process_text(qa_cbr, <span class="string">"questions_title"</span>) </span><br><span class="line">qa_cbr = process_text(qa_cbr, <span class="string">"questions_body"</span>) </span><br><span class="line"></span><br><span class="line">qa_cbr.head()</span><br></pre></td></tr></table></figure>
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>questions_title</th>
+      <th>questions_body</th>
+      <th>questions_id</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>typical compensation range firstyear investmen...</td>
+      <td>please tell us common compensation range compo...</td>
+      <td>edb8c179c5d64c9cb812a59a32045f55</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>top tier consulting firms look resumes</td>
+      <td>please explain factors consulting firms look r...</td>
+      <td>f6b9ca94aed04ba28256492708e74f60</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>top tier management consulting firms</td>
+      <td>companies toptier consulting</td>
+      <td>4b995e60b99d4ee18346e893e007cb8f</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>entrylevel salary consulting company</td>
+      <td>im interested getting benchmarks salaries univ...</td>
+      <td>dd363c09e4744c4b977499f215289b35</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>path get high school becoming judge</td>
+      <td>paths getting beginning high school becoming j...</td>
+      <td>ca209b4e19064d8e9834b3ca1a3f5361</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+<p>The following recommender system was the work of Rounak Banik. A huge thanks (and credits) to Rounak!</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">tf = TfidfVectorizer(analyzer=<span class="string">'word'</span>,</span><br><span class="line">                     ngram_range=(<span class="number">1</span>,<span class="number">2</span>),</span><br><span class="line">                     min_df=<span class="number">3</span>,</span><br><span class="line">                     max_df=<span class="number">0.9</span>,</span><br><span class="line">                     stop_words=<span class="string">'english'</span>)</span><br><span class="line"></span><br><span class="line">tfidf_matrix = tf.fit_transform(qa_cbr[<span class="string">'questions_body'</span>])</span><br><span class="line">tfidf_matrix.shape</span><br></pre></td></tr></table></figure>
+<pre><code>(23110, 27223)
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cosine_sim = linear_kernel(tfidf_matrix, tfidf_matrix)<span class="comment">## 输出 （23110 ，23110 ），计算questions_body 两两间的余弦相似度</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># qa_cbr = qa_cbr.reset_index()</span></span><br><span class="line">q_titles = qa_cbr[<span class="string">'questions_title'</span>]</span><br><span class="line">q_ids = qa_cbr[<span class="string">'questions_id'</span>]</span><br><span class="line">indices = pd.Series(qa_cbr.index, index=qa_cbr[<span class="string">'questions_title'</span>])</span><br><span class="line"></span><br><span class="line">qa_cbr.head()</span><br></pre></td></tr></table></figure>
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>questions_title</th>
+      <th>questions_body</th>
+      <th>questions_id</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>typical compensation range firstyear investmen...</td>
+      <td>please tell us common compensation range compo...</td>
+      <td>edb8c179c5d64c9cb812a59a32045f55</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>top tier consulting firms look resumes</td>
+      <td>please explain factors consulting firms look r...</td>
+      <td>f6b9ca94aed04ba28256492708e74f60</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>top tier management consulting firms</td>
+      <td>companies toptier consulting</td>
+      <td>4b995e60b99d4ee18346e893e007cb8f</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>entrylevel salary consulting company</td>
+      <td>im interested getting benchmarks salaries univ...</td>
+      <td>dd363c09e4744c4b977499f215289b35</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>path get high school becoming judge</td>
+      <td>paths getting beginning high school becoming j...</td>
+      <td>ca209b4e19064d8e9834b3ca1a3f5361</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_recommendations_idx</span><span class="params">(title)</span>:</span></span><br><span class="line">    idx = indices[title]</span><br><span class="line">    sim_scores = list(enumerate(cosine_sim[idx]))</span><br><span class="line">    sim_scores = sorted(sim_scores, key=<span class="keyword">lambda</span> x: x[<span class="number">1</span>], reverse=<span class="keyword">True</span>)</span><br><span class="line">    sim_scores = sim_scores[<span class="number">1</span>:<span class="number">31</span>]</span><br><span class="line">    q_indices = [i[<span class="number">0</span>] <span class="keyword">for</span> i <span class="keyword">in</span> sim_scores]</span><br><span class="line">    <span class="keyword">return</span> q_indices</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_recommendations</span><span class="params">(title)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> q_titles.iloc[get_recommendations_idx(title)]</span><br><span class="line">    </span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_questions_id</span><span class="params">(title)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> q_ids.iloc[get_recommendations_idx(title)]</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">get_recommendations(<span class="string">'want become army officer become army officer'</span>).head(<span class="number">10</span>)</span><br></pre></td></tr></table></figure>
+<pre><code>5343                                        get us marines
+5973                                                  army
+8452                                                 tenth
+15066                                  become army officer
+22254                                              go army
+13175             become army officer good become engineer
+2651                                        us army ranger
+6680                   anyone provide information tes army
+6864                        want build career army class x
+3503     way get military paid education policing educa...
+Name: questions_title, dtype: object
+</code></pre><h4 id="Undeniably-they-are-related-to-army"><a href="#Undeniably-they-are-related-to-army" class="headerlink" title="Undeniably, they are related to army!"></a>Undeniably, they are related to army!</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">get_questions_id(<span class="string">'want become army officer become army officer'</span>).head(<span class="number">10</span>)</span><br></pre></td></tr></table></figure>
+<pre><code>5343     4a348c16906e4ade96619f609f8d5df8
+5973     552df6150cf842578f7bc7ab45ed3d05
+8452     d314b89b2efa4c81ae9e7d1029ab4ee8
+15066    783ff517ce5f4e76a00f78ef0ade5b75
+22254    578c73c0ce8a46578d6b1f54eeb28cb9
+13175    3e9b474c11654285b3e935e8b9421402
+2651     73d43b7affa14b99aa1e8439e2d8bce8
+6680     dbdada7ef83c4f8fae28debb7a81287d
+6864     cb7c51b7f145491085b10817ae23e92b
+3503     5945c9dfd5b44c43a64f390e5bc2f776
+Name: questions_id, dtype: object
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_sim_authors</span><span class="params">(qids)</span>:</span></span><br><span class="line">    sim_authors = []</span><br><span class="line">    <span class="keyword">for</span> qid <span class="keyword">in</span> qids:</span><br><span class="line">        <span class="keyword">if</span> qid <span class="keyword">in</span> authors_link_dic:</span><br><span class="line">            sim_authors.append(authors_link_dic[qid][<span class="string">'answers_author_id_y'</span>])</span><br><span class="line">    <span class="keyword">return</span> sim_authors</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">qids = get_questions_id(<span class="string">'want become army officer become army officer'</span>).tolist()</span><br><span class="line"></span><br><span class="line">qa[qa[<span class="string">'questions_id'</span>].isin(qids)].head()</span><br></pre></td></tr></table></figure>
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>questions_id</th>
+      <th>questions_author_id</th>
+      <th>questions_date_added</th>
+      <th>questions_title</th>
+      <th>questions_body</th>
+      <th>answers_id</th>
+      <th>answers_author_id</th>
+      <th>answers_question_id</th>
+      <th>answers_date_added</th>
+      <th>answers_body</th>
+      <th>qa_duration</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>40995</th>
+      <td>34ec5b3dfe824cbb92ec3b331168abbc</td>
+      <td>0c673e046d824ec0ad0ebe012a0673e4</td>
+      <td>2011-12-29 04:57:02</td>
+      <td>What is the career path to a successful career...</td>
+      <td>I'm interested in exploring a career in the mi...</td>
+      <td>ced5d4157c7744c1b751b4384c565192</td>
+      <td>5f77e0a2c3a144dda336df2294a64530</td>
+      <td>34ec5b3dfe824cbb92ec3b331168abbc</td>
+      <td>2011-12-30 03:41:02</td>
+      <td>&lt;p&gt;The opinions expressed in the comments belo...</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>40992</th>
+      <td>34ec5b3dfe824cbb92ec3b331168abbc</td>
+      <td>0c673e046d824ec0ad0ebe012a0673e4</td>
+      <td>2011-12-29 04:57:02</td>
+      <td>What is the career path to a successful career...</td>
+      <td>I'm interested in exploring a career in the mi...</td>
+      <td>538cd3dbb2a146dc86e405609d0493e0</td>
+      <td>c7de3fcfbe384881899d1a38b0b1c532</td>
+      <td>34ec5b3dfe824cbb92ec3b331168abbc</td>
+      <td>2014-12-30 19:33:15</td>
+      <td>&lt;p&gt;My best advice would be to visit a recruite...</td>
+      <td>1097</td>
+    </tr>
+    <tr>
+      <th>18446</th>
+      <td>73d43b7affa14b99aa1e8439e2d8bce8</td>
+      <td>c81017b2723146338246f62253a16732</td>
+      <td>2015-10-20 18:31:03</td>
+      <td>What should I do before being a U.S Army Ranger?</td>
+      <td>I am in 6th grade and want to be a U.S Army Ra...</td>
+      <td>9c4ad076b63c4dd2ad26d27739281320</td>
+      <td>369f1c8646b649f6997eae7809696bd5</td>
+      <td>73d43b7affa14b99aa1e8439e2d8bce8</td>
+      <td>2015-10-20 20:04:06</td>
+      <td>&lt;p&gt;Hi,\nYou have plenty of time but I would su...</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>31241</th>
+      <td>b05228bfef4940bab6eec062b64ecbc8</td>
+      <td>8d2c495f3e9e41228139a1a1533e3b85</td>
+      <td>2015-10-22 17:07:53</td>
+      <td>How long do you have to go to school to be in ...</td>
+      <td>Because I want to serve for my country like my...</td>
+      <td>2720403e2eb2451cbb8f4cd24492cfa9</td>
+      <td>36ff3b3666df400f956f8335cf53e09e</td>
+      <td>b05228bfef4940bab6eec062b64ecbc8</td>
+      <td>2015-10-22 21:55:08</td>
+      <td>&lt;p&gt;You can go into the service after you compl...</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>38504</th>
+      <td>4c6d71aaf2724b9f8d439ae086d4f3da</td>
+      <td>8d2c495f3e9e41228139a1a1533e3b85</td>
+      <td>2015-10-22 17:06:12</td>
+      <td>How do i have to go to school to in the military</td>
+      <td>Because I want to serve for my country like my...</td>
+      <td>729ab697bbea43369cf95f25f02cdf12</td>
+      <td>a0243e7c750e4c878fd47fe9cfb56f6f</td>
+      <td>4c6d71aaf2724b9f8d439ae086d4f3da</td>
+      <td>2015-11-02 20:16:18</td>
+      <td>&lt;p&gt;Great question!&lt;/p&gt;\n&lt;p&gt;There are a few dif...</td>
+      <td>11</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">sim_ids = []</span><br><span class="line"><span class="keyword">for</span> all_ids <span class="keyword">in</span> get_sim_authors(qids):</span><br><span class="line">    <span class="keyword">for</span> each_id <span class="keyword">in</span> all_ids.split(<span class="string">','</span>):</span><br><span class="line">        sim_ids.append(each_id)</span><br><span class="line"></span><br><span class="line">sim_ids = set(sim_ids)</span><br><span class="line"></span><br><span class="line">sim_active_recent = set(active_recent_p) &amp; set(sim_ids)</span><br><span class="line"></span><br><span class="line">sim_active_recent</span><br><span class="line"></span><br><span class="line">professionals[professionals[<span class="string">'professionals_id'</span>].isin(sim_active_recent)].T</span><br></pre></td></tr></table></figure>
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>2410</th>
+      <th>2520</th>
+      <th>4428</th>
+      <th>4588</th>
+      <th>10688</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>professionals_id</th>
+      <td>36ff3b3666df400f956f8335cf53e09e</td>
+      <td>36ddb593ca5742f29ed9b5ac66cf24a3</td>
+      <td>5c4960f30bf04d4aaf100551bb9c349f</td>
+      <td>58fa5e95fe9e480a9349bbb1d7faaddb</td>
+      <td>9fc88a7c3323466dbb35798264c7d497</td>
+    </tr>
+    <tr>
+      <th>professionals_location</th>
+      <td>Cleveland, Ohio</td>
+      <td>Riverview, Florida</td>
+      <td>New York, New York</td>
+      <td>Redford Charter Township, Michigan</td>
+      <td>Lakeville, Massachusetts</td>
+    </tr>
+    <tr>
+      <th>professionals_industry</th>
+      <td>Mental Health Care</td>
+      <td>Education Management</td>
+      <td>Hospital &amp; Health Care</td>
+      <td>Automotive</td>
+      <td>Environmental Services</td>
+    </tr>
+    <tr>
+      <th>professionals_headline</th>
+      <td>Assist with Recognizing and Developing Potential</td>
+      <td>Document Management Analyst at Bristol-Myers S...</td>
+      <td>Sense, Think, Move, movement activities for gr...</td>
+      <td>Mechanical Engineer I Automotive</td>
+      <td>Environmental Health and Safety Manager (Seeki...</td>
+    </tr>
+    <tr>
+      <th>professionals_date_joined</th>
+      <td>2015-10-19 20:56:49 UTC+0000</td>
+      <td>2015-11-05 02:45:50 UTC+0000</td>
+      <td>2016-03-08 05:24:03 UTC+0000</td>
+      <td>2016-03-14 16:27:13 UTC+0000</td>
+      <td>2017-05-01 20:13:07 UTC+0000</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+<h4 id="So-these-are-the-professionals-who-have-been-answering-questions-related-to-“army”"><a href="#So-these-are-the-professionals-who-have-been-answering-questions-related-to-“army”" class="headerlink" title="So these are the professionals who have been answering questions related to “army”!"></a>So these are the professionals who have been answering questions related to “army”!</h4><h3 id="t-SNE-visualization"><a href="#t-SNE-visualization" class="headerlink" title="t-SNE visualization"></a>t-SNE visualization</h3><p>Let’s explore some t-SNE visualization. Essentially, t-SNE learns a mapping from a set of high-dimensional vectors and output the outcome to a space with in 2 dimensions. Credits to DanB for sharing the t-SNE plot code.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.manifold <span class="keyword">import</span> TSNE</span><br><span class="line"></span><br><span class="line">tsne = TSNE(random_state=<span class="number">0</span>, n_iter=<span class="number">250</span>, metric=<span class="string">"cosine"</span>)</span><br></pre></td></tr></table></figure>
+<p>To prevent running out of memory, we sample 40% of our data for visualization purposes. Since t-SNE takes in an embedding matrix, we feed it with our tf-idf matrix.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">g_q_sample = qa_cbr.sample(frac=<span class="number">.4</span>, random_state=<span class="number">43</span>)</span><br><span class="line"></span><br><span class="line">tf = TfidfVectorizer(analyzer=<span class="string">'word'</span>,</span><br><span class="line">                     ngram_range=(<span class="number">1</span>,<span class="number">2</span>),</span><br><span class="line">                     min_df=<span class="number">0</span>,</span><br><span class="line">                     stop_words=<span class="string">'english'</span>)</span><br><span class="line"></span><br><span class="line">tfidf_matrix = tf.fit_transform(g_q_sample[<span class="string">'questions_body'</span>])</span><br><span class="line">tfidf_matrix.shape</span><br><span class="line"></span><br><span class="line">tm = tfidf_matrix.toarray()</span><br><span class="line"></span><br><span class="line">tsne_matrix = tsne.fit_transform(tm)</span><br><span class="line"></span><br><span class="line">tsne_matrix</span><br></pre></td></tr></table></figure>
+<pre><code>array([[ 0.00266974, -0.00198474],
+       [-0.04657575, -0.05190464],
+       [ 0.00159361,  0.00021252],
+       ...,
+       [-0.00081038, -0.00103935],
+       [ 0.00482379,  0.00101065],
+       [ 0.00139891, -0.00056521]], dtype=float32)
+</code></pre><p>We add the x- and y-coordinate calculated by t-SNE to our dataframe.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">df = g_q_sample.copy()</span><br><span class="line"></span><br><span class="line">df[<span class="string">'x'</span>] = tsne_matrix[:, <span class="number">0</span>]</span><br><span class="line">df[<span class="string">'y'</span>] = tsne_matrix[:, <span class="number">1</span>]</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">FS = (<span class="number">10</span>, <span class="number">8</span>)</span><br><span class="line">fig, ax = plt.subplots(figsize=FS)</span><br><span class="line"><span class="comment"># Make points translucent so we can visually identify regions with a high density of overlapping points</span></span><br><span class="line">ax.scatter(df.x, df.y, alpha=<span class="number">.1</span>)</span><br></pre></td></tr></table></figure>
+<pre><code>&lt;matplotlib.collections.PathCollection at 0x1a46804400&gt;
+</code></pre><p><img src="/2019/02/27/CareerVillage_Recommand_alg/output_127_1.png" alt="png"></p>
+<p>Seems like most points are clustered around the center region. Can we generate a better plot?</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">FS = (<span class="number">18</span>, <span class="number">8</span>)</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">plot_region</span><span class="params">(x0, x1, y0, y1, text=True)</span>:</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    Plot the region of the mapping space bounded by the given x and y limits.</span></span><br><span class="line"><span class="string">    """</span>    </span><br><span class="line">    pts = df[</span><br><span class="line">        (df.x &gt;= x0) &amp; (df.x &lt;= x1)</span><br><span class="line">        &amp; (df.y &gt;= y0) &amp; (df.y &lt;= y1)</span><br><span class="line">    ]</span><br><span class="line">    fig, ax = plt.subplots(figsize=FS)</span><br><span class="line">    ax.scatter(pts.x, pts.y, alpha=<span class="number">.6</span>)</span><br><span class="line">    ax.set_xlim(x0, x1)</span><br><span class="line">    ax.set_ylim(y0, y1)</span><br><span class="line">    <span class="keyword">if</span> text:</span><br><span class="line">        texts = []</span><br><span class="line">        <span class="keyword">for</span> label, x, y <span class="keyword">in</span> zip(pts.questions_title.values, pts.x.values, pts.y.values):</span><br><span class="line">            t = ax.annotate(label, xy=(x, y))</span><br><span class="line">            texts.append(t)</span><br><span class="line">    <span class="keyword">return</span> ax</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">plot_region_around</span><span class="params">(title, margin=<span class="number">5</span>, **kwargs)</span>:</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    Plot the region of the mapping space in the neighbourhood of the the questions_title. </span></span><br><span class="line"><span class="string">    The margin parameter controls the size of the neighbourhood around the movie.</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    xmargin = ymargin = margin</span><br><span class="line">    match = df[df.questions_title == title]</span><br><span class="line">    <span class="keyword">assert</span> len(match) == <span class="number">1</span></span><br><span class="line">    row = match.iloc[<span class="number">0</span>]</span><br><span class="line">    <span class="keyword">return</span> plot_region(row.x-xmargin, row.x+xmargin, row.y-ymargin, row.y+ymargin, **kwargs)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># df</span></span><br><span class="line">plot_region_around(<span class="string">'lifestyle pediatric surgeon'</span>, <span class="number">.00005</span>)</span><br></pre></td></tr></table></figure>
+<pre><code>&lt;matplotlib.axes._subplots.AxesSubplot at 0x1a4dac5cc0&gt;
+</code></pre><p><img src="/2019/02/27/CareerVillage_Recommand_alg/output_130_1.png" alt="png"></p>
+<p>I would say points within the .00005 region of “lifestyle pediatric surgeon” are pretty much related.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/ML/" rel="tag"># ML</a>
+          
+            <a href="/tags/机器学习/" rel="tag"># 机器学习</a>
+          
+            <a href="/tags/推荐算法/" rel="tag"># 推荐算法</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/02/27/EM/" rel="next" title="EM算法理解">
+                <i class="fa fa-chevron-left"></i> EM算法理解
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/02/28/tf-nmt-seq2seq/" rel="prev" title="tensorflow-nmt(seq2seq)模型（官方）">
+                tensorflow-nmt(seq2seq)模型（官方） <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="MCF">
+            
+              <p class="site-author-name" itemprop="name">MCF</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">21</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Introduction"><span class="nav-number">1.</span> <span class="nav-text">Introduction</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Exploring-questions-answers-1"><span class="nav-number">2.</span> <span class="nav-text">Exploring questions_answers (1)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Exploring-questions-and-answers-2-and-mind-blowing-observation"><span class="nav-number">3.</span> <span class="nav-text">Exploring questions and answers (2) and mind-blowing observation</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#IMPORTANT-OBSERVATION"><span class="nav-number">3.1.</span> <span class="nav-text">IMPORTANT OBSERVATION:</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Exploring-students"><span class="nav-number">4.</span> <span class="nav-text">Exploring students</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#What-are-the-professionals’-headline"><span class="nav-number">4.1.</span> <span class="nav-text">What are the professionals’ headline?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Who-are-our-biggest-heroes"><span class="nav-number">4.2.</span> <span class="nav-text">Who are our biggest heroes?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Where-do-the-professionals-come-from-Let’s-remove-the-city-to-get-a-better-context"><span class="nav-number">4.3.</span> <span class="nav-text">Where do the professionals come from? Let’s remove the city to get a better context.</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Let’s-check-for-active-professionals"><span class="nav-number">4.4.</span> <span class="nav-text">Let’s check for active professionals.</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Exploring-professionals-and-answers"><span class="nav-number">5.</span> <span class="nav-text">Exploring professionals and answers</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Exploring-tags"><span class="nav-number">6.</span> <span class="nav-text">Exploring tags</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Questions"><span class="nav-number">7.</span> <span class="nav-text">Questions</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Building-tag-chart"><span class="nav-number">8.</span> <span class="nav-text">Building tag_chart</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Content-Based-Recommender"><span class="nav-number">9.</span> <span class="nav-text">Content Based Recommender</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Undeniably-they-are-related-to-army"><span class="nav-number">9.1.</span> <span class="nav-text">Undeniably, they are related to army!</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#So-these-are-the-professionals-who-have-been-answering-questions-related-to-“army”"><span class="nav-number">9.2.</span> <span class="nav-text">So these are the professionals who have been answering questions related to “army”!</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#t-SNE-visualization"><span class="nav-number">10.</span> <span class="nav-text">t-SNE visualization</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">MCF</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

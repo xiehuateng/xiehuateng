@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="-NLP,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="自然语言（Natural Language）其实就是人类语言，自然语言处理（NLP）就是对人类语言的处理，当然主要是利用计算机。自然语言处理是关于计算机科学和语言学的交叉学科，常见的研究任务包括：    分词（Word Segmentation或Word Breaker，WB） 信息抽取（Information Extraction，IE）：命名实体识别和关系抽取（Named Entity Rec">
+<meta name="keywords" content="-NLP">
+<meta property="og:type" content="article">
+<meta property="og:title" content="语言模型基础">
+<meta property="og:url" content="http://yoursite.com/2018/09/12/language-model/index.html">
+<meta property="og:site_name" content="Mcf&#39;s Blog">
+<meta property="og:description" content="自然语言（Natural Language）其实就是人类语言，自然语言处理（NLP）就是对人类语言的处理，当然主要是利用计算机。自然语言处理是关于计算机科学和语言学的交叉学科，常见的研究任务包括：    分词（Word Segmentation或Word Breaker，WB） 信息抽取（Information Extraction，IE）：命名实体识别和关系抽取（Named Entity Rec">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="http://yoursite.com/2018/09/12/language-model/L1_lm.png">
+<meta property="og:updated_time" content="2019-03-12T12:20:42.386Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="语言模型基础">
+<meta name="twitter:description" content="自然语言（Natural Language）其实就是人类语言，自然语言处理（NLP）就是对人类语言的处理，当然主要是利用计算机。自然语言处理是关于计算机科学和语言学的交叉学科，常见的研究任务包括：    分词（Word Segmentation或Word Breaker，WB） 信息抽取（Information Extraction，IE）：命名实体识别和关系抽取（Named Entity Rec">
+<meta name="twitter:image" content="http://yoursite.com/2018/09/12/language-model/L1_lm.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/09/12/language-model/">
+
+
+
+
+
+  <title>语言模型基础 | Mcf's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Mcf's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/12/language-model/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="MCF">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Mcf's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">语言模型基础</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-09-12T19:02:51+08:00">
+                2018-09-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/NLP/" itemprop="url" rel="index">
+                    <span itemprop="name">NLP</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>自然语言（Natural Language）其实就是人类语言，自然语言处理（NLP）就是对人类语言的处理，当然主要是利用计算机。自然语言处理是关于计算机科学和语言学的交叉学科，常见的研究任务包括：  </p>
+<ul>
+<li>分词（Word Segmentation或Word Breaker，WB）</li>
+<li>信息抽取（Information Extraction，IE）：命名实体识别和关系抽取（Named Entity Recognition &amp; Relation Extraction，NER）</li>
+<li>词性标注（Part Of Speech Tagging，POS）</li>
+<li>指代消解（Coreference Resolution）</li>
+<li>句法分析（Parsing）</li>
+<li>词义消歧（Word Sense Disambiguation，WSD）</li>
+<li>语音识别（Speech Recognition）</li>
+<li>语音合成（Text To Speech，TTS）</li>
+<li>机器翻译（Machine Translation，MT）</li>
+<li>自动文摘（Automatic Summarization）</li>
+<li>问答系统（Question Answering）</li>
+<li>自然语言理解（Natural Language Understanding）</li>
+<li>OCR</li>
+<li>信息检索（Information Retrieval，IR）  </li>
+</ul>
+<p>早期的自然语言处理系统主要是基于人工撰写的规则，这种方法费时费力，且不能覆盖各种语言现象。上个世纪80年代后期，机器学习算法被引入到自然语言处理中，这要归功于不断提高的计算能力。研究主要集中在统计模型上，这种方法采用大规模的训练语料（corpus）对模型的参数进行自动的学习，和之前的基于规则的方法相比，这种方法更具鲁棒性。</p>
+<p>在这个大背景下产出了统计机器学习方法和统计自然语言处理方法。  </p>
+<h4 id="语言模型"><a href="#语言模型" class="headerlink" title="语言模型"></a>语言模型</h4><p>语言模型简单来讲，就是计算一个句子的概率，更确切的说是计算组成这个句子一系列词语的概率。举个简单的例子，我们知道“武松打死了老虎”相比于“老虎了死武松打”，更像是一句正常的话，这是因为前者出现的概率更高。</p>
+<p>对一句话$S = x_1,x_2,x_3,x_4,x_5,…,x_n$而言，它的概率</p>
+<blockquote>
+<p>$P(S)=P(x_1,x_2,x_3,x_4,x_5,…,x_n) = P(x_1)P(x_2|x_1)P(x_3|x_1,x_2)…P(x_n|x_1,x_2,…,x_{n-1})$</p>
+</blockquote>
+<p>上面的联合概率链规则公式考虑到了所有的词和词之间的依赖关系，但是非常复杂，在实际生活中几乎没办法使用，于是我们就想了很多办法去近似这个公式，效果又要求比独立性假设好。我们下面提到的语言模型n-gram就是一个这样的简化。</p>
+<p>举个简单的邮件分类例子，对于垃圾邮件中的一句话<strong>“我司可办理正规发票保真增值税发票点数优惠”</strong>，这句话发生的概率P = P(“我”,“司”,“可”,“办理”,“正规发票”,“保真”,“增值税”,“发票”,“点数”,“优惠”)，如果要按照上面的联合概率链规则公式，我们只考虑一个词语对上一个词语的依赖关系，而与再之前的词没有关系，公式就简化成了如下形式，我们把它叫做二元语法（bigram，2-gram）:</p>
+<blockquote>
+<p>$P(x_1,x_2,x_3,x_4,x_5,x_6,x_7,x_8,x_9,x_{10})=P(x_1)P(x_2|x_1)P(x_3|x_2)P(x_4|x_3)..P(x_{10}|x_9)=P(“我”)P(“司”|“我”)P(“可”|“司”)P(“办理”|“可”)…P(“优惠”|“点数”)$</p>
+</blockquote>
+<p>如果把依赖词长度再拉长一点，考虑一个词对前两个词的依赖关系，就叫做三元语法（trigram，3-gram），公式如下:</p>
+<blockquote>
+<p>$P(x_1,x_2,x_3,x_4,x_5,x_6,x_7,x_8,x_9,x_{10})=P(x_1)P(x_2|x_1)P(x_3|x_1,x_2)P(x_4|x_2,x_3)×…×P(x_{10}|x_8,x_9)=P(“我”)P(“司”|“我”)P(“可”|“我”,“司”)P(“办理”|“司”,“可”)…P(“优惠”|“发票”,“点数”)$</p>
+</blockquote>
+<p>如果我们再考虑长一点，考虑n个词语之间的关系，恩恩，这就是n-gram的由来。</p>
+<p>其实以上几个简化后的公式，就是著名的<strong>马尔科夫假设（Markov Assumption）</strong>：下一个词的出现仅依赖于它前面的一个或几个词。这相对于联合概率链规则，其实是一个有点粗糙的简化，不过很好地体现了就近思路，<strong>离得较远和关系比较弱的词语就被简化和省略了</strong>。实际应用中，这些简化后的n-gram语法比独立性假设还是强很多的。其实可以把独立性假设理解成为1-gram。  </p>
+<h4 id="选择N-gram的N"><a href="#选择N-gram的N" class="headerlink" title="选择N-gram的N"></a>选择N-gram的N</h4><p>选择依赖词的个数“n”主要与计算条件概率有关。理论上，只要有足够大的语料，n越大越好，毕竟这样考虑的信息更多嘛。条件概率很好算，统计一下各个元组出现的次数就可以，比如:</p>
+<blockquote>
+<p>$P(“优惠”|“发票”,“点数”)=\frac{(“发票”,“点数”，“优惠”)出现的次数}{(“发票”,“点数”)出现的次数}$</p>
+</blockquote>
+<p>但我们实际情况往往是训练语料很有限，很容易产生数据稀疏，不满足大数定律，算出来的概率失真。比如(“发票”,“点数”，“优惠”)在训练集中竟没有出现，就会导致零概率问题。</p>
+<p>又比如在英文语料库IBM, Brown中，三四百兆的语料，其测试语料14.7%的trigram和2.2%的bigram在训练语料中竟未出现！</p>
+<p>另一方面，如果n很大，参数空间过大，产生维数灾难，也无法实用。假设词表的大小为100000，那么n-gram模型的参数数量为$100000^n$。这么多的参数，估计内存就不够放了。</p>
+<p>那么，如何选择依赖词的个数n呢？从前人的经验来看：</p>
+<ul>
+<li>经验上，trigram用的最多。尽管如此，原则上，能用bigram解决，绝不使用trigram。n取≥4的情况较少。</li>
+<li>当ｎ更大时：对下一个词出现的约束信息更多，具有更大的辨别力；</li>
+<li>当ｎ更小时：在训练语料库中出现的次数更多，具有更可靠的统计信息，具有更高的可靠性、实用性。  </li>
+</ul>
+<h4 id="N-gram语言模型应用"><a href="#N-gram语言模型应用" class="headerlink" title="N-gram语言模型应用"></a>N-gram语言模型应用</h4><p>说了这么N-gram语言模型的背景知识，咱们再来看看N-gram语言模型在自然语言处理中有哪些常见应用。</p>
+<h5 id="词性标注"><a href="#词性标注" class="headerlink" title="词性标注"></a>词性标注</h5><p><strong>词性标注是一个典型的多分类问题</strong>。常见的词性包括名词、动词、形容词、副词等。而一个词可能属于多种词性。如“爱”，可能是动词，可能是形容词，也可能是名词。但是一般来说，<strong>“爱”作为动词还是比较常见的。所以可以统一给“爱”分配为“动词”</strong>。这种最简单粗暴的思想非常好实现，如果准确率要求不高则也比较常用。<strong>它只需要基于词性标注语料库做一个统计就够了，连贝叶斯方法、最大似然法都不要用</strong>。词性标注语料库一般是由专业人员搜集好了的，长下面这个样子。其中斜线后面的字母表示一种词性，词性越多说明语料库分得越细：<br><img src="/2018/09/12/language-model/L1_lm.png" alt=""></p>
+<p>需要比较以下各概率的大小，选择概率最大的词性即可：</p>
+<blockquote>
+<p> $P(词性_i|“爱”)=\frac{“爱”作为“词性_i”的次数}{“爱”出现的次数}\  ； i=1,2,3…$</p>
+</blockquote>
+<p><strong>但这种方法没有考虑上下文的信息。而一般来说，形容词后面接名词居多，而不接动词，副词后面才接动词，而不接名词。</strong> 考虑到词性会受前面一两个词的词性的影响，<strong>可以引入2-gram模型提升匹配的精确度。</strong> 我们匹配以下这句话（已被空格分好词）中“爱”的词性：</p>
+<blockquote>
+<p>“闷骚的 李雷 很 爱 韩梅梅”</p>
+</blockquote>
+<p>将公式进行以下改造，比较各概率的大小，选择概率最大的词性：</p>
+<blockquote>
+<p> $P(词性_i|“很”的词性（副词），“爱”)=\frac{前面被“副词”修饰的“爱”作为“词性_i”的次数}{前面被“副词”修饰的“爱”出现的次数}\  ； i=1,2,3…$</p>
+</blockquote>
+<p>计算这个概率需要对语料库进行统计。但前提是你得先判断好“很”的词性，因为采用2-gram模型，进而就需要提前判断“李雷”的词性，需要判断“闷骚的”词性。但是“闷骚的”作为第一个词语，已经找不比它更靠前的词语了。这时就可以考虑用之前最简单粗暴的方法判断“闷骚的”的词性，统一判断为形容词即可。</p>
+<p>PS:词性标注是自然语言处理中的一项基础性工作，有其细节实现远比我们介绍地更加丰富。感兴趣的同学可以看看这篇文章<a href="https://superangevil.wordpress.com/2009/10/20/nltk5/" target="_blank" rel="noopener">《NLTK读书笔记 — 分类与标注》</a>  </p>
+<h5 id="垃圾邮件识别"><a href="#垃圾邮件识别" class="headerlink" title="垃圾邮件识别"></a>垃圾邮件识别</h5><p><strong>下面我们用直观的例子探讨一下其在分类问题上是怎么发挥作用的</strong>。一个可行的思路如下：</p>
+<ul>
+<li>先对邮件文本进行断句，以句尾标点符号（“。” “!” “？”等）为分隔符将邮件内容拆分成不同的句子。</li>
+<li>用N-gram分类器(马上提到)判断每个句子是否为垃圾邮件中的敏感句子。</li>
+<li>当被判断为敏感句子的数量超过一定数量（比如3个）的时候，认为整个邮件就是垃圾邮件。</li>
+</ul>
+<p>有同学问N-gram分类器是什么鬼，这个分类器靠谱么。N-gram分类器是结合贝叶斯方法和语言模型的分类器。这里用$Y_1,Y_2$分别表示这垃圾邮件和正常邮件，用$X$表示被判断的邮件的句子。根据贝叶斯公式有：</p>
+<blockquote>
+<p> $P(Y_i|X)\propto P(X|Y_i)P(Y_i)  ； i=1,2$</p>
+</blockquote>
+<p>比较i=1和2时两个概率值的大小即可得到$X$所属的分类。对于句子（“我”,“司”,“可”,“办理”,“正规发票”,“保真”,“增值税”,“发票”,“点数”,“优惠”)用字母$X$代表，每一个词语用字母$x_i$表示。$X$就可以写成一个$x_i$组成的向量，$x_i$就是这向量中某个维度的特征。<strong>对$P(X|Y_i)$ 套用2-gram模型。</strong> 则上式化简为：</p>
+<blockquote>
+<p>$P(Y_i|X)\propto P(X|Y_i)P(Y_i)  ； i=1,2$<br>$\propto P(x_1|Y_i)P(x_2|x_1，Y_i)P(x_3|x_2，Y_i)…P(x_{10}|x_9，Y_i)P(Y_i)$<br>$\propto P(“我”|Y_i)P(“司”|“我”，Y_i)P(“可”|“司”，Y_i)…P(“优惠”|“点数”，Y_i)P(Y_i)$</p>
+</blockquote>
+<p>公式中的条件概率也比较好求，举个例子：</p>
+<blockquote>
+<p>$P(“优惠”|“点数”，Y_i)=\frac{在类别Y_i中，(“点数”，“优惠”)出现的次数}{在类别Y_i中，“点数”出现的次数}$</p>
+</blockquote>
+<p>剩下的就需要在语料库中间做一个的统计就是了。<strong>因为这种方法考虑到了词语前面的一个词语的信息，同时也考虑到了部分语序信息，因此区分效果会比单纯用朴素贝叶斯方法更好。</strong></p>
+<p>多提几句，N-gram方法在实际应用中有一些tricks需要注意：</p>
+<ul>
+<li>3-gram方法的公式与上面类似。此处省略。从区分度来看，3-gram方法更好些。</li>
+<li>句子开头的词，比如本例中的“我”，<strong>因为要考虑其本身作为开头的特征，可以考虑在其前面再添加一个句子起始符号如$“\<s\>”$，这样我们就不必单独计算$P(“我”|Y_i)$，而是替换为计算$P(“我”|“\<s\>”,Y_i)$。形式上与2-gram统一。</s\></s\></strong> 这样统计和预测起来都比较方便。</li>
+<li>一般地，<strong>如果采用N-gram模型，可以在文本开头加入n-1个虚拟的开始符号</strong>，这样在所有情况下预测下一个词的可依赖词数都是一致的。</li>
+<li>与朴素贝叶斯方法一样，<strong>N-gram模型也会发生零概率问题，也需要平滑技术。</strong> 一会儿会讨论到。  </li>
+</ul>
+<h5 id="中文分词"><a href="#中文分词" class="headerlink" title="中文分词"></a>中文分词</h5><p>之前说过，中文分词技术是“中文NLP中，最最最重要的技术之一”，重要到某搜索引擎厂有专门的team在集中精力优化这一项工作，重要到能影响双语翻译百分位的准确度，能影响某些query下搜索引擎百分位的广告收入。不过简单的分词实现方式中，包含的原理其实也非常易懂。</p>
+<p>说起来，<strong>中文分词也可以理解成一个多分类的问题。</strong> 这里用$X$表示被分词的句子“我司可办理正规发票”， <strong>用$Y_i$表示该句子的一个分词方案。</strong> 咱们继续套用贝叶斯公式：</p>
+<blockquote>
+<p> $P(Y_i|X)\propto P(X|Y_i)P(Y_i)  ； i=1,2,3…$</p>
+</blockquote>
+<p>比较这些概率的大小，找出使得$P(Y_i|X)$ 最大的$Y_i$即可得到$X$ 所属的分类(分词方案)了。</p>
+<p>$Y_i$作为分词方案，其实就是个词串，比如（“我司”，“可”，“办理”，“正规发票”）或者（“我”，“司可办”，“理正规”，“发票”），也<strong>就是一个向量</strong>了。</p>
+<p>而上面贝叶斯公式中$P(X|Y_i)$ 项的意思就是在分类方案 $Y_i$ 的前提下，其对应句子为$X$ 的概率。而无论分词方案是（“我司”，“可”，“办理”，“正规发票”）还是（“我”，“司可办”，“理正规”，“发票”），或者其他什么方案，其对应的句子都是“我司可办理正规发票”。也就是说<strong>任意假想的一种分词方式之下生成的句子总是唯一的</strong>（只需把分词之间的分界符号扔掉剩下的内容都一样）。于是<strong>可以将 $P(X|Y_i)$ 看作是恒等于1</strong>的。这样贝叶斯公式又进一步化简成为：</p>
+<blockquote>
+<p> $P(Y_i|X)\propto P(Y_i)  ； i=1,2,3…$</p>
+</blockquote>
+<p>也就是说我们只要取最大化的$P(Y_i)$ 就成了。而$Y_i$就是一个词串，也就是一个向量，可以直接套用我们上面的N-gram语言模型。这里采用2-gram。于是有：</p>
+<blockquote>
+<p> $P(Y_1)=P(“我司”，“可”，“办理”，“正规发票”)$<br>$=P(“我司”)P(“可”|“我司”)P(“办理”|“可”)P(“正规发票”|“办理”）$</p>
+</blockquote>
+<p>第二种分词方案的概率为：</p>
+<blockquote>
+<p> $P(Y_2)=P(“我”，“司可办”，“理正规”，“发票”)$<br>$=P(“我”)P(“司可办”|“我”)P(“理正规”|“司可办”)P(“发票”|“理正规”）$</p>
+</blockquote>
+<p>由于在语料库中“司可办”与“理正规”一起连续出现的概率为0，于是$P(Y_2)=0$ ,$P(Y_1)$ 的概率更高，优先选择$Y_1$的分词方案。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/NLP/" rel="tag"># -NLP</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/10/12/text-topic-extraction-1/" rel="prev" title="文本主题抽取与表示（一）TD-IDF">
+                文本主题抽取与表示（一）TD-IDF <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="MCF">
+            
+              <p class="site-author-name" itemprop="name">MCF</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">21</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#语言模型"><span class="nav-number">1.</span> <span class="nav-text">语言模型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#选择N-gram的N"><span class="nav-number">2.</span> <span class="nav-text">选择N-gram的N</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#N-gram语言模型应用"><span class="nav-number">3.</span> <span class="nav-text">N-gram语言模型应用</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#词性标注"><span class="nav-number">3.1.</span> <span class="nav-text">词性标注</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#垃圾邮件识别"><span class="nav-number">3.2.</span> <span class="nav-text">垃圾邮件识别</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#中文分词"><span class="nav-number">3.3.</span> <span class="nav-text">中文分词</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">MCF</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>
