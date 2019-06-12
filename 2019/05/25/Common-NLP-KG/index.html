@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="nlp,kg,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="目录结构简介C_OPRE中文开放域关系抽取。相关论文：《Chinese Open Relation Extraction and Knowledge Base Establishment》亮点：根据依存句法分析定义了中文的依赖语义范式。DSNF（DEPENDENCY SEMANTIC NORMAL FORMS）这个方案可以在开放的网络上的巨量语料中快速抽取出部分三元组关系，在这基础上，可以为下面的">
+<meta name="keywords" content="nlp,kg">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DL结合KG的整理(Common_NLP_KG)">
+<meta property="og:url" content="http://yoursite.com/2019/05/25/Common-NLP-KG/index.html">
+<meta property="og:site_name" content="Mcf&#39;s Blog">
+<meta property="og:description" content="目录结构简介C_OPRE中文开放域关系抽取。相关论文：《Chinese Open Relation Extraction and Knowledge Base Establishment》亮点：根据依存句法分析定义了中文的依赖语义范式。DSNF（DEPENDENCY SEMANTIC NORMAL FORMS）这个方案可以在开放的网络上的巨量语料中快速抽取出部分三元组关系，在这基础上，可以为下面的">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-05-28T09:47:06.939Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="DL结合KG的整理(Common_NLP_KG)">
+<meta name="twitter:description" content="目录结构简介C_OPRE中文开放域关系抽取。相关论文：《Chinese Open Relation Extraction and Knowledge Base Establishment》亮点：根据依存句法分析定义了中文的依赖语义范式。DSNF（DEPENDENCY SEMANTIC NORMAL FORMS）这个方案可以在开放的网络上的巨量语料中快速抽取出部分三元组关系，在这基础上，可以为下面的">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/05/25/Common-NLP-KG/">
+
+
+
+
+
+  <title>DL结合KG的整理(Common_NLP_KG) | Mcf's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Mcf's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/25/Common-NLP-KG/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="MCF">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Mcf's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">DL结合KG的整理(Common_NLP_KG)</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-05-25T12:03:59+08:00">
+                2019-05-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h4 id="目录结构简介"><a href="#目录结构简介" class="headerlink" title="目录结构简介"></a>目录结构简介</h4><h6 id="C-OPRE"><a href="#C-OPRE" class="headerlink" title="C_OPRE"></a>C_OPRE</h6><p>中文开放域关系抽取。<br>相关论文：《Chinese Open Relation Extraction and Knowledge Base Establishment》<br>亮点：根据依存句法分析定义了中文的依赖语义范式。DSNF（DEPENDENCY SEMANTIC NORMAL FORMS）<br>这个方案可以在开放的网络上的巨量语料中快速抽取出部分三元组关系，在这基础上，可以为下面的一些其他任务服务。</p>
+<h5 id="memn2n"><a href="#memn2n" class="headerlink" title="memn2n"></a>memn2n</h5><p>端到端记忆网络:<a href="https://arxiv.org/abs/1503.08895" target="_blank" rel="noopener">《End to End Memory Network》</a><br>论文中使用了<a href="https://research.fb.com/downloads/babi/" target="_blank" rel="noopener">bAbi</a>数据集（fastbook开源问答项目）<br>通过这个地址<a href="http://www.thespermwhale.com/jaseweston/babi/tasks_1-20_v1-2.tar.gz" target="_blank" rel="noopener">http://www.thespermwhale.com/jaseweston/babi/tasks_1-20_v1-2.tar.gz</a>下载数据。数据集包括20种类型的问答任务。<br>single.py 是对单个任务实践。通过参数task_id选择任务。<br>join.py 是把所有任务拼接在一起训练（操作上就是把20个任务数据拼接在一起）。<br>论文的具体解析可以参考这边blog<a href="https://blog.csdn.net/Irving_zhang/article/details/79111102" target="_blank" rel="noopener">https://blog.csdn.net/Irving_zhang/article/details/79111102</a>.<br>有几个细节点需要注意的：<br>1.位置编码。（和词向量做elmentwise相乘）<br>2.时序编码（time1…）加在句子向量的最后，在梯度更新时不做处理。形成一个很强的特征。query检索memery时这个特征应该起很大作用。<br>3.mi存放的是一个句子的向量。query和每个mi相乘求得权重看那个句子最为重要。这里可以理解为input记忆mi专为匹配句子重要的服务，而output记忆专为匹配输出答案服务，这里有点类似lstm的输入输出门。<br>4.多跳之间的参数共享方案看代码。（代码用比较低级的api来实现的，值得学习）  </p>
+<h5 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h5><p>通过这篇论文可以了解到记忆网络和RNN的区别，记忆更像一种外部内存一样，把输入编码记忆起来，存到记忆slot里面。而RNN的记忆则是rnnCelll实现，跟随序列一直在变，直觉上体量较小。  </p>
+<p>还有一篇《Mem2Seq:Effectively Incorporating Knowledge Bases into End-to-End Task-Oriented Dialog Systems》</p>
+<p>参考blog<a href="https://blog.csdn.net/weixin_34369928/article/details/81209309" target="_blank" rel="noopener">https://blog.csdn.net/weixin_34369928/article/details/81209309</a>  </p>
+<h5 id="PCNN-MIL-ATT"><a href="#PCNN-MIL-ATT" class="headerlink" title="PCNN-MIL-ATT"></a>PCNN-MIL-ATT</h5><ul>
+<li>MIL -  Zeng (2015). Distant Supervision for Relation Extraction via Piecewise Convolutional Neural Networks. EMNLP  </li>
+<li>ATT - Lin (2016). Neural Relation Extraction with Selective Attention over Instances.ACL<br>基本思路是先识别句子中的实体对，再进行关系预测，基本上跟分类问题一样。要有标识的训练数据，这些数据从开源的语料结合知识库得来，如NYT+Freebase。<br>里面使用了远程监督学习（Distant Supervised Learning），可以自动标注训练样本，原理很简单。利用知识图谱中的两个entity以及对应的某个relation，在corpus中进行回标，如果某个句子中同时包含了两个entity，那么就假定这个句子包含了上述的relation. 这样就可以获得大量的标注数据。当然缺陷就是假设太强，会引入了很多噪音数据， 因为包含两个entity的句子不一定可以刻画对应的relation，如下, 对于NYT 语料中的第一个句子的确描述了 Founder的关系（Freebase），但是第二句就不是这个关系，因此属于噪音。在2011年提出了Multi Instance Learning的方法来改进原始的Distance supervision的方法，有一个At-Least-One 的前提: 包含两个entity的所有句子中，至少有一个句子可以体现relation，即至少有一个标注正确的句子。通过结合FreeBase 对NYT语料做Entity Linking，Relation Aligning等操作进行标注， 最终得到一个被广泛使用的关系抽取数据集, 在开始已经描述过详情。正如前面声明，这里面会有噪音数据。 因此在这一系列的文章中，都会针对该噪音问题做一些工作，其中大部分基于Multi Instance来做。简单引用介绍Multi Instance Learning:</li>
+</ul>
+<p>多示例学习可以被描述为：假设训练数据集中的每个数据是一个包(Bag)，每个包都是一个示例(instance)的集合,每个包都有一个训练标记，而包中的示例是没有标记的；如果包中至少存在一个正标记的示例，则包被赋予正标记；而对于一个有负标记的包，其中所有的示例均为负标记。（这里说包中的示例没有标记，而后面又说包中至少存在一个正标记的示例时包为正标记包，是相对训练而言的，也就是说训练的时候是没有给示例标记的，只是给了包的标记，但是示例的标记是确实存在的，存在正负示例来判断正负类别）。通过定义可以看出，与监督学习相比，多示例学习数据集中的样本示例的标记是未知的，而监督学习的训练样本集中，每个示例都有一个一已知的标记；与非监督学习相比，多示例学习仅仅只有包的标记是已知的，而非监督学习样本所有示例均没有标记。但是多示例学习有个特点就是它广泛存在真实的世界中，潜在的应用前景非常大。 from <a href="http://blog.csdn.net/tkingreturn/article/details/39959931" target="_blank" rel="noopener">http://blog.csdn.net/tkingreturn/article/details/39959931</a>  </p>
+<p><strong>MIL就是应用了多示例学习，先通过数据预处理把数据分成一个一个包，然后把包输入网络，找出每个包里面得分最高的代表这个包的实例，去更新参数，然后重复迭代，有点类似EM的思想。</strong>  </p>
+<p><strong>在Zeng 2015中的MIL部分，每一个bag仅仅取了置信度最高的instance，这样会丢失很多的信息，因此一个bag内可能有很多个positive instance。应用Attention机制可以减弱噪音，加强正样本，因此可以更充分的利用信息。这是ATT的思想。</strong>  </p>
+<p><strong>PCNN指的是Piecewise Max Pooling Layer，具体实现是在Maxpooling的基础上改成分块Maxpooling。</strong>  </p>
+<p>这是深度学习应用在关系抽取的一些研究性工作上，工业界估计没普及。  </p>
+<h5 id="RE-CNN-pytorch"><a href="#RE-CNN-pytorch" class="headerlink" title="RE-CNN-pytorch"></a>RE-CNN-pytorch</h5><p>通过多尺寸卷积核卷积神经网络的深度学习方法进行关系抽取/分类的PyTorch实现。跟上一基本属于类似的。而且还是更基础的。这里就不细节讲述了。<br>Data: SemEval-2010 Task #8（这个是实体关系抽取任务里，比较多论文引用的一个数据集）  </p>
+<h5 id="CCM《Commonsense-Knowledge-Aware-Conversation-Generation-with-Graph-Attention》"><a href="#CCM《Commonsense-Knowledge-Aware-Conversation-Generation-with-Graph-Attention》" class="headerlink" title="CCM《Commonsense Knowledge Aware Conversation Generation with Graph Attention》"></a>CCM《Commonsense Knowledge Aware Conversation Generation with Graph Attention》</h5><ul>
+<li>神经模型连接并充分利用大规模的常识知识库  </li>
+<li><p>该项目是首次在对话生成神经系统中，尝试使用大规模常识知识。有了这些知识的支撑，我们的模型能够更好地理解对话，从而给出更合适、信息量更大的回复。</p>
+</li>
+<li><p>代替过去将知识三元组分开使用的方法，我们设计了静态和动态图注意力机制，把知识三元组看作一个图，基于与其相邻实体和它们之间的关系，我们可以更好地解读所研究实体的语义。  </p>
+</li>
+</ul>
+<p>使用语义网络 (ConceptNet) 作为常识知识库  </p>
+<p>来自 reddit 上一问一答形式的对话数据  </p>
+<p>模型主体是基于GRU的encoder - decoder结构；</p>
+<p>基本思路是，知识解析器 (Knowledge Interpreter)旨在优化问题理解这一环节。它通过引入每个单词对应的图向量，来增强单词的语义。操作是，通过实体链接，把句子中的中实体和知识库的链接起来，找出实体在知识库中的子图。知识解析器作用就是通过注意力（这里称为静态注意力机制）的权重估量了“实体间关系”和“头实体”﻿﻿﻿6以及“尾实体”﻿﻿﻿﻿之间的关联度。然后把结果和wordembeding一起输入GRU。  </p>
+<p>知识感知生成器 (Knowledge Aware Generator) 旨在通过充分利用检索到的图，来生成相应的回复。操作上，把解码器的状态St 和刚才知识解析器的结果（子图的三元组的注意力处理后的）做注意力处理，然后进一步对子图里面的三元组做注意力处理，把各种结果和解码器的结果拼接起来做sofemax得到一个生成词的概率。同时这里还会计算一个从知识库直接复制词的概率，最终结果由两种概率结合所得（权衡哪个高）。  </p>
+<p>参考blog<a href="https://blog.csdn.net/tMb8Z9Vdm66wH68VX1/article/details/81518247" target="_blank" rel="noopener">https://blog.csdn.net/tMb8Z9Vdm66wH68VX1/article/details/81518247</a>  </p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/nlp/" rel="tag"># nlp</a>
+          
+            <a href="/tags/kg/" rel="tag"># kg</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/05/24/CCM/" rel="next" title="常识知识感知对话模型(CCM)代码详解">
+                <i class="fa fa-chevron-left"></i> 常识知识感知对话模型(CCM)代码详解
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="MCF">
+            
+              <p class="site-author-name" itemprop="name">MCF</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">37</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#目录结构简介"><span class="nav-number">1.</span> <span class="nav-text">目录结构简介</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#C-OPRE"><span class="nav-number">1.0.1.</span> <span class="nav-text">C_OPRE</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#memn2n"><span class="nav-number">1.1.</span> <span class="nav-text">memn2n</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#总结"><span class="nav-number">1.2.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#PCNN-MIL-ATT"><span class="nav-number">1.3.</span> <span class="nav-text">PCNN-MIL-ATT</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#RE-CNN-pytorch"><span class="nav-number">1.4.</span> <span class="nav-text">RE-CNN-pytorch</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#CCM《Commonsense-Knowledge-Aware-Conversation-Generation-with-Graph-Attention》"><span class="nav-number">1.5.</span> <span class="nav-text">CCM《Commonsense Knowledge Aware Conversation Generation with Graph Attention》</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">MCF</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>
